@@ -48,5 +48,5 @@ et bien d'autres choses !
 - Projet ambitieux, créatif et évolutif
 - Problématiques techniques de taille
 - Mise en relation d'un site front et d'une API voire d'API externes
-- Côté back : API, Fullstack (Sessions, Twig, Doctrine, Security, Services, ...)
-- Côté front : Hooks, Components, Redux, Axios, SyntheticEvents, etc
+- Côté back : Symfony API
+- Côté front : React, librairies JS
