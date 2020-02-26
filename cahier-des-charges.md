@@ -141,7 +141,7 @@ Compatibilité dernières versions des navigateurs (Chrome, Firefox et Edge).
 ### Rôles de l'équipe 
 
 | **Alex** | **Shirin** | **Arnaud** | **William**  
-|:---:|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|
 | Scrum Master | Git Master Front | Git Master Back | Product Owner |
 | Developer Front | Lead Dev Front | Developer Back | Lead Dev Back |
 
