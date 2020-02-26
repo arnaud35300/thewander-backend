@@ -68,7 +68,7 @@ Anglais.
 - À propos
 - Mentions légales
 
-![Flowchart](./flowchart.png)
+![Flowchart](./flowchart-fr.png)
 
 ### Navigation
 

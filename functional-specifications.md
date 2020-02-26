@@ -69,7 +69,7 @@ English.
 - About
 - Legal Notice
 
-![Flowchart](./flowchart.png)
+![Flowchart](./flowchart-en.png)
 
 ### Navigation
 
