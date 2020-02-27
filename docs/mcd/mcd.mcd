@@ -1,17 +1,13 @@
-GETS, 11< USER, 0N> ROLE
-ROLE: name
-HAS, 0N< STAR, 11> COMMENT
-COMMENT: body
-:
-
-USER: nickname, slug, email, password, avatar, firstname, birthday, bio, status
-CREATED BY, 11< STAR, 0N> USER
-STAR: name, slug, picture, nb_stars, description
-CORRESPONDS TO, 11< STAR, 0N> SUBTYPE
-SUBTYPE: name
-
-POSSESSES, 11< USER, 0N> RANK
 RANK: name, badge
-BELONGS TO, 11< STAR, 0N> TYPE
-TYPE: name
-CONTAINS, 1N< TYPE, 11> SUBTYPE
+POSSESSES, 11 USER, 0N RANK
+::
+
+GETS, 11 USER, 0N ROLE
+USER: nickname, slug, email, password, avatar, firstname, birthday, bio, status
+CREATES, 11 CELESTIAL_BODY, 0N USER
+PROPERTY: name, unit, value
+
+ROLE: name
+COMMENTS, 0N USER, 0N CELESTIAL_BODY: body
+CELESTIAL_BODY: name, slug, picture, nb_stars, description
+HAS, 1N CELESTIAL_BODY, 0N PROPERTY

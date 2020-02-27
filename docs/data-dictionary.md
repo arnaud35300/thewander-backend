@@ -1,20 +1,18 @@
 # Data Dictionary
 
-## Star (`star`)
+## Celestial Body (`celestial_body`)
 
-|    Field    |    Type     |                  Specification                  |               Description               |
-| :---------: | :---------: | :---------------------------------------------: | :-------------------------------------: |
-|     id      |     INT     | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |              The star's ID              |
-|    name     | VARCHAR(50) |                    NOT NULL                     |             The star's name             |
-|    slug     | VARCHAR(50) |                    NOT NULL                     |             The star's slug             |
-|    user     |   ENTITY    |                    NOT NULL                     |           The star's creator            |
-|    type     |   ENTITY    |                    NOT NULL                     |             The star's type             |
-|   subtype   |   ENTITY    |                    NOT NULL                     |           The star's subtype            |
-|   picture   | VARCHAR(50) |                      NULL                       |           The star's picture            |
-|  nb_stars   |     INT     |                      NULL                       | The number of people who liked the star |
-| description |   TEXT()    |                      NULL                       |         The star's description          |
-| created_at  |  TIMESTAMP  |                    NOT NULL                     |        The star's creation date         |
-| updated_at  |  TIMESTAMP  |                    NOT NULL                     |         The star's last update          |
+|    Field    |    Type     |                  Specification                  |                    Description                    |
+| :---------: | :---------: | :---------------------------------------------: | :-----------------------------------------------: |
+|     id      |     INT     | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |              The celestial body's ID              |
+|    name     | VARCHAR(50) |                    NOT NULL                     |             The celestial body's name             |
+|    slug     | VARCHAR(50) |                    NOT NULL                     |             The celestial body's slug             |
+|    user     |   ENTITY    |                    NOT NULL                     |           The celestial body's creator            |
+|   picture   | VARCHAR(50) |                      NULL                       |           The celestial body's picture            |
+|  nb_stars   |     INT     |                      NULL                       | The number of people who liked the celestial body |
+| description |   TEXT()    |                      NULL                       |         The celestial body's description          |
+| created_at  |  TIMESTAMP  |                    NOT NULL                     |        The celestial body's creation date         |
+| updated_at  |  TIMESTAMP  |                    NOT NULL                     |         The celestial body's last update          |
 
 ## User (`user`)
 
@@ -37,14 +35,14 @@
 
 ## Comment (`comment`)
 
-|   Field    |   Type    |                  Specification                  |         Description         |
-| :--------: | :-------: | :---------------------------------------------: | :-------------------------: |
-|     id     |    INT    | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |      The comment's ID       |
-|    body    |   TEXT    |                    NOT NULL                     |    The comment's message    |
-|    user    |  ENTITY   |                    NOT NULL                     |    The comment's author     |
-|    star    |  ENTITY   |                    NOT NULL                     |  The comment's star target  |
-| created_at | TIMESTAMP |                    NOT NULL                     | The comment's creation date |
-| updated_at | TIMESTAMP |                    NOT NULL                     |  The comment's last update  |
+|     Field      |   Type    |                  Specification                  |             Description             |
+| :------------: | :-------: | :---------------------------------------------: | :---------------------------------: |
+|       id       |    INT    | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |          The comment's ID           |
+|      body      |   TEXT    |                    NOT NULL                     |        The comment's message        |
+|      user      |  ENTITY   |                    NOT NULL                     |        The comment's author         |
+| celestial_body |  ENTITY   |                    NOT NULL                     | The comment's celestial body target |
+|   created_at   | TIMESTAMP |                    NOT NULL                     |     The comment's creation date     |
+|   updated_at   | TIMESTAMP |                    NOT NULL                     |      The comment's last update      |
 
 ## Role (`role`)
 
@@ -65,21 +63,20 @@
 | created_at |  TIMESTAMP  |                    NOT NULL                     | The rank's creation date |
 | updated_at |  TIMESTAMP  |                    NOT NULL                     |  The rank's last update  |
 
-## Type (`type`)
+## Property (`type`)
 
-|   Field    |     Type     |                  Specification                  |       Description        |
-| :--------: | :----------: | :---------------------------------------------: | :----------------------: |
-|     id     |     INT      | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |      The type's ID       |
-|    name    | VARCHAR(100) |                    NOT NULL                     |     The type's name      |
-| created_at |  TIMESTAMP   |                    NOT NULL                     | The type's creation date |
-| updated_at |  TIMESTAMP   |                    NOT NULL                     |  The type's last update  |
+|   Field    |     Type     |                  Specification                  |         Description          |
+| :--------: | :----------: | :---------------------------------------------: | :--------------------------: |
+|     id     |     INT      | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |      The property's ID       |
+|    name    | VARCHAR(100) |                    NOT NULL                     |     The property's name      |
+|    unit    |     INT      |                      NULL                       |     The property's unit      |
+|   value    | VARCHAR(20)  |                      NULL                       |     The property's value     |
+| created_at |  TIMESTAMP   |                    NOT NULL                     | The property's creation date |
+| updated_at |  TIMESTAMP   |                    NOT NULL                     |  The property's last update  |
 
-## Subtype (`subtype`)
+## CelestialBodyProperty (`celestial_body_property`)
 
-|   Field    |     Type     |                  Specification                  |            Description             |
-| :--------: | :----------: | :---------------------------------------------: | :--------------------------------: |
-|     id     |     INT      | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |          The subtype's ID          |
-|    name    | VARCHAR(255) |                    NOT NULL                     |         The subtype's name         |
-|    type    |    ENTITY    |                    NOT NULL                     | The type which the subtype belongs |
-| created_at |  TIMESTAMP   |                    NOT NULL                     |    The subtype's creation date     |
-| updated_at |  TIMESTAMP   |                    NOT NULL                     |     The subtype's last update      |
+|       Field       | Type  | Specification |       Description       |
+| :---------------: | :---: | :-----------: | :---------------------: |
+|    property_id    |  INT  |   NOT NULL    |    The property's ID    |
+| celestial_body_id |  INT  |   NOT NULL    | The celestial body's ID |

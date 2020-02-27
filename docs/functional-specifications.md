@@ -14,21 +14,22 @@ Provide a collaborative web app for the astronomy fans community, as well as new
 
 ## MVP
 
-### Back :
+### Back
 
 - API : database, security, routes, administration and CRUD (Create, Read, Update, Delete)
 - Admin Interface : administration and moderation of datas and users
 - Forbidden words dictionnary
-- Grading system: depending on the level of the user input (number of stars created, reactions / comments left, ...
+- (Grading system: depending on the level of the user input (number of stars created, reactions / comments left, ...)
 
-### Front :
+### Front
 
 - Interactive map : setting up a canvas (space navigation, consultation and creation of stars, comments, likes / ratings, refocusing)
 - Navbar : access to user interactions (authentication, profile) and to the site links (home page, page of instructions for using card interactions, about, contact)
+
 - User's profile : summarize and edit the registration informations (nickname, email, password), complete additional informations (avatar, first name, birth date, bio, ...) and consult user contributions (stars, comments, likes)
 - Ambiant sound theme system (disabled by default)
 
-## Functionnal specifications
+## Functional specifications
 
 ### Appearence
 
@@ -82,7 +83,7 @@ English.
 #### Global layout
 
 - Title/logotype.
-- Semi-transparent background picture 
+- Semi-transparent background picture
 - Buttons linked to :
   - Log in form
   - User manual
@@ -99,23 +100,25 @@ English.
 #### Profile
 
 Profile :
+
 - Fixed menu / profile submenu with tabs to access to other options
 - Profile with user informations + edit to open input
   - Submit button
 
-Preferences : 
-- Fixed menu / profile submenu with tabs to access to other options
-- User controls (toggle notifications, theme...) 
+Preferences :
 
-My stars : 
 - Fixed menu / profile submenu with tabs to access to other options
-- My created stars list 
+- User controls (toggle notifications, theme...)
 
+My stars :
+
+- Fixed menu / profile submenu with tabs to access to other options
+- My created stars list
 
 #### About
 
 - Fixed menu
-- Team presentation cards 
+- Team presentation cards
   - Risitas picture
   - Name / Nickname
   - Role
@@ -128,7 +131,7 @@ My stars :
 - Video animation ? OR
 - Text only with screenshots
 
-#### Legal notice :
+#### Legal notice
 
 - Fixed menu
 - RGPD
@@ -151,7 +154,7 @@ Compatibility with the latest versions of browsers (Chrome, Firefox and Edge).
 
 The application will be designed via:
 
-**Front end**
+##### Front end
 
 - CSS 3 - integration
 - React 16.2 - App administration.
@@ -159,7 +162,7 @@ The application will be designed via:
 - react-sound : soundscape
 - p5.js/p5-react : design the map's canva
   
-**Back end**
+##### Back end
 
 - MySQL : stock datas.
 - PhpMyAdmin : database manager
@@ -170,9 +173,11 @@ The application will be designed via:
 
 Fans and lovers of astronomy, all ages.
 
-### Future developments
+### Future developments : V2 | V3
 
-*About interactive map*  
+#### About interactive map
+
+----------------
 
     - zoom on the map
     - search bar to search one star
@@ -183,7 +188,9 @@ Fans and lovers of astronomy, all ages.
     - Add stars to favorites.
     - Vote for stars.
 
-*About users*  
+#### About users
+
+----------------
 
     - Gamification: win a grade / an achievement 
     - Add a "preference" tag in the profile menu, to manage notifications.
@@ -193,16 +200,22 @@ Fans and lovers of astronomy, all ages.
     - receive a notification when a new comment / vote is added on a user's star. 
     - Contributor of the Month
 
-*About stars creation*  
+#### About stars creation
+
+----------------
 
     - Create constellations while linking stars together
     - Create a GUI for stars and planets custom design
 
-*About admin back office*  
+#### About admin back office
+
+----------------
 
     - Add moderation options (stats, visits)
 
-*About additional functions*  
+#### About additional functions
+
+----------------
 
     - Add a blog about space, new Rajouter un blog en rapport à l'espace, new discoveries, recommended material, etc ...
     - Create a community forum on various topics about astronomy
@@ -215,6 +228,59 @@ Fans and lovers of astronomy, all ages.
 | [Available on Trello](https://trello.com/b/TPK9IEjv/user-stories)  | [Format JSON](https://trello.com/b/TPK9IEjv.json)  |
 | | |
 
+#### Home
+
+| As | I want | To (if needed) | Efforts |
+|--|--|--|--|
+| visitor | access to the home page | to access the read only map, log in / sign in option, and the other pages of the app | 3 |
+| visitor | access to the app pages | to consult about page, the chart and legal notice | 2 |
+| visitor | skip intro and choose not to see it anymore | to display home page directly without playing intro | 8 |
+| visitor | see and contact dev team | to say hello and have more infos about the dev team | 3 |
+
+#### Map
+
+| As | I want | To (if needed) | Efforts |
+|--|--|--|--|
+| visitor | access to the card in read only mode | to consult stars and explore the map | 21 |
+| visitor | move on the card in read only mode | to consult stars and explore the map | 13 |
+| visitor | consult a star | to see its informations and coordinates | 5 |
+| visitor | refocus the map on the sun | to find your way | 3 |
+| connected user | access to the full map | to access full functionalities | 13 |
+| connected user | add a new star | to create my own stars | 8 |
+| connected user | edit one of my stars | to change infos of my stars | 8 |
+| connected user | delete one of my stars | to delete my own stars | 5 |
+| connected user | comment a star | leave a comment on someone's star | 5 |
+| connected user | access to someone's complete profile | see other users informations | 5 |
+| connected user | vote for a star | - | 3 |
+| visitor | turn on/off the soundscape | improve UX | 3 |
+| visitor | access to the minimal profile (light version) of the other users | see others informations | 3 |
+
+#### Auth
+
+| As | I want | To (if needed) | Efforts |
+|--|--|--|--|
+| visitor | access to log in and/or sign in | to access to the whole fonctionnalities of the map | 8 |
+| visitor | be able to log out | close my session | 1 |
+| visitor | receive an email confirming my registration | to reminder me of my identifiers | 3 |
+
+#### Profile page
+
+| As | I want | To (if needed) | Efforts |
+|--|--|--|--|
+| visitor | access to my stars list | to consult my own stars and edit it | 3 |
+| visitor | access to my profile and edit it | to manage my informations and avatar | 5 |
+
+#### Admin
+
+| As | I want | To (if needed) | Efforts |
+|--|--|--|--|
+| admin | access to all the functionnality of the other roles | - | 3 |
+| admin | access to the back office with all the functionnalities | to consult the list of all users and all stars | 8 |
+| admin | consult a full list of the users | to consult, moderate or ban users | 2 |
+| admin | add and edit forbidden words in the dictionnary | to manage forbidden words | ? |
+| admin | prohibit forbidden words in the forms | to prevent users from using forbidden words in the forms | 5 |
+| admin | definitely ban a user | moderate users | 3 |
+
 ### Routes
 
 #### Back
@@ -223,22 +289,21 @@ Fans and lovers of astronomy, all ages.
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | /login | GET / POST | SecurityController | login | api_login | 200 / 401 | connects a user |
 | /logout | GET | SecurityController | logout | api_logout | 200 / 401 | disconnects a user |
-| /stars | GET | StarController | getAll | api_stars_list | 200 / 404 | retrieves all the stars |
-| /stars/{:name} | GET | StarController | getOne | api_star | 200 / 404 | retrieves a particular star |
-| /stars | POST | StarController | create | api_create_star | 201 / 401 | creates a new star |
-| /stars/{:name} | PATCH | StarController | update | api_update_star | 200 / 401 | updates a user's star |
-| /stars/{:name} | DELETE | StarController | delete | api_delete_star | 204 / 401 | deletes a user's star |
-| /types | GET | TypeController | getAll | api_types_list | 200 / 404 | retrieves all the types of stars |
-| /types/{:id}/subtypes | GET | TypeController | getSubtypes | api_type_subtypes | 200 / 404 | retrieves all the type's subtypes |
+| /celestial-bodies | GET | CelestialBodyController | getAll | api_celestial_bodies_list | 200 / 404 | retrieves all the celestial bodies |
+| /celestial-bodies/{:slug} | GET | CelestialBodyController | getOne | api_celestial_body | 200 / 404 | retrieves a particular celestial body |
+| /celestial-bodies | POST | CelestialBodyController | create | api_create_celestial_body | 201 / 401 | creates a new celestial body |
+| /celestial-bodies/{:slug} | PATCH | CelestialBodyController | update | api_update_celestial_body | 200 / 401 | updates a user's celestial body |
+| /celestial-bodies/{:slug} | DELETE | CelestialBodyController | delete | api_delete_celestial_body | 204 / 401 | deletes a user's celestial body |
+| /properties | GET | PropertyController | getAll | api_properties_list | 200 / 404 | retrieves all the properties |
 | /users | GET | UserController | getAll | api_users_list | 200 / 404 | retrieves all users |
-| /users/{:nickname} | GET | UserController | getOne | api_user | 200 / 404 | retrieves a particular user |
+| /users/{:slug} | GET | UserController | getOne | api_user | 200 / 404 | retrieves a particular user |
 | /users | POST | UserController | create | api_create_user | 201 / 401 | creates a new user |
-| /users/{:nickname} | PATCH | UserController | update | api_update_user | 200 / 401 | updates a  user |
-| /users/{:nickname} | DELETE | UserController | delete | api_delete_user | 204 / 401 | deletes a user |
-| /users/{:nickname}/stars | GET | UserController | getStars | api_user_stars | 200 / 404 | retrieves all user's stars |
+| /users/{:slug} | PATCH | UserController | update | api_update_user | 200 / 401 | updates a  user |
+| /users/{:slug} | DELETE | UserController | delete | api_delete_user | 204 / 401 | deletes a user |
+| /users/{:slug}/celestial-bodies | GET | UserController | getCelestialBodies | api_user_celestial_bodies | 200 / 404 | retrieves all user's celestialbodies |
 | /comments | GET | CommentController | getAll | api_comments_list | 200 / 404 | retrieves all comments |
 | /comments/{:id} | GET | CommentController | getOne | api_comment | 200 / 404 | retrieves a particular comment |
-| /comments | POST | CommentController | create | api_create_comment | 201 / 401 | adds a comment on a star |
+| /comments | POST | CommentController | create | api_create_comment | 201 / 401 | adds a comment on a celestial_body |
 | /comments/{:id} | PATCH | CommentController | update | api_update_comment | 200 / 401 | updates a user's comment |
 | /comments/{:id} | DELETE | CommentController | delete | api_delete_comment | 204 / 401 | deletes a user's comment |
 | /admin/users | PATCH | AdminController | toggleUserStatus | api_toggle_user | 200 / 401 | bans or unbans a user |
@@ -250,12 +315,12 @@ Fans and lovers of astronomy, all ages.
 | /home | None | Homepage with all the available links | 
 | /login | api_login | login modal |  
 | /signin | api_create_user | signin modal |   
-| /space | api_stars_list,  api_user, api_create_star, api_types_list, api_type_subtypes, api_star, api_update_star, api_delete_star | Our interactive map where all the stars are loaded + actions available (add, update, delete stars) |   
+| /space | api_celestial_bodies_list,  api_user, api_create_celestial_body, api_properties_list, api_celestial_body, api_update_celestial_body, api_delete_celestial_body | Our interactive map where all the celestial bodies are loaded + actions available (add, update, delete celestial bodies) |   
 | /profile | api_update_user, api_user | Global informations about the user |  
-| /profile/stars | api_user, api_user_stars  | List of all the stars the user created |  
+| /profile/celestial-bodies | api_user, api_user_celestial_bodies  | List of all the celestial bodies the user created |  
 | /admin | None | Admin panel |  
 | /admin/users | api_users, api_delete_user, api_update_user | Panel to moderate users (update or delete an user) |  
-| /admin/stars | api_stars_list, api_delete_star, api_update_star  | Panel to moderate stars |  
+| /admin/celestial-bodies | api_celestial_bodies_list, api_delete_celestial_body, api_update_celestial_body  | Panel to moderate celestial-bodies |  
 | /about | None | Where the contact form and the dev presentation are |  
-| /user-manual | None | The User's How To : Navigate on the map, add, update or delete a star, check a star... |  
+| /user-manual | None | The User's How To : Navigate on the map, add, update or delete a celestial_body, check a celestial_body... |  
 | /legal-notice | None | Legal chart of the website |
