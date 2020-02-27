@@ -19,7 +19,7 @@ Mettre à disposition une application web collaborative au service de la communa
 - API : base de données, sécurité, routes, gestion et CRUD (ajout, affichage, édition et suppression)
 - Interface d'administration : gestion et modération des données et des utilisateurs
 - Dictionnaire des mots interdits
-- (Système de grades : en fonction du degré de contribution des utilisateurs (nombre d'astres créés, de réactions / commentaires laissés, ...))
+- Système de grades : en fonction du degré de contribution des utilisateurs (nombre d'astres créés, de réactions / commentaires laissés, ...)
 
 ### Front :
 
@@ -220,7 +220,7 @@ Les fans comme les amateurs d'astronomie, tout âge confondu.
 
 | URL | HTTP Method | Controller | Method | Name | Response | Comment
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| /login | POST | SecurityController | login | api_login | 200 / 401 | connects a user |
+| /login | GET / POST | SecurityController | login | api_login | 200 / 401 | connects a user |
 | /logout | GET | SecurityController | logout | api_logout | 200 / 401 | disconnects a user |
 | /stars | GET | StarController | getAll | api_stars_list | 200 / 404 | retrieves all the stars |
 | /stars/{:name} | GET | StarController | getOne | api_star | 200 / 404 | retrieves a particular star |

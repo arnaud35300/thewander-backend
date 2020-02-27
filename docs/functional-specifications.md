@@ -19,13 +19,12 @@ Provide a collaborative web app for the astronomy fans community, as well as new
 - API : database, security, routes, administration and CRUD (Create, Read, Update, Delete)
 - Admin Interface : administration and moderation of datas and users
 - Forbidden words dictionnary
-- (Grading system: depending on the level of the user input (number of stars created, reactions / comments left, ...)
+- Grading system: depending on the level of the user input (number of stars created, reactions / comments left, ...
 
 ### Front :
 
 - Interactive map : setting up a canvas (space navigation, consultation and creation of stars, comments, likes / ratings, refocusing)
 - Navbar : access to user interactions (authentication, profile) and to the site links (home page, page of instructions for using card interactions, about, contact)
-
 - User's profile : summarize and edit the registration informations (nickname, email, password), complete additional informations (avatar, first name, birth date, bio, ...) and consult user contributions (stars, comments, likes)
 - Ambiant sound theme system (disabled by default)
 
@@ -222,7 +221,7 @@ Fans and lovers of astronomy, all ages.
 
 | URL | HTTP Method | Controller | Method | Name | Response | Comment
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| /login | POST | SecurityController | login | api_login | 200 / 401 | connects a user |
+| /login | GET / POST | SecurityController | login | api_login | 200 / 401 | connects a user |
 | /logout | GET | SecurityController | logout | api_logout | 200 / 401 | disconnects a user |
 | /stars | GET | StarController | getAll | api_stars_list | 200 / 404 | retrieves all the stars |
 | /stars/{:name} | GET | StarController | getOne | api_star | 200 / 404 | retrieves a particular star |
