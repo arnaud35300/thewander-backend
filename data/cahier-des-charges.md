@@ -227,12 +227,14 @@ Les fans comme les amateurs d'astronomie, tout âge confondu.
 | /stars | POST | StarController | create | api_create_star | 201 / 401 | creates a new star |
 | /stars/{:name} | PATCH | StarController | update | api_update_star | 200 / 401 | updates a user's star |
 | /stars/{:name} | DELETE | StarController | delete | api_delete_star | 204 / 401 | deletes a user's star |
+| /types | GET | TypeController | getAll | api_types_list | 200 / 404 | retrieves all the types of stars |
+| /types/{:id}/subtypes | GET | TypeController | getSubtypes | api_type_subtypes | 200 / 404 | retrieves all the type's subtypes |
 | /users | GET | UserController | getAll | api_users_list | 200 / 404 | retrieves all users |
 | /users/{:nickname} | GET | UserController | getOne | api_user | 200 / 404 | retrieves a particular user |
 | /users | POST | UserController | create | api_create_user | 201 / 401 | creates a new user |
 | /users/{:nickname} | PATCH | UserController | update | api_update_user | 200 / 401 | updates a  user |
 | /users/{:nickname} | DELETE | UserController | delete | api_delete_user | 204 / 401 | deletes a user |
-| /users/{:nickname}/stars | GET | UserController | getUserStars | api_user_stars | 200 / 404 | retrieves all user's stars |
+| /users/{:nickname}/stars | GET | UserController | getStars | api_user_stars | 200 / 404 | retrieves all user's stars |
 | /comments | GET | CommentController | getAll | api_comments_list | 200 / 404 | retrieves all comments |
 | /comments/{:id} | GET | CommentController | getOne | api_comment | 200 / 404 | retrieves a particular comment |
 | /comments | POST | CommentController | create | api_create_comment | 201 / 401 | adds a comment on a star |
@@ -247,7 +249,7 @@ Les fans comme les amateurs d'astronomie, tout âge confondu.
 | /home | None | Homepage with all the available links | 
 | /login | api_login | login modal |  
 | /signin | api_create_user | signin modal |   
-| /space | api_stars_list,  api_user, api_create_star, api_star, api_update_star, api_delete_star | Our interactive map where all the stars are loaded + actions available (add, update, delete stars) |   
+| /space | api_stars_list,  api_user, api_create_star, api_types_list, api_type_subtypes, api_star, api_update_star, api_delete_star | Our interactive map where all the stars are loaded + actions available (add, update, delete stars) |   
 | /profile | api_update_user, api_user | Global informations about the user |  
 | /profile/stars | api_user, api_user_stars  | List of all the stars the user created |  
 | /admin | None | Admin panel |  

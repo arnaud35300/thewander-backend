@@ -27,7 +27,7 @@
 |  password  | VARCHAR(30)  |                    NOT NULL                     |        The user's password         |
 |    role    |    ENTITY    |                    NOT NULL                     |          The user's role           |
 |   avatar   | VARCHAR(50)  |                      NULL                       |         The user's avatar          |
-|    rank    |    ENTITY    |                      NULL                       |          The user's rank           |
+|    rank    |    ENTITY    |                    NOT NULL                     |          The user's rank           |
 | firstname  | VARCHAR(50)  |                      NULL                       |        The user's firstname        |
 |  birthday  |   DATETIME   |                      NULL                       |       The user's birth date        |
 |    bio     |     TEXT     |                      NULL                       |       The user's description       |

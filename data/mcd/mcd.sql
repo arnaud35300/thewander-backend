@@ -1,0 +1,69 @@
+CREATE DATABASE IF NOT EXISTS `TYPES` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `TYPES`;
+
+/*
+CREATE TABLE `ROLE` (
+  `name` VARCHAR(42),
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
+
+CREATE TABLE `COMMENT` (
+  `body` VARCHAR(42),
+  `name` VARCHAR(42),
+  PRIMARY KEY (`body`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `USER` (
+  `nickname` VARCHAR(42),
+  `slug` VARCHAR(42),
+  `email` VARCHAR(42),
+  `password` VARCHAR(42),
+  `avatar` VARCHAR(42),
+  `firstname` VARCHAR(42),
+  `birthday` VARCHAR(42),
+  `bio` VARCHAR(42),
+  `status` VARCHAR(42),
+  `name` VARCHAR(42),
+  `name_1` VARCHAR(42),
+  PRIMARY KEY (`nickname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `STAR` (
+  `name` VARCHAR(42),
+  `slug` VARCHAR(42),
+  `picture` VARCHAR(42),
+  `nb_stars` VARCHAR(42),
+  `description` VARCHAR(42),
+  `name_1` VARCHAR(42),
+  `name_2` VARCHAR(42),
+  `nickname` VARCHAR(42),
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `SUBTYPE` (
+  `name` VARCHAR(42),
+  `name_1` VARCHAR(42),
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `RANK` (
+  `name` VARCHAR(42),
+  `badge` VARCHAR(42),
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*
+CREATE TABLE `TYPE` (
+  `name` VARCHAR(42),
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
+
+ALTER TABLE `COMMENT` ADD FOREIGN KEY (`name`) REFERENCES `STAR` (`name`);
+ALTER TABLE `USER` ADD FOREIGN KEY (`name_1`) REFERENCES `RANK` (`name`);
+-- ALTER TABLE `USER` ADD FOREIGN KEY (`name`) REFERENCES `ROLE` (`name`);
+ALTER TABLE `STAR` ADD FOREIGN KEY (`nickname`) REFERENCES `USER` (`nickname`);
+ALTER TABLE `STAR` ADD FOREIGN KEY (`name_2`) REFERENCES `SUBTYPE` (`name`);
+-- ALTER TABLE `STAR` ADD FOREIGN KEY (`name_1`) REFERENCES `TYPE` (`name`);
+-- ALTER TABLE `SUBTYPE` ADD FOREIGN KEY (`name_1`) REFERENCES `TYPE` (`name`);
