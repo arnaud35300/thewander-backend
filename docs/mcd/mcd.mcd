@@ -9,5 +9,5 @@ PROPERTY: name, unit, value
 
 ROLE: name
 COMMENTS, 0N USER, 0N CELESTIAL_BODY: body
-CELESTIAL_BODY: name, slug, picture, nb_stars, description
+CELESTIAL_BODY: name, slug, x_position, y_position, picture, nb_stars, description
 HAS, 1N CELESTIAL_BODY, 0N PROPERTY

@@ -5,7 +5,7 @@ GETS, 11 USER, 0N ROLE
 ROLE: id, name, created_at, updated_at
 
 HAS, 1N CELESTIAL_BODY, 11 CELESTIAL_BODY_PROPERTY
-CELESTIAL_BODY: id, name, slug, user_id, picture, nb_stars, description, created_at, updated_at
+CELESTIAL_BODY: id, name, slug, x_position, y_position, user_id, picture, nb_stars, description, created_at, updated_at
 CREATES, 11 CELESTIAL_BODY, 0N USER
 USER: id, nickname, slug, email, password, role_id, avatar, rank_id, firstname, birthday, bio, status, created_at, updated_at
 POSSESSES, 11 USER, 0N RANK
