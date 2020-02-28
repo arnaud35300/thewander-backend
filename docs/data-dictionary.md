@@ -7,6 +7,8 @@
 |     id      |     INT     | PRIMARY KEY, NOT NULL, UNSIGNED, AUTO_INCREMENT |              The celestial body's ID              |
 |    name     | VARCHAR(50) |                    NOT NULL                     |             The celestial body's name             |
 |    slug     | VARCHAR(50) |                    NOT NULL                     |             The celestial body's slug             |
+|    y_position     |   INT    |                    NULL                     |           The celestial body's y position            |
+|    x_position     |   INT    |                    NULL                     |           The celestial body's x position            |
 |    user     |   ENTITY    |                    NOT NULL                     |           The celestial body's creator            |
 |   picture   | VARCHAR(50) |                      NULL                       |           The celestial body's picture            |
 |  nb_stars   |     INT     |                      NULL                       | The number of people who liked the celestial body |
