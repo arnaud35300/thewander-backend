@@ -18,7 +18,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CelestialBodyController extends AbstractController
 {
     /**
-     * @Route(name="celestial_bodies_list", methods={"GET"})
+     *? Retrieves all the celestial bodies.
+     * 
+     * @param object $celestialBodyRepository The CelestialBody repository.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route(name="celestial_bodies_list", methods={"GET"})
      */
     public function getAll(CelestialBodyRepository $celestialBodyRepository): JsonResponse
     {
@@ -33,12 +39,18 @@ class CelestialBodyController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="celestial_body", methods={"GET"})
+     *? Retrieves a particular celestial body.
+     * 
+     * @param object $celestialBody The CelestialBody entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}", name="celestial_body", methods={"GET"})
      */
     public function getOne(CelestialBody $celestialBody = null): JsonResponse
     {
         if ($celestialBody === null) {
-            return new JsonResponse(
+            return $this->json(
                 ['error' => 'celestial body not found'],
                 Response::HTTP_NOT_FOUND
             );
@@ -53,21 +65,29 @@ class CelestialBodyController extends AbstractController
     }
 
     /**
-     * @Route(name="create_celestial_body", methods={"POST"})
+     *? Creates a new celestial body.
+     * 
+     * @param object $request The HttpFoundation Request class.
+     * @param object $serializer The Serializer component.
+     * @param object $validator The Validator component.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route(name="create_celestial_body", methods={"POST"})
      */
     public function create(
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator
-    ): JsonResponse
-    {
+    ): JsonResponse {
+        // TODO : authentication requirements
+
         $content = $request->getContent();
 
         if (json_decode($content) === null) {
             return $this->json(
                 ['error' => 'invalid data format'],
-                Response::HTTP_UNAUTHORIZED,
-                array()
+                Response::HTTP_UNAUTHORIZED
             );
         }
 
@@ -92,14 +112,14 @@ class CelestialBodyController extends AbstractController
 
             return $this->json(
                 $errorsList,
-                Response::HTTP_UNPROCESSABLE_ENTITY,
-                array()
+                Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->persist($newCelestialBody);
         $manager->flush();
@@ -109,26 +129,34 @@ class CelestialBodyController extends AbstractController
                 'message' => 'celestial body created',
                 'content' => $newCelestialBody
             ],
-            Response::HTTP_CREATED,
-            array()
+            Response::HTTP_CREATED
         );
     }
 
     /**
-     * @Route("/{slug}", name="update_celestial_body", methods={"PATCH"})
+     *? Updates a particular celestial body.
+     * 
+     * @param object $celestialBody The CelestialBody entity.
+     * @param object $request The HttpFoundation Request class.
+     * @param object $serializer The Serializer component.
+     * @param object $validator The Validator component.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}", name="update_celestial_body", methods={"PATCH"})
      */
     public function update(
         CelestialBody $celestialBody = null,
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator
-    ): JsonResponse
-    {
+    ): JsonResponse {
+        // TODO : authentication requirements
+
         if ($celestialBody === null) {
             return $this->json(
                 ['error' => 'this celestial body does not exist'],
-                Response::HTTP_NOT_FOUND,
-                array()
+                Response::HTTP_NOT_FOUND
             );
         }
 
@@ -137,8 +165,7 @@ class CelestialBodyController extends AbstractController
         if (json_decode($content) === null) {
             return $this->json(
                 ['error' => 'invalid data format'],
-                Response::HTTP_UNAUTHORIZED,
-                array()
+                Response::HTTP_UNAUTHORIZED
             );
         }
 
@@ -163,8 +190,7 @@ class CelestialBodyController extends AbstractController
 
             return $this->json(
                 $errorsList,
-                Response::HTTP_UNPROCESSABLE_ENTITY,
-                array()
+                Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
@@ -180,16 +206,42 @@ class CelestialBodyController extends AbstractController
                 'message' => 'celestial body updated',
                 'content' => $updatedCelestialBody
             ],
-            Response::HTTP_OK,
-            array()
+            Response::HTTP_OK
         );
     }
 
     /**
-     * @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
+     *? Deletes a particular celestial body.
+     * 
+     * @param object $celestialBody The CelestialBody entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
      */
-    public function delete()
+    public function delete(CelestialBody $celestialBody): JsonResponse
     {
-        # Code...
+        // TODO : authentication requirements
+
+        if ($celestialBody === null) {
+            return $this->json(
+                ['error' => 'this celestial body does not exist'],
+                Response::HTTP_NOT_FOUND,
+                array()
+            );
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($celestialBody);
+        $manager->flush();
+
+        return $this->json(
+            ['message' => 'celestial body deleted'],
+            Response::HTTP_NO_CONTENT
+        );
     }
 }
