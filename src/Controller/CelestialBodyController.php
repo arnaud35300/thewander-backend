@@ -103,7 +103,7 @@ class CelestialBodyController extends AbstractController
         return $this->json(
             [
                 'message' => 'celestial body created',
-                'data' => $celestialBody
+                'content' => $celestialBody
             ],
             Response::HTTP_OK,
             array()
