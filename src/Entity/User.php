@@ -17,30 +17,38 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "users_list", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "user_create", "user_updated", "users_list", "user"})
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 30,
+     *      minMessage="Your nickname must be at least {{ limit }} characters long",
+     *      maxMessage = "Your nickname cannot be longer than {{ limit }} characters"
+     * )
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=30)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "users_list", "user_updated", "user"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user_create", "user_updated"})
      */
     private $email;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"user_create"})
      */
     private $password;
 
@@ -52,54 +60,62 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "user_updated", "users_list", "user"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"user_updated", "user"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"user_updated", "user"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"user_updated", "user"})
      */
     private $bio;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"user"})
      */
     private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CelestialBody", mappedBy="user", orphanRemoval=true)
+     * @Groups("user_celestial_body")
      */
     private $celestialBodies;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
+     * @Groups({"user"})
      */
     private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "user"})
      */
     private $rank;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user_updated", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user_updated", "user"})
      */
     private $updatedAt;
 

@@ -152,6 +152,7 @@ class CelestialBodyController extends AbstractController
         ValidatorInterface $validator
     ): JsonResponse {
         // TODO : authentication requirements
+        // ! Note : properties ID JSON
 
         if ($celestialBody === null) {
             return $this->json(
@@ -219,15 +220,14 @@ class CelestialBodyController extends AbstractController
      * 
      ** @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
      */
-    public function delete(CelestialBody $celestialBody): JsonResponse
+    public function delete(CelestialBody $celestialBody = null): JsonResponse
     {
         // TODO : authentication requirements
 
         if ($celestialBody === null) {
             return $this->json(
                 ['error' => 'this celestial body does not exist'],
-                Response::HTTP_NOT_FOUND,
-                array()
+                Response::HTTP_NOT_FOUND
             );
         }
 
