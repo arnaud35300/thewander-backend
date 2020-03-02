@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
@@ -20,16 +21,19 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"user_celestial_body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"user_celestial_body"})
      */
     private $unit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({"user_celestial_body"})
      */
     private $value;
 
@@ -94,7 +98,7 @@ class Property
         return $this;
     }
 
-    
+
     /**
      * @return Collection|CelestialBody[]
      */
@@ -102,48 +106,48 @@ class Property
     {
         return $this->celestialBodies;
     }
-    
+
     public function addCelestialBody(CelestialBody $celestialBody): self
     {
         if (!$this->celestialBodies->contains($celestialBody)) {
             $this->celestialBodies[] = $celestialBody;
             $celestialBody->addProperty($this);
         }
-        
+
         return $this;
     }
-    
+
     public function removeCelestialBody(CelestialBody $celestialBody): self
     {
         if ($this->celestialBodies->contains($celestialBody)) {
             $this->celestialBodies->removeElement($celestialBody);
             $celestialBody->removeProperty($this);
         }
-        
+
         return $this;
     }
-    
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
-    
+
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-    
+
         return $this;
     }
-    
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
-    
+
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-    
+
         return $this;
     }
 }
