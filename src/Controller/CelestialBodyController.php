@@ -30,4 +30,24 @@ class CelestialBodyController extends AbstractController
             array()
         ]);
     }
+
+    /**
+     * @Route("/{slug}", name="celestial_body", methods={"GET"})
+     */
+    public function getOne(CelestialBody $celestialBody = null)
+    {
+        if ($celestialBody === null) {
+            return new JsonResponse(
+                ['error' => 'celestial body not found'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        return $this->json([
+            $celestialBody,
+            Response::HTTP_OK,
+            array(),
+            'groups' => 'celestial-body'
+        ]);
+    }
 }
