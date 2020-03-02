@@ -23,3 +23,9 @@
 **Matinée :** prospection sur les API, lecture de documentation (symfonydocs, StackOverflow) et réflexions sur la carte interactive avec le front.
 
 **Après-midi :** installation du projet Symfony Skeleton, mise en place des dépendances nécessaires, configurations transversales de la machine (notamment pour l'utilisation du serveur local de Symfony).
+
+## 02/03/2020 - Jour 5
+
+**Matinée :** création de la base de données et des entités conformément au MLD et au dictionnaire de données et développement du contrôleur des astres suivant les normes définies dans le chapitre des routes du cahier des charges.
+
+**Après-midi :** continuation du contrôleur des astres, prospection et documentation sur Internet vis-à-vis du CRUD dans le cadre d'une API et soulèvement de problématiques diverses et variées relatives aux diverses méthodes du contrôleur.
