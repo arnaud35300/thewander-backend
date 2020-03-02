@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
@@ -15,62 +16,74 @@ class CelestialBody
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"celestial-body"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"celestial-body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"celestial-body"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-body"})
      */
     private $xPosition;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-body"})
      */
     private $yPosition;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-body"})
      */
     private $nbStars;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"celestial-body"})
      */
     private $description;
     
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
+     * @Groups({"celestial-body"})
      */
     private $properties;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="celestialBodies")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"celestial-body"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="celestialBody", orphanRemoval=true)
+     * @Groups({"celestial-body"})
      */
     private $comments;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"celestial-body"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"celestial-body"})
      */
     private $updatedAt;
 
