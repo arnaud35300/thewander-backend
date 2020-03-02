@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
@@ -15,62 +16,80 @@ class CelestialBody
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"celestial-body", "user_celestial_body"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"celestial-bodies", "celestial-body", "user_celestial_body"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
      */
     private $xPosition;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
      */
     private $yPosition;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
+     */
+    private $picture;
+
+    /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"celestial-body", "user_celestial_body"})
      */
     private $nbStars;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
+     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user_celestial_body"})
      */
     private $properties;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="celestialBodies")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"celestial-body"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="celestialBody", orphanRemoval=true)
+     * @Groups({"celestial-body"})
      */
     private $comments;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"celestial-body", "user_celestial_body"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"celestial-body", "user_celestial_body"})
      */
     private $updatedAt;
 
@@ -129,6 +148,18 @@ class CelestialBody
     public function setYPosition(?int $yPosition): self
     {
         $this->yPosition = $yPosition;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
