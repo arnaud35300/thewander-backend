@@ -22,7 +22,7 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $name;
 
@@ -34,15 +34,21 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $xPosition;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $yPosition;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"celestial-body", "celestial-body-creation"})
+     */
+    private $picture;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -52,13 +58,13 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $description;
-    
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $properties;
 
@@ -142,6 +148,18 @@ class CelestialBody
     public function setYPosition(?int $yPosition): self
     {
         $this->yPosition = $yPosition;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
