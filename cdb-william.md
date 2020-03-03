@@ -29,3 +29,9 @@
 **Matinée :** création de la base de données et des entités conformément au MLD et au dictionnaire de données et développement du contrôleur des astres suivant les normes définies dans le chapitre des routes du cahier des charges.
 
 **Après-midi :** continuation du contrôleur des astres, prospection et documentation sur Internet vis-à-vis du CRUD dans le cadre d'une API et soulèvement de problématiques diverses et variées relatives aux diverses méthodes du contrôleur.
+
+## 03/03/2020 - Jour 6
+
+**Matinée :** rétrospective sur le Sprint 0.
+
+**Après-midi :** prospection et documentation sur les connexions entre React et une API Symfony via le bundle JWT et l'utilisation de ce dernier, puis revue du code dans le cadre de la vérification de la convention de code.

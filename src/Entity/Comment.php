@@ -14,19 +14,20 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"user"})
+     * @Groups({"celestial-body", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"user"})
+     * @Groups({"celestial-body", "user"})
      */
     private $body;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"celestial-body"})
      */
     private $user;
 
@@ -38,13 +39,13 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user"})
+     * @Groups({"celestial-body", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user"})
+     * @Groups({"celestial-body", "user"})
      */
     private $updatedAt;
 

@@ -19,35 +19,34 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     /**
-     * Retrieves all users.
+     *? Retrieves all users.
      *
-     * @param UserRepository $userRepository
+     * @param UserRepository $userRepository The User repository.
      * 
      * @return JsonResponse
      *
-     *  @Route(name="users_list", methods={"GET"})
+     ** @Route(name="users_list", methods={"GET"})
      */
     public function getAll(UserRepository $userRepository): JsonResponse
     {
-        // TODO retrieve all users but only with status 1 -> go querycustoms
         $users = $userRepository->findAll();
 
         return $this->json(
             $users,
             Response::HTTP_OK,
             array(),
-            ['groups' => 'users_list']
+            ['groups' => 'users-list']
         );
     }
 
     /**
-     * Retrieves a partical user.
+     *? Retrieves a partical user.
      *
      * @param User $user
      * 
      * @return JsonResponse
      * 
-     * @Route("/{slug}", name="user", methods={"GET"})
+     ** @Route("/{slug}", name="user", methods={"GET"})
      */
     public function getOne(User $user = null): JsonResponse
     {
@@ -67,15 +66,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * Create a new user.
+     *? Create a new user.
      *
      * @param Request $request
      * @param SerializerInterface $serializer
      * @param ValidatorInterface $validator
      * @param UserPasswordEncoderInterface $encoder
+     * 
      * @return JsonResponse
      * 
-     * @Route(name="create_user", methods={"POST"})
+     ** @Route(name="create_user", methods={"POST"})
      */
     public function create(
         Request $request,
@@ -84,7 +84,7 @@ class UserController extends AbstractController
         UserPasswordEncoderInterface $encoder
     ) {
 
-        //TODO make voters
+        // TODO : authentication requirements
 
         $content = $request->getContent();
 
@@ -99,7 +99,7 @@ class UserController extends AbstractController
             $content,
             User::class,
             'json',
-            ['groups' => 'user_create']
+            ['groups' => 'user-create']
         );
 
         $errors = $validator->validate($user);
@@ -109,8 +109,8 @@ class UserController extends AbstractController
 
             foreach ($errors as $error) {
                 $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
+                    'field' => $error->getPropertyPath(),
+                    'message' => $error->getMessage()
                 ];
             }
 
@@ -140,7 +140,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Update a user.
+     *? Update a user.
      *
      * @param Request $request
      * @param SerializerInterface $serializer
@@ -150,7 +150,7 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     * @Route("/{slug}", name="update_user", methods={"PATCH"})
+     ** @Route("/{slug}", name="update_user", methods={"PATCH"})
      */
     public function update(
         Request $request,
@@ -160,7 +160,7 @@ class UserController extends AbstractController
         User $user = null
     ) {
 
-        //TODO make voters
+        // TODO : authentication requirements
 
         if (!$user) {
             return $this->json(
@@ -203,8 +203,8 @@ class UserController extends AbstractController
 
             foreach ($errors as $error) {
                 $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
+                    'field' => $error->getPropertyPath(),
+                    'message' => $error->getMessage()
                 ];
             }
 
@@ -224,12 +224,12 @@ class UserController extends AbstractController
         $user = $serializer->serialize(
             $user,
             'json',
-            ['groups' => 'user_updated']
+            ['groups' => 'user-updated']
         );
 
         return $this->json(
             [
-                'message' => 'user updated',
+                'message' => 'user updated.',
                 'content' => $user
             ],
             Response::HTTP_OK
@@ -237,13 +237,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * Deletes a user.
+     *? Deletes a user.
      * 
      * @param User $user The CelestialBody entity.
      * 
      * @return JsonResponse
      * 
-     * @Route("/{slug}", name="delete_user", methods={"DELETE"})
+     ** @Route("/{slug}", name="delete_user", methods={"DELETE"})
      */
     public function delete(User $user = null): JsonResponse
     {
@@ -264,19 +264,19 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'user deleted'],
+            ['message' => 'user deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
 
     /**
-     * retrieves all user's celestialbodies
+     *? Retrieves all user's celestialbodies.
      *
      * @param User $user
      * 
      * @return JsonResponse
      * 
-     * @Route("/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
+     ** @Route("/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
      */
     public function getCelestialBodies(User $user = null): JsonResponse
     {
@@ -291,7 +291,7 @@ class UserController extends AbstractController
             $user,
             Response::HTTP_OK,
             array(),
-            ['groups' => 'user_celestial_body']
+            ['groups' => 'user-celestial-body']
         );
 
     }

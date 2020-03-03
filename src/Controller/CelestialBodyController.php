@@ -20,7 +20,7 @@ class CelestialBodyController extends AbstractController
     /**
      *? Retrieves all the celestial bodies.
      * 
-     * @param object $celestialBodyRepository The CelestialBody repository.
+     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
      * 
      * @return JsonResponse
      * 
@@ -41,7 +41,7 @@ class CelestialBodyController extends AbstractController
     /**
      *? Retrieves a particular celestial body.
      * 
-     * @param object $celestialBody The CelestialBody entity.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
      * 
@@ -67,9 +67,9 @@ class CelestialBodyController extends AbstractController
     /**
      *? Creates a new celestial body.
      * 
-     * @param object $request The HttpFoundation Request class.
-     * @param object $serializer The Serializer component.
-     * @param object $validator The Validator component.
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param ValidatorInterface $validator The Validator component.
      * 
      * @return JsonResponse
      * 
@@ -136,10 +136,10 @@ class CelestialBodyController extends AbstractController
     /**
      *? Updates a particular celestial body.
      * 
-     * @param object $celestialBody The CelestialBody entity.
-     * @param object $request The HttpFoundation Request class.
-     * @param object $serializer The Serializer component.
-     * @param object $validator The Validator component.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param ValidatorInterface $validator The Validator component.
      * 
      * @return JsonResponse
      * 
@@ -214,7 +214,7 @@ class CelestialBodyController extends AbstractController
     /**
      *? Deletes a particular celestial body.
      * 
-     * @param object $celestialBody The CelestialBody entity.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
      * 
