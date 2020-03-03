@@ -99,7 +99,7 @@ class UserController extends AbstractController
             $content,
             User::class,
             'json',
-            ['groups' => 'user-create']
+            ['groups' => 'user-creation']
         );
 
         $errors = $validator->validate($user);
