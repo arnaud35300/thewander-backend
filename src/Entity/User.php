@@ -19,13 +19,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body", "users_list", "user"})
+     * @Groups({"celestial-body", "users", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=30, unique=true)
-     * @Groups({"celestial-body", "user_create", "user_updated", "users_list", "user"})
+     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user"})
      * @Assert\Length(
      *      min = 2,
      *      max = 30,
@@ -37,20 +37,20 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=30)
-     * @Groups({"celestial-body", "users_list", "user_updated", "user"})
+     * @Groups({"celestial-body", "users", "user-update", "user"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user_create", "user_updated"})
+     * @Groups({"user-creation", "user-update"})
      */
     private $email;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user_create"})
+     * @Groups({"user-creation"})
      */
     private $password;
 
@@ -62,25 +62,25 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"celestial-body", "user_updated", "users_list", "user"})
+     * @Groups({"celestial-body", "user-update", "users", "user"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"user_updated", "user"})
+     * @Groups({"user-update", "user"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"user_updated", "user"})
+     * @Groups({"user-update", "user"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"user_updated", "user"})
+     * @Groups({"user-update", "user"})
      */
     private $bio;
 
@@ -92,7 +92,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CelestialBody", mappedBy="user", orphanRemoval=true)
-     * @Groups("user_celestial_body")
+     * @Groups("user-celestial-body")
      */
     private $celestialBodies;
 
@@ -111,13 +111,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user_updated", "user"})
+     * @Groups({"user-update", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user_updated", "user"})
+     * @Groups({"user-update", "user"})
      */
     private $updatedAt;
 

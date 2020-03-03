@@ -3,74 +3,67 @@
 namespace App\DataFixtures\Provider;
 
 class DataProvider {
-
-    private $lorem = 'In de nec et rogati nos in turpes ut enim amicitia Etenim spatio excusatio Etenim.';
-
-    private $ranks = ['astronaut'];
-
-    private $roles = ['ROLE_USER', 'ROLE_ADMIN'];
-
-    private $properties = ['star', 'planet'];
-
-    private $email = ['william@gmail.com', 'shirin@gmail.com', 'arnaud@gmail.com', 'alex@gmail.com'];
-
-    private $nickname = ['william', 'shirin', 'arnaud', 'alex'];
-
-    private $celestialBodies = ['sun', 'earth', 'mars', 'venus', 'uranus'];
+    const LOREM = 'In de nec et rogati nos in turpes ut enim amicitia Etenim spatio excusatio Etenim.';
+    const RANKS = ['astronaut'];
+    const ROLES = ['ROLE_USER', 'ROLE_ADMIN'];
+    const PROPERTIES = ['star', 'planet'];
+    const EMAIL = ['william@gmail.com', 'shirin@gmail.com', 'arnaud@gmail.com', 'alex@gmail.com'];
+    const NICKNAME = ['william', 'shirin', 'arnaud', 'alex'];
+    const CELESTIAL_BODIES = ['sun', 'earth', 'mars', 'venus', 'uranus'];
 
     /**
-     * Get the value of lorem
+     *? Retrieves the value of lorem.
      */ 
     public static function getLorem()
     {
-        return $this->lorem;
+        return self::LOREM;
     }
 
     /**
-     * Get the value of ranks
+     *? Retrieves the value of ranks.
      */ 
     public static function getRanks()
     {
-        return $this->ranks;
+        return self::RANKS;
     }
 
     /**
-     * Get the value of roles
+     *? Retrieves the value of roles.
      */ 
     public static function getRoles()
     {
-        return $this->roles;
+        return self::ROLES;
     }
 
     /**
-     * Get the value of properties
+     *? Retrieves the value of properties.
      */ 
     public static function getProperties()
     {
-        return $this->properties;
+        return self::PROPERTIES;
     }
 
     /**
-     * Get the value of email
+     *? Retrieves the value of email.
      */ 
     public static function getEmail()
     {
-        return $this->email;
+        return self::EMAIL;
     }
 
     /**
-     * Get the value of nickname
+     *? Retrieves the value of nickname.
      */ 
     public static function getNickname()
     {
-        return $this->nickname;
+        return self::NICKNAME;
     }
 
     /**
-     * Get the value of celestialBodies
+     *? Retrieves the value of celestialBodies.
      */ 
     public static function getCelestialBodies()
     {
-        return $this->celestialBodies;
+        return self::CELESTIAL_BODIES;
     }
 }

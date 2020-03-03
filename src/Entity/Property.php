@@ -21,19 +21,19 @@ class Property
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"user_celestial_body"})
+     * @Groups({"user-celestial-body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"user_celestial_body"})
+     * @Groups({"user-celestial-body"})
      */
     private $unit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"user_celestial_body"})
+     * @Groups({"user-celestial-body"})
      */
     private $value;
 
