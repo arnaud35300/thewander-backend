@@ -45,7 +45,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}", name="comment", methods={"GET"})
+     ** @Route("/{id}", name="comment", requirements={"id"="\d+"}, methods={"GET"})
      */
     public function getOne(Comment $comment = null): JsonResponse
     {
@@ -143,7 +143,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}", name="update_comment", methods={"PATCH"})
+     ** @Route("/{id}", name="update_comment", requirements={"id"="\d+"}, methods={"PATCH"})
      */
     public function update(
         Request $request,
@@ -223,7 +223,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}", name="delete_comment", methods={"DELETE"})
+     ** @Route("/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
      */
     public function delete(Comment $comment =  null): JsonResponse
     {

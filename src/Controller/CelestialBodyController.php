@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Property;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/celestial-bodies", name="api_")
@@ -91,6 +92,10 @@ class CelestialBodyController extends AbstractController
             );
         }
 
+        $data = json_decode($content);
+        $properties = $data->properties;
+
+
         $newCelestialBody = $serializer->deserialize(
             $content,
             CelestialBody::class,
@@ -105,8 +110,8 @@ class CelestialBodyController extends AbstractController
 
             foreach ($errors as $error) {
                 $errorsList[] = [
-                    'field' => $error->getPropertyPath(),
-                    'message' => $error->getMessage()
+                    'field'     => $error->getPropertyPath(),
+                    'message'   => $error->getMessage()
                 ];
             }
 
@@ -114,6 +119,14 @@ class CelestialBodyController extends AbstractController
                 $errorsList,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
+        }
+
+        foreach ($properties as $propertyId) {
+            $property = $this->getDoctrine->getRepository(Property::class)->find($propertyId);
+            
+            if ($property) {
+                $newCelestialBody->addProperty($property);
+            }            
         }
 
         $manager = $this
@@ -152,11 +165,10 @@ class CelestialBodyController extends AbstractController
         CelestialBody $celestialBody = null
     ): JsonResponse {
         // TODO : authentication requirements
-        // ! Note : properties ID JSON
 
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'this celestial body does not exist'],
+                ['error' => 'comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -170,42 +182,73 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        $updatedCelestialBody = $serializer->deserialize(
-            $content,
-            CelestialBody::class,
-            'json',
-            ['groups' => 'celestial-body-update']
-        );
+        $content = json_decode($content, true);
+        
+        $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
+        $slug = !empty($content['slug']) ? $content['slug'] : $celestialBody->getSlug();
+        $xPosition = !empty($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
+        $yPosition = !empty($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
+        $picture = !empty($content['picture']) ? $content['picture'] : $celestialBody->getPicture();
+        $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
+        $properties = $content->properties;
 
-        $errors = $validator->validate($updatedCelestialBody);
-
+        $celestialBody->setName($name);
+        $celestialBody->setSlug($slug);
+        $celestialBody->setXPosition($xPosition);
+        $celestialBody->setYPosition($yPosition);
+        $celestialBody->setPicture($picture);
+        $celestialBody->setDescription($description);
+        
+        $errors = $validator->validate($celestialBody);
+        
         if (count($errors) !== 0) {
             $errorsList = array();
-
+            
             foreach ($errors as $error) {
                 $errorsList[] = [
-                    'field' => $error->getPropertyPath(),
-                    'message' => $error->getMessage()
+                    'field'     => $error->getPropertyPath(),
+                    'message'   => $error->getMessage()
                 ];
             }
-
+            
             return $this->json(
                 $errorsList,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+        
+        $currentProperties = $celestialBody->getProperties();
+        
+        foreach ($currentProperties as $currentProperty) {
+            $celestialBody->removeProperty($currentProperty);
+        }
 
+        foreach ($properties as $propertyId) {
+            $property = $this->getDoctrine->getRepository(Property::class)->find($propertyId);
+            
+            if ($property) {
+                $celestialBody->addProperty($property);
+            }            
+        }
+        
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
-        $manager->persist($updatedCelestialBody);
+        $manager->persist($celestialBody);
         $manager->flush();
 
+        $celestialBody = $serializer->serialize(
+            $celestialBody,
+            'json',
+            ['groups' => 'celestial-body-update']
+        );
+        
         return $this->json(
             [
                 'message' => 'celestial body updated',
-                'content' => $updatedCelestialBody
+                'content' => $celestialBody
             ],
             Response::HTTP_OK
         );
