@@ -52,13 +52,11 @@ class Rank
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\Datetime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\Datetime
      */
     private $updatedAt;
 

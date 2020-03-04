@@ -102,6 +102,10 @@ class UserController extends AbstractController
             ['groups' => 'user-creation']
         );
 
+        $user->setSlug('jean');
+        $user->setCreatedAt(new \DateTime());
+        $user->setUpdatedAt(new \DateTime());
+        
         $errors = $validator->validate($user);
 
         if (count($errors) !== 0) {
@@ -122,6 +126,7 @@ class UserController extends AbstractController
 
         // TODO make event for this
         $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+
 
         $manager = $this
             ->getDoctrine()
@@ -180,29 +185,22 @@ class UserController extends AbstractController
 
         $content = json_decode($content, true);
 
-        extract($content);
+        $nickname = !empty($content['nickname']) ? $content['nickname'] : $user->getNickname();
+        $email = !empty($content['email']) ? $content['email'] : $user->getEmail();
+        $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
+        $avatar = !empty($content['avatar']) ? $content['avatar'] : $user->getAvatar();
+        $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
+        $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
+        $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
 
-
-        if($nickname) {
-            $user->setNickname($nickname);
-        }
-
-        // $nickname = !empty($content['nickname']) ? $content['nickname'] : false;
-        // $email = !empty($content['email']) ? $content['email'] : false;
-        // $password = !empty($content['password']) ? $content['password'] : false;
-        // $avatar = !empty($content['avatar']) ? $content['avatar'] : false;
-        // $firstname = !empty($content['firstname']) ? $content['firstname'] : false;
-        // $birthday = !empty($content['birthday']) ? $content['birthday'] : false;
-        // $bio = !empty($content['bio']) ? $content['bio'] : false;
-
-        // $user
-        //     ->setNickname($nickname)
-        //     ->setEmail($email)
-        //     ->setPassword($encoder->encodePassword($user, $password))
-        //     ->setAvatar($avatar)
-        //     ->setFirstname($firstname)
-        //     ->setBirthday($birthday)
-        //     ->setBio($bio);
+        $user
+            ->setNickname($nickname)
+            ->setEmail($email)
+            ->setPassword($encoder->encodePassword($user, $password))
+            ->setAvatar($avatar)
+            ->setFirstname($firstname)
+            ->setBirthday($birthday)
+            ->setBio($bio);
 
         $errors = $validator->validate($user);
         if (count($errors) !== 0) {

@@ -147,7 +147,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
      * @Assert\NotNull
      * @Groups({"user-update", "user"})
      */
@@ -155,7 +154,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
      * @Assert\NotNull
      * @Groups({"user-update", "user"})
      */
