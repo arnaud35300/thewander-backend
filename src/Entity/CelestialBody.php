@@ -100,6 +100,7 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
      * @Assert\DateTime
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
@@ -107,6 +108,7 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
      * @Assert\DateTime
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
