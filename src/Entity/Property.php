@@ -16,24 +16,25 @@ class Property
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"celestial-body"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $unit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $value;
 

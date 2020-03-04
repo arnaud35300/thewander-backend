@@ -92,7 +92,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CelestialBody", mappedBy="user", orphanRemoval=true)
-     * @Groups("user-celestial-body")
+     * @Groups("user-celestial-bodies")
      */
     private $celestialBodies;
 

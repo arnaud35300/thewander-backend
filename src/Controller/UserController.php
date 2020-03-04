@@ -35,7 +35,7 @@ class UserController extends AbstractController
             $users,
             Response::HTTP_OK,
             array(),
-            ['groups' => 'users-list']
+            ['groups' => 'users']
         );
     }
 
@@ -224,7 +224,7 @@ class UserController extends AbstractController
         $user = $serializer->serialize(
             $user,
             'json',
-            ['groups' => 'user-updated']
+            ['groups' => 'user-update']
         );
 
         return $this->json(
@@ -291,7 +291,7 @@ class UserController extends AbstractController
             $user,
             Response::HTTP_OK,
             array(),
-            ['groups' => 'user-celestial-body']
+            ['groups' => 'user-celestial-bodies']
         );
 
     }

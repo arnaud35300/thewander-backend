@@ -21,13 +21,13 @@ class Rank
 
     /**
      * @ORM\Column(type="string", length=30)
-     * @Groups("user")
+     * @Groups({"celestial-body", "user"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups("user")
+     * @Groups({"celestial-body", "user"})
      */
     private $badge;
 

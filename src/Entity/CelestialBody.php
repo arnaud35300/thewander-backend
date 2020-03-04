@@ -16,55 +16,55 @@ class CelestialBody
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body", "user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $xPosition;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $yPosition;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"celestial-body", "user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $nbStars;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-body"})
+     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $properties;
 
@@ -83,13 +83,13 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"celestial-body", "user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"celestial-body", "user-celestial-body"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $updatedAt;
 
