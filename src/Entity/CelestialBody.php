@@ -6,9 +6,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
+ * @UniqueEntity("name")
+ * @UniqueEntity("slug")
+ * @UniqueEntity(
+ *      fields={"xPosition", "yPosition"},
+ *      message="Another celestial body already matches these coordinates."
+ * )
  */
 class CelestialBody
 {
@@ -21,43 +29,52 @@ class CelestialBody
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=50)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(name="slug", type="string", length=50)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies"})
      */
     private $slug;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="xPosition", type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $xPosition;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(name="yPosition", type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $yPosition;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Type("string")
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $nbStars;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $description;
@@ -83,12 +100,14 @@ class CelestialBody
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $updatedAt;
