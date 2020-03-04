@@ -6,9 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
+ * @UniqueEntity("name")
  */
 class Property
 {
@@ -21,19 +24,23 @@ class Property
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(name="name", type="string", length=100)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type(type="integer")
      * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $unit;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "user-celestial-body"})
      */
     private $value;
@@ -45,11 +52,15 @@ class Property
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
+     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank
+     * @Assert\DateTime
      */
     private $updatedAt;
 
