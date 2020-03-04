@@ -30,7 +30,7 @@ class User implements UserInterface
      * @ORM\Column(name="nickname", type="string", length=30, unique=true)
      * @Assert\Length(
      *      min = 3,
-     *      max = 30,
+     *      max = 30
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
@@ -63,15 +63,9 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      * @Assert\Length(
      *      min = 6,
-     *      max = 30,
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Assert\Regex(
-     *      pattern = "/^(?=.*\d)(?=.*[A-Z])(?=.*[@#$%])(?!.*(.)\1{2}).*[a-z]/m",
-     *      match=true,
-     *      message="Your password must be at least eight characters long, including upper and lower case letters, a number and a symbol."
-     * )
      * @Groups({"user-creation"}) 
      */
     private $password;
@@ -87,18 +81,16 @@ class User implements UserInterface
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"celestial-body", "user-update", "users", "user"})
      */
     private $avatar;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"user-update", "user"})
      * */
@@ -106,7 +98,6 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Assert\Date
      * @Groups({"user-update", "user"})
      */
     private $birthday;
@@ -116,7 +107,6 @@ class User implements UserInterface
      * @Assert\Length(
      *      max = 500
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"user-update", "user"})
      */
@@ -150,16 +140,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @Groups({"user-update", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @Groups({"user-update", "user"})
      */
     private $updatedAt;
