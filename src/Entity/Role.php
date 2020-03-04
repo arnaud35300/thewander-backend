@@ -25,7 +25,7 @@ class Role
     private $id;
 
     /**
-     * @ORM\Column(name="name"type="string", length=20, unique=true)
+     * @ORM\Column(name="name", type="string", length=20, unique=true)
      * @Assert\NotBlank
      * @Assert\Length(
      *      max = 30
