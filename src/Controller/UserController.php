@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/users", name="api_")
@@ -101,7 +101,7 @@ class UserController extends AbstractController
             'json',
             ['groups' => 'user-creation']
         );
-
+  
         $errors = $validator->validate($user);
 
         if (count($errors) !== 0) {
@@ -123,6 +123,7 @@ class UserController extends AbstractController
         // TODO make event for this
         $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
+
         $manager = $this
             ->getDoctrine()
             ->getManager();
@@ -135,7 +136,9 @@ class UserController extends AbstractController
                 'message' => 'user created',
                 'content' => $user
             ],
-            Response::HTTP_CREATED
+            Response::HTTP_CREATED,
+            array(),
+            ['groups' => 'user']
         );
     }
 
@@ -180,8 +183,6 @@ class UserController extends AbstractController
 
         $content = json_decode($content, true);
 
-        $nickname = !empty($content['nickname']) ? $content['nickname'] : $user->getNickname();
-        $email = !empty($content['email']) ? $content['email'] : $user->getEmail();
         $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
         $avatar = !empty($content['avatar']) ? $content['avatar'] : $user->getAvatar();
         $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
@@ -189,13 +190,12 @@ class UserController extends AbstractController
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
 
         $user
-            ->setNickname($nickname)
-            ->setEmail($email)
             ->setPassword($encoder->encodePassword($user, $password))
             ->setAvatar($avatar)
             ->setFirstname($firstname)
             ->setBirthday($birthday)
-            ->setBio($bio);
+            ->setBio($bio)
+        ;
 
         $errors = $validator->validate($user);
         if (count($errors) !== 0) {
@@ -258,7 +258,8 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->remove($user);
         $manager->flush();

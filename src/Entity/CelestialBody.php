@@ -24,7 +24,7 @@ class CelestialBody
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user-celestial-bodies", "comments"})
      */
     private $id;
 
@@ -32,7 +32,7 @@ class CelestialBody
      * @ORM\Column(name="name", type="string", length=50)
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies", "comments"})
      */
     private $name;
 
@@ -40,7 +40,7 @@ class CelestialBody
      * @ORM\Column(name="slug", type="string", length=50)
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
      */
     private $slug;
 
