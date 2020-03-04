@@ -6,9 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RankRepository")
+ * @UniqueEntity("name")
  */
 class Rank
 {
@@ -20,13 +24,23 @@ class Rank
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(name="name", type="string", length=30, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      max = 30
+     * )
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "user"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      max = 50
+     * )
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "user"})
      */
     private $badge;
@@ -38,11 +52,13 @@ class Rank
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Datetime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Datetime
      */
     private $updatedAt;
 
