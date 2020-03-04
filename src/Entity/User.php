@@ -7,11 +7,14 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("nickname")
+ * @UniqueEntity("email")
  */
 class User implements UserInterface
 {
@@ -24,25 +27,33 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30, unique=true)
-     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user"})
+     * @ORM\Column(name="nickname", type="string", length=30, unique=true)
      * @Assert\Length(
-     *      min = 2,
+     *      min = 3,
      *      max = 30,
-     *      minMessage="Your nickname must be at least {{ limit }} characters long",
-     *      maxMessage = "Your nickname cannot be longer than {{ limit }} characters"
      * )
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "users", "user-update", "user"})
      */
     private $slug;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(name="email", type="string", length=180, unique=true)
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     * @Assert\Email
+     * @Assert\Length(
+     *      max = 100,
+     * )
      * @Groups({"user-creation", "user-update"})
      */
     private $email;
@@ -50,7 +61,18 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user-creation"})
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 30,
+     * )
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     * @Assert\Regex(
+     *      pattern = "/^(?=.*\d)(?=.*[A-Z])(?=.*[@#$%])(?!.*(.)\1{2}).*[a-z]/m",
+     *      match=true,
+     *      message="Your password must be at least eight characters long, including upper and lower case letters, a number and a symbol."
+     * )
+     * @Groups({"user-creation"}) 
      */
     private $password;
 
@@ -62,24 +84,40 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Assert\Length(
+     *      max = 50
+     * )
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"celestial-body", "user-update", "users", "user"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(
+     *      max = 50
+     * )
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"user-update", "user"})
-     */
+     * */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\Date
      * @Groups({"user-update", "user"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(
+     *      max = 500
+     * )
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Groups({"user-update", "user"})
      */
     private $bio;
@@ -87,6 +125,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="smallint")
      * @Groups({"user"})
+     * @Assert\Type("integer")
      */
     private $status;
 
@@ -111,12 +150,16 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
+     * @Assert\NotNull
      * @Groups({"user-update", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
+     * @Assert\NotNull
      * @Groups({"user-update", "user"})
      */
     private $updatedAt;
