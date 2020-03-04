@@ -20,7 +20,7 @@ class AdminController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/users/{slug}", name="toggle_user")
+     ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
     public function toggleUserStatus(User $user = null): JsonResponse
     {
