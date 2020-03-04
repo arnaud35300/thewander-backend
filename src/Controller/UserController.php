@@ -8,10 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/users", name="api_")
@@ -101,11 +101,7 @@ class UserController extends AbstractController
             'json',
             ['groups' => 'user-creation']
         );
-
-        $user->setSlug('jean');
-        $user->setCreatedAt(new \DateTime());
-        $user->setUpdatedAt(new \DateTime());
-        
+  
         $errors = $validator->validate($user);
 
         if (count($errors) !== 0) {
@@ -140,7 +136,9 @@ class UserController extends AbstractController
                 'message' => 'user created',
                 'content' => $user
             ],
-            Response::HTTP_CREATED
+            Response::HTTP_CREATED,
+            array(),
+            ['groups' => 'user']
         );
     }
 
@@ -200,7 +198,8 @@ class UserController extends AbstractController
             ->setAvatar($avatar)
             ->setFirstname($firstname)
             ->setBirthday($birthday)
-            ->setBio($bio);
+            ->setBio($bio)
+        ;
 
         $errors = $validator->validate($user);
         if (count($errors) !== 0) {
@@ -263,7 +262,8 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->remove($user);
         $manager->flush();
