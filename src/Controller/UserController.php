@@ -183,8 +183,6 @@ class UserController extends AbstractController
 
         $content = json_decode($content, true);
 
-        $nickname = !empty($content['nickname']) ? $content['nickname'] : $user->getNickname();
-        $email = !empty($content['email']) ? $content['email'] : $user->getEmail();
         $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
         $avatar = !empty($content['avatar']) ? $content['avatar'] : $user->getAvatar();
         $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
@@ -192,8 +190,6 @@ class UserController extends AbstractController
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
 
         $user
-            ->setNickname($nickname)
-            ->setEmail($email)
             ->setPassword($encoder->encodePassword($user, $password))
             ->setAvatar($avatar)
             ->setFirstname($firstname)
