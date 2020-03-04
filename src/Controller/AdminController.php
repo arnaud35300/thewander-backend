@@ -14,13 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     /**
-     * ? Ban or unbans a user.
+     *? Toggles the user's status (ban or unban).
      * 
-     * @param User $user
+     * @param User $user The User Repository.
      * 
      * @return JsonResponse
      * 
-     * * @Route("/users/{slug}", name="toggle_user")
+     ** @Route("/users/{slug}", name="toggle_user")
      */
     public function toggleUserStatus(User $user = null): JsonResponse
     {

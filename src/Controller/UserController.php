@@ -42,7 +42,7 @@ class UserController extends AbstractController
     /**
      *? Retrieves a partical user.
      *
-     * @param User $user
+     * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
@@ -68,8 +68,8 @@ class UserController extends AbstractController
     /**
      *? Create a new user.
      *
-     * @param Request $request
-     * @param SerializerInterface $serializer
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator
      * @param UserPasswordEncoderInterface $encoder
      * 
@@ -142,11 +142,11 @@ class UserController extends AbstractController
     /**
      *? Update a user.
      *
-     * @param Request $request
-     * @param SerializerInterface $serializer
-     * @param ValidatorInterface $validator
-     * @param UserPasswordEncoderInterface $encoder
-     * @param User $user
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param ValidatorInterface $validator The Validator component.
+     * @param UserPasswordEncoderInterface $encoder The PasswordEncoder component.
+     * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
@@ -239,7 +239,7 @@ class UserController extends AbstractController
     /**
      *? Deletes a user.
      * 
-     * @param User $user The CelestialBody entity.
+     * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
@@ -272,7 +272,7 @@ class UserController extends AbstractController
     /**
      *? Retrieves all user's celestialbodies.
      *
-     * @param User $user
+     * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
