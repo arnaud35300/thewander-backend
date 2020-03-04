@@ -15,7 +15,7 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "comments"})
      */
     private $id;
 
@@ -23,20 +23,21 @@ class Comment
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "comments", "comment-creation"})
      */
     private $body;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "comments"})
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CelestialBody", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"comments"})
      */
     private $celestialBody;
 
@@ -44,7 +45,7 @@ class Comment
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
      * @Assert\DateTime
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "comments"})
      */
     private $createdAt;
 
@@ -52,7 +53,7 @@ class Comment
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
      * @Assert\DateTime
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "comments"})
      */
     private $updatedAt;
 

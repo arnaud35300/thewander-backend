@@ -63,4 +63,61 @@ class CommentController extends AbstractController
             ['groups' => 'comments']
         );
     }
+
+    public function create(
+        Request $request,
+        SerializerInterface $serializer,
+        ValidatorInterface $validator
+    ): JsonResponse {
+        // TODO : authentication requirements
+
+        $content = $request->getContent();
+
+        if (json_decode($content) === null) {
+            return $this->json(
+                ['error' => 'invalid data format'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $newComment = $serializer->deserialize(
+            $content,
+            Comment::class,
+            'json',
+            ['groups' => 'comment-creation']
+        );
+
+        $errors = $validator->validate($newComment);
+
+        if (count($errors) !== 0) {
+            $errorsList = array();
+
+            foreach ($errors as $error) {
+                $errorsList[] = [
+                    'field'     => $error->getPropertyPath(),
+                    'message'   => $error->getMessage()
+                ];
+            }
+
+            return $this->json(
+                $errorsList,
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager();
+
+        $manager->persist($newComment);
+        $manager->flush();
+
+        return $this->json(
+            [
+                'message' => 'comment sent',
+                'content' => $newComment
+            ],
+            Response::HTTP_CREATED
+        );
+    }
 }
