@@ -24,25 +24,28 @@ class AdminController extends AbstractController
      */
     public function toggleUserStatus(User $user = null): JsonResponse
     {
-        if ($user === null) {
+        if ($user === null)
             return $this->json(
-                ['error' => 'user not found.'],
+                ['error' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         if ($user->getStatus() === 1) {
+            $user->setStatus(0);
+
             return $this->json(
-                ['message' => 'user has been banned.'],
+                ['message' => 'User now banned.'],
                 Response::HTTP_OK
             );
         }
 
         if ($user->getStatus() === 0) {
+            $user->setStatus(1);
+
             return $this->json(
-                ['message' => 'user has been unbanned.'],
+                ['message' => 'User now unbanned.'],
                 Response::HTTP_OK
-            );
-        }        
+            );       
+        }
     }
 }

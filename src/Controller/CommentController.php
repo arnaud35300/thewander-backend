@@ -49,12 +49,11 @@ class CommentController extends AbstractController
      */
     public function getOne(Comment $comment = null): JsonResponse
     {
-        if ($comment === null) {
+        if ($comment === null)
             return $this->json(
-                ['error' => 'comment not found'],
+                ['error' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         return $this->json(
             $comment,
@@ -84,12 +83,11 @@ class CommentController extends AbstractController
 
         $content = $request->getContent();
 
-        if (json_decode($content) === null) {
+        if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
-        }
 
         $newComment = $serializer->deserialize(
             $content,
@@ -115,7 +113,7 @@ class CommentController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-
+        
         $manager = $this
             ->getDoctrine()
             ->getManager()
@@ -126,7 +124,7 @@ class CommentController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'comment sent',
+                'message' => 'Comment sent.',
                 'content' => $newComment
             ],
             Response::HTTP_CREATED
@@ -153,21 +151,19 @@ class CommentController extends AbstractController
     ): JsonResponse {
         // TODO : authentication requirements
 
-        if ($comment === null) {
+        if ($comment === null)
             return $this->json(
                 ['error' => 'comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         $content = $request->getContent();
 
-        if (json_decode($content) === null) {
+        if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
-        }
 
         $content = json_decode($content, true);
         
@@ -209,7 +205,7 @@ class CommentController extends AbstractController
         
         return $this->json(
             [
-                'message' => 'comment updated',
+                'message' => 'Comment updated.',
                 'content' => $comment
             ],
             Response::HTTP_OK
@@ -225,16 +221,15 @@ class CommentController extends AbstractController
      * 
      ** @Route("/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
      */
-    public function delete(Comment $comment =  null): JsonResponse
+    public function delete(Comment $comment = null): JsonResponse
     {
         // TODO : authentication requirements
 
-        if ($comment === null) {
+        if ($comment === null)
             return $this->json(
-                ['error' => 'the comment does not exist.'],
+                ['error' => 'The comment does not exist.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         $manager = $this
             ->getDoctrine()
@@ -245,7 +240,7 @@ class CommentController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'comment deleted'],
+            ['message' => 'Comment deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
