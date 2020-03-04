@@ -50,7 +50,7 @@ class UserController extends AbstractController
      */
     public function getOne(User $user = null): JsonResponse
     {
-        if (!$user || $user->getStatus() === 0) {
+        if ($user === null || $user->getStatus() === 0) {
             return $this->json(
                 ['error' => 'user not found.'],
                 Response::HTTP_NOT_FOUND
@@ -162,7 +162,7 @@ class UserController extends AbstractController
 
         // TODO : authentication requirements
 
-        if (!$user) {
+        if ($user === null) {
             return $this->json(
                 ['error' => 'user not found.'],
                 Response::HTTP_NOT_FOUND
@@ -280,7 +280,7 @@ class UserController extends AbstractController
      */
     public function getCelestialBodies(User $user = null): JsonResponse
     {
-        if (!$user || $user->getStatus() === 0) {
+        if ($user === null || $user->getStatus() === 0) {
             return $this->json(
                 ['error' => 'user not found.'],
                 Response::HTTP_NOT_FOUND
