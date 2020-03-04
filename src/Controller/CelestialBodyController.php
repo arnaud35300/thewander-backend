@@ -146,10 +146,10 @@ class CelestialBodyController extends AbstractController
      ** @Route("/{slug}", name="update_celestial_body", methods={"PATCH"})
      */
     public function update(
-        CelestialBody $celestialBody = null,
         Request $request,
         SerializerInterface $serializer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        CelestialBody $celestialBody = null
     ): JsonResponse {
         // TODO : authentication requirements
         // ! Note : properties ID JSON

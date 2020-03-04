@@ -164,7 +164,7 @@ class UserController extends AbstractController
 
         if ($user === null) {
             return $this->json(
-                ['error' => 'user not found.'],
+                ['error' => 'user not found'],
                 Response::HTTP_NOT_FOUND
             );
         }
