@@ -109,8 +109,8 @@ class UserController extends AbstractController
 
             foreach ($errors as $error) {
                 $errorsList[] = [
-                    'field' => $error->getPropertyPath(),
-                    'message' => $error->getMessage()
+                    'field'     => $error->getPropertyPath(),
+                    'message'   => $error->getMessage()
                 ];
             }
 
