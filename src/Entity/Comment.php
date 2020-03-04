@@ -43,7 +43,6 @@ class Comment
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
-     * @Assert\DateTime
      * @Groups({"celestial-body", "user"})
      */
     private $createdAt;
@@ -51,7 +50,6 @@ class Comment
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
-     * @Assert\DateTime
      * @Groups({"celestial-body", "user"})
      */
     private $updatedAt;

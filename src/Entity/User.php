@@ -147,14 +147,14 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @Groups({"user-update", "user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotNull
+     * @Assert\NotBlank
      * @Groups({"user-update", "user"})
      */
     private $updatedAt;
