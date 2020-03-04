@@ -6,9 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
+ * @UniqueEntity("name")
  */
 class Role
 {
@@ -21,8 +25,10 @@ class Role
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(name="name"type="string", length=20, unique=true)
+     * @Assert\Type("string")
      * @Groups("user")
+     * 
      */
     private $name;
 
@@ -33,11 +39,13 @@ class Role
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      */
     private $updatedAt;
 
