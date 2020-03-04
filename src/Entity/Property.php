@@ -19,7 +19,7 @@ class Property
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body"})
+     * @Groups({"properties", "celestial-body"})
      */
     private $id;
 
@@ -27,23 +27,9 @@ class Property
      * @ORM\Column(name="name", type="string", length=100)
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "user-celestial-body"})
+     * @Groups({"properties", "celestial-body", "user-celestial-body"})
      */
     private $name;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Type(type="integer")
-     * @Groups({"celestial-body", "user-celestial-body"})
-     */
-    private $unit;
-
-    /**
-     * @ORM\Column(type="string", length=20, nullable=true)
-     * @Assert\Type("string")
-     * @Groups({"celestial-body", "user-celestial-body"})
-     */
-    private $value;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\CelestialBody", mappedBy="properties")
@@ -85,31 +71,6 @@ class Property
 
         return $this;
     }
-
-    public function getUnit(): ?int
-    {
-        return $this->unit;
-    }
-
-    public function setUnit(?int $unit): self
-    {
-        $this->unit = $unit;
-
-        return $this;
-    }
-
-    public function getValue(): ?string
-    {
-        return $this->value;
-    }
-
-    public function setValue(?string $value): self
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
 
     /**
      * @return Collection|CelestialBody[]
