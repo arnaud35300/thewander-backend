@@ -180,22 +180,29 @@ class UserController extends AbstractController
 
         $content = json_decode($content, true);
 
-        $nickname = !empty($content['nickname']) ? $content['nickname'] : $user->getNickname();
-        $email = !empty($content['email']) ? $content['email'] : $user->getEmail();
-        $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
-        $avatar = !empty($content['avatar']) ? $content['avatar'] : $user->getAvatar();
-        $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
-        $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
-        $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
+        extract($content);
 
-        $user
-            ->setNickname($nickname)
-            ->setEmail($email)
-            ->setPassword($encoder->encodePassword($user, $password))
-            ->setAvatar($avatar)
-            ->setFirstname($firstname)
-            ->setBirthday($birthday)
-            ->setBio($bio);
+
+        if($nickname) {
+            $user->setNickname($nickname);
+        }
+
+        // $nickname = !empty($content['nickname']) ? $content['nickname'] : false;
+        // $email = !empty($content['email']) ? $content['email'] : false;
+        // $password = !empty($content['password']) ? $content['password'] : false;
+        // $avatar = !empty($content['avatar']) ? $content['avatar'] : false;
+        // $firstname = !empty($content['firstname']) ? $content['firstname'] : false;
+        // $birthday = !empty($content['birthday']) ? $content['birthday'] : false;
+        // $bio = !empty($content['bio']) ? $content['bio'] : false;
+
+        // $user
+        //     ->setNickname($nickname)
+        //     ->setEmail($email)
+        //     ->setPassword($encoder->encodePassword($user, $password))
+        //     ->setAvatar($avatar)
+        //     ->setFirstname($firstname)
+        //     ->setBirthday($birthday)
+        //     ->setBio($bio);
 
         $errors = $validator->validate($user);
         if (count($errors) !== 0) {

@@ -22,7 +22,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"celestial-body", "users", "user"})
+     * @Groups({"celestial-body", "users", "user", "comments"})
      */
     private $id;
 
@@ -34,7 +34,7 @@ class User implements UserInterface
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user"})
+     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user", "comments"})
      */
     private $nickname;
 
@@ -42,7 +42,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "users", "user-update", "user"})
+     * @Groups({"celestial-body", "users", "user-update", "user", "comments"})
      */
     private $slug;
 
@@ -87,7 +87,6 @@ class User implements UserInterface
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"celestial-body", "user-update", "users", "user"})
      */
@@ -98,7 +97,6 @@ class User implements UserInterface
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"user-update", "user"})
      * */
@@ -116,7 +114,6 @@ class User implements UserInterface
      * @Assert\Length(
      *      max = 500
      * )
-     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Groups({"user-update", "user"})
      */
