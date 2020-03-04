@@ -64,6 +64,17 @@ class CommentController extends AbstractController
         );
     }
 
+    /**
+     *? Adds a new comment on a particular celestial body.
+     * 
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param ValidatorInterface $validator
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route(name="create_comment", methods={"POST"})
+     */
     public function create(
         Request $request,
         SerializerInterface $serializer,
@@ -107,7 +118,8 @@ class CommentController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->persist($newComment);
         $manager->flush();
@@ -118,6 +130,89 @@ class CommentController extends AbstractController
                 'content' => $newComment
             ],
             Response::HTTP_CREATED
+        );
+    }
+
+    /**
+     *? Updates a user's comment.
+     * 
+     * @param Request $request The HttpFoundation Request class.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param ValidatorInterface $validator The Validator component.
+     * @param User $user The user entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}", name="update_comment", methods={"PATCH"})
+     */
+    public function update(
+        Request $request,
+        SerializerInterface $serializer,
+        ValidatorInterface $validator,
+        Comment $comment = null
+    ): JsonResponse {
+        // TODO : authentication requirements
+
+        if ($comment === null) {
+            return $this->json(
+                ['error' => 'comment not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $content = $request->getContent();
+
+        if (json_decode($content) === null) {
+            return $this->json(
+                ['error' => 'invalid data format'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+
+        $content = json_decode($content, true);
+        
+        $body = !empty($content['body']) ? $content['body'] : $comment->getBody();
+
+        $comment->setBody($body);
+
+        $errors = $validator->validate($comment);
+
+        if (count($errors) !== 0) {
+            $errorsList = array();
+
+            foreach ($errors as $error) {
+                $errorsList[] = [
+                    'field'     => $error->getPropertyPath(),
+                    'message'   => $error->getMessage()
+                ];
+            }
+
+            return $this->json(
+                $errorsList,
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->persist($comment);
+        $manager->flush();
+
+        $comment = $serializer->serialize(
+            $comment,
+            'json',
+            ['groups' => 'comment-update']
+        );
+        
+        return $this->json(
+            [
+                'message' => 'comment updated',
+                'content' => $comment
+            ],
+            Response::HTTP_OK
         );
     }
 }

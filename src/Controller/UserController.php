@@ -140,7 +140,7 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Update a user.
+     *? Updates a user.
      *
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
@@ -195,9 +195,11 @@ class UserController extends AbstractController
             ->setAvatar($avatar)
             ->setFirstname($firstname)
             ->setBirthday($birthday)
-            ->setBio($bio);
+            ->setBio($bio)
+        ;
 
         $errors = $validator->validate($user);
+        
         if (count($errors) !== 0) {
             $errorsList = array();
 

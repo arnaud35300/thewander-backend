@@ -23,7 +23,7 @@ class Comment
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "user", "comments", "comment-creation"})
+     * @Groups({"celestial-body", "user", "comments", "comment-creation", "comment-update"})
      */
     private $body;
 
