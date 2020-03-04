@@ -199,7 +199,7 @@ class UserController extends AbstractController
         ;
 
         $errors = $validator->validate($user);
-        
+
         if (count($errors) !== 0) {
             $errorsList = array();
 
@@ -241,7 +241,7 @@ class UserController extends AbstractController
     /**
      *? Deletes a user.
      * 
-     * @param User $user The user entity.
+     * @param User $user The User entity.
      * 
      * @return JsonResponse
      * 

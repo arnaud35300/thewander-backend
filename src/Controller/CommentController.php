@@ -215,4 +215,38 @@ class CommentController extends AbstractController
             Response::HTTP_OK
         );
     }
+
+    /**
+     *? Deletes a user's comment.
+     * 
+     * @param Comment $comment The Comment entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}", name="delete_comment", methods={"DELETE"})
+     */
+    public function delete(Comment $comment =  null): JsonResponse
+    {
+        // TODO : authentication requirements
+
+        if ($comment === null) {
+            return $this->json(
+                ['error' => 'the comment does not exist.'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($comment);
+        $manager->flush();
+
+        return $this->json(
+            ['message' => 'comment deleted'],
+            Response::HTTP_NO_CONTENT
+        );
+    }
 }
