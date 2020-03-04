@@ -208,7 +208,7 @@ class UserController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-        
+
         $manager = $this
             ->getDoctrine()
             ->getManager()
