@@ -50,12 +50,11 @@ class UserController extends AbstractController
      */
     public function getOne(User $user = null): JsonResponse
     {
-        if ($user === null || $user->getStatus() === 0) {
+        if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'user not found.'],
+                ['error' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         return $this->json(
             $user,
@@ -83,17 +82,15 @@ class UserController extends AbstractController
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder
     ) {
-
         // TODO : authentication requirements
 
         $content = $request->getContent();
 
-        if (json_decode($content) === null) {
+        if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
-        }
 
         $user = $serializer->deserialize(
             $content,
@@ -123,17 +120,17 @@ class UserController extends AbstractController
         // TODO make event for this
         $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
-
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->persist($user);
         $manager->flush();
 
         return $this->json(
             [
-                'message' => 'user created',
+                'message' => 'User created.',
                 'content' => $user
             ],
             Response::HTTP_CREATED,
@@ -162,24 +159,21 @@ class UserController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         User $user = null
     ) {
-
         // TODO : authentication requirements
 
-        if ($user === null) {
+        if ($user === null)
             return $this->json(
-                ['error' => 'user not found.'],
+                ['error' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         $content = $request->getContent();
 
-        if (json_decode($content) === null) {
+        if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format'],
                 Response::HTTP_UNAUTHORIZED
             );
-        }
 
         $content = json_decode($content, true);
 
@@ -198,6 +192,7 @@ class UserController extends AbstractController
         ;
 
         $errors = $validator->validate($user);
+
         if (count($errors) !== 0) {
             $errorsList = array();
 
@@ -213,10 +208,11 @@ class UserController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-
+        
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->persist($user);
         $manager->flush();
@@ -229,7 +225,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'user updated.',
+                'message' => 'User updated.',
                 'content' => $user
             ],
             Response::HTTP_OK
@@ -249,12 +245,11 @@ class UserController extends AbstractController
     {
         // TODO : authentication requirements
 
-        if ($user === null) {
+        if ($user === null)
             return $this->json(
-                ['error' => 'this user does not exist.'],
+                ['error' => 'This user does not exist.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         $manager = $this
             ->getDoctrine()
@@ -265,7 +260,7 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'user deleted.'],
+            ['message' => 'User deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
@@ -281,12 +276,11 @@ class UserController extends AbstractController
      */
     public function getCelestialBodies(User $user = null): JsonResponse
     {
-        if ($user === null || $user->getStatus() === 0) {
+        if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'user not found.'],
+                ['error' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         return $this->json(
             $user,
@@ -294,6 +288,5 @@ class UserController extends AbstractController
             array(),
             ['groups' => 'user-celestial-bodies']
         );
-
     }
 }

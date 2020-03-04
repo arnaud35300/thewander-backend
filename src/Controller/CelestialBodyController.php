@@ -52,7 +52,7 @@ class CelestialBodyController extends AbstractController
     {
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'celestial body not found'],
+                ['error' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -87,14 +87,13 @@ class CelestialBodyController extends AbstractController
 
         if (json_decode($content) === null) {
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
 
         $data = json_decode($content);
         $properties = $data->properties;
-
 
         $newCelestialBody = $serializer->deserialize(
             $content,
@@ -122,11 +121,14 @@ class CelestialBodyController extends AbstractController
         }
 
         foreach ($properties as $propertyId) {
-            $property = $this->getDoctrine->getRepository(Property::class)->find($propertyId);
+            $property = $this
+                ->getDoctrine()
+                ->getRepository(Property::class)
+                ->find($propertyId)
+            ;
             
-            if ($property) {
+            if ($property)
                 $newCelestialBody->addProperty($property);
-            }            
         }
 
         $manager = $this
@@ -139,7 +141,7 @@ class CelestialBodyController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'celestial body created',
+                'message' => 'Celestial body now created.',
                 'content' => $newCelestialBody
             ],
             Response::HTTP_CREATED
@@ -168,7 +170,7 @@ class CelestialBodyController extends AbstractController
 
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'comment not found.'],
+                ['error' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -177,7 +179,7 @@ class CelestialBodyController extends AbstractController
 
         if (json_decode($content) === null) {
             return $this->json(
-                ['error' => 'invalid data format'],
+                ['error' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -219,16 +221,14 @@ class CelestialBodyController extends AbstractController
         
         $currentProperties = $celestialBody->getProperties();
         
-        foreach ($currentProperties as $currentProperty) {
+        foreach ($currentProperties as $currentProperty)
             $celestialBody->removeProperty($currentProperty);
-        }
 
         foreach ($properties as $propertyId) {
             $property = $this->getDoctrine->getRepository(Property::class)->find($propertyId);
             
-            if ($property) {
+            if ($property)
                 $celestialBody->addProperty($property);
-            }            
         }
         
         $manager = $this
@@ -247,7 +247,7 @@ class CelestialBodyController extends AbstractController
         
         return $this->json(
             [
-                'message' => 'celestial body updated',
+                'message' => 'Celestial body now updated.',
                 'content' => $celestialBody
             ],
             Response::HTTP_OK
@@ -269,7 +269,7 @@ class CelestialBodyController extends AbstractController
 
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'this celestial body does not exist'],
+                ['error' => 'This celestial body does not exist.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -283,7 +283,7 @@ class CelestialBodyController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'celestial body deleted'],
+            ['message' => 'Celestial body now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
