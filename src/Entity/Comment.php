@@ -117,9 +117,9 @@ class Comment
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt(\DateTime $dateTime): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $dateTime;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -133,9 +133,9 @@ class Comment
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(\DateTime $dateTime): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }

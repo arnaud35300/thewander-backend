@@ -41,3 +41,9 @@
 **Matinée :** gestion des contraintes de propriétés sur chaque entité de la base de données.
 
 **Après-midi :** création des derniers contrôleurs, réflexion sur la manière de procéder pour l'assignation automatique des valeurs sur certaines propriétés des entités (createdAt, updatedAt, ...) et concertation avec l'équipe sur le futur nom du projet.
+
+## 05/03/2020 - Jour 8
+
+**Matinée :** création des événements Symfony pour prendre en charge l'assignation automatique de certaines propriétés des entités.
+
+**Après-midi :** réflexion sur la nécessité des query builders, correction de bugs insignifiants et création d'index sur les entités pour l'optimisation des requêtes SQL.

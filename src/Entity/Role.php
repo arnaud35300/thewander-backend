@@ -30,10 +30,10 @@ class Role
      * @ORM\Column(name="name", type="string", length=20, unique=true)
      * 
      * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 30
      * )
-     * @Assert\Type("string")
      * 
      * @Groups("user")
      */
@@ -113,15 +113,11 @@ class Role
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
      * @ORM\PrePersist
      */
-    public function setCreatedAt(\DateTime $dateTime): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $dateTime;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -132,16 +128,12 @@ class Role
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(\DateTime $dateTime): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }
