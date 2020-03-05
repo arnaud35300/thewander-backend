@@ -42,6 +42,7 @@ class CelestialBodyController extends AbstractController
     /**
      *? Retrieves a particular celestial body.
      * 
+     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
      * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
