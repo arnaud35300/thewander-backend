@@ -60,8 +60,6 @@ class AppFixtures extends Fixture
             $property = new Property();
             $property
                 ->setName($currentProperty)
-                ->setUnit(12000)
-                ->setValue('kg')
             ;
 
             $properties[] = $property;

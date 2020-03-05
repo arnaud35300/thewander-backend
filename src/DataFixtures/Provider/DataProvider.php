@@ -4,7 +4,7 @@ namespace App\DataFixtures\Provider;
 
 class DataProvider {
     const LOREM = 'In de nec et rogati nos in turpes ut enim amicitia Etenim spatio excusatio Etenim.';
-    const RANKS = ['astronaut'];
+    const RANKS = ['neophyte', 'astronaut'];
     const ROLES = ['ROLE_USER', 'ROLE_ADMIN'];
     const PROPERTIES = ['star', 'planet'];
     const EMAIL = ['william@gmail.com', 'shirin@gmail.com', 'arnaud@gmail.com', 'alex@gmail.com'];
