@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Repository\RankRepository;
+use App\Repository\RoleRepository;
+use App\Service\Slugger;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("nickname")
  * @UniqueEntity("email")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -22,50 +26,60 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
      * @Groups({"celestial-body", "users", "user", "comments"})
      */
     private $id;
 
     /**
      * @ORM\Column(name="nickname", type="string", length=30, unique=true)
+     * 
      * @Assert\Length(
      *      min = 3,
      *      max = 30
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "user-creation", "user-update", "users", "user", "comments"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "users", "user-update", "user", "comments"})
      */
     private $slug;
 
     /**
      * @ORM\Column(name="email", type="string", length=180, unique=true)
+     * 
      * @Assert\NotBlank
      * @Assert\Type("string")
      * @Assert\Email
      * @Assert\Length(
      *      max = 100,
      * )
+     * 
      * @Groups({"user-creation", "user-update"})
      */
     private $email;
 
     /**
      * @var string The hashed password
+     * 
      * @ORM\Column(type="string")
+     * 
      * @Assert\Length(
      *      min = 6,
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * 
      * @Groups({"user-creation"}) 
      */
     private $password;
@@ -78,55 +92,66 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * 
      * @Assert\Length(
      *      max = 50
      * )
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "user-update", "users", "user"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * 
      * @Assert\Length(
      *      max = 50
      * )
      * @Assert\Type("string")
+     * 
      * @Groups({"user-update", "user"})
      * */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * 
      * @Groups({"user-update", "user"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * 
      * @Assert\Length(
      *      max = 500
      * )
      * @Assert\Type("string")
+     * 
      * @Groups({"user-update", "user"})
      */
     private $bio;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"user"})
+     * 
      * @Assert\Type("integer")
+     * 
+     * @Groups({"user"})
      */
     private $status;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CelestialBody", mappedBy="user", orphanRemoval=true)
+     * 
      * @Groups("user-celestial-bodies")
      */
     private $celestialBodies;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
+     * 
      * @Groups({"user"})
      */
     private $comments;
@@ -134,6 +159,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * 
      * @Groups({"celestial-body", "user"})
      */
     private $rank;
@@ -141,6 +167,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
+     * 
      * @Groups({"user-update", "user"})
      */
     private $createdAt;
@@ -148,14 +175,38 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
+     * 
      * @Groups({"user-update", "user"})
      */
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(RoleRepository $roleRepository, RankRepository $rankRepository): void
     {
         $this->celestialBodies = new ArrayCollection();
         $this->comments = new ArrayCollection();
+
+        $this->status = (int) 1;
+
+        $role = $roleRepository->findByName('ROLE_USER');
+        $this->role = $role;
+
+        $rank = $rankRepository->findByName('neophyte');
+        $this->rank = $rank;
+    }
+
+    /**
+     * This method assesses the rank of the user based on their contributions.
+     * 
+     * @return void
+     * 
+     * @ORM\PreUpdate
+     */
+    public function rankUgrade(RankRepository $rankRepository): void {
+        $xp = $this->celestialBodies->count() + $this->comments->count();
+
+        if($xp > 5) {
+            $this->rank = $rankRepository->findByName('astronaut');
+        }
     }
 
     public function getId(): ?int
@@ -208,9 +259,17 @@ class User implements UserInterface
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    /**
+     * @param Slugger $slugger The Slugger service.
+     * 
+     * @return self
+     * 
+     * @ORM\PrePresist
+     * @ORM\PreUpdate
+     */
+    public function setSlug(Slugger $slugger): self
     {
-        $this->slug = $slug;
+        $this->slug = $slugger->slugify($this->nickname);
 
         return $this;
     }
@@ -402,9 +461,16 @@ class User implements UserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(\DateTime $dateTime): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $dateTime;
 
         return $this;
     }
@@ -414,9 +480,17 @@ class User implements UserInterface
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(\DateTime $dateTime): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $dateTime;
 
         return $this;
     }
