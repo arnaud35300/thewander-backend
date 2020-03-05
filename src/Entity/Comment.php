@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks() 
  */
 class Comment
 {
@@ -15,14 +16,17 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
      * @Groups({"celestial-body", "user", "comments"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
+     * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "user", "comments", "comment-creation", "comment-update"})
      */
     private $body;
@@ -30,6 +34,7 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * 
      * @Groups({"celestial-body", "comments"})
      */
     private $user;
@@ -37,20 +42,25 @@ class Comment
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CelestialBody", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * 
      * @Groups({"comments"})
      */
     private $celestialBody;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      * @Assert\NotBlank
+     * 
      * @Groups({"celestial-body", "user", "comments"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      * @Assert\NotBlank
+     * 
      * @Groups({"celestial-body", "user", "comments"})
      */
     private $updatedAt;
@@ -101,9 +111,12 @@ class Comment
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(\DateTime $dateTime): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $dateTime;
 
         return $this;
     }
@@ -113,9 +126,13 @@ class Comment
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(\DateTime $dateTime): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $dateTime;
 
         return $this;
     }
