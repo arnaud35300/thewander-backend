@@ -180,7 +180,7 @@ class User implements UserInterface
      */
     private $updatedAt;
 
-    public function __construct(RoleRepository $roleRepository, RankRepository $rankRepository): void
+    public function __construct(RoleRepository $roleRepository, RankRepository $rankRepository)
     {
         $this->celestialBodies = new ArrayCollection();
         $this->comments = new ArrayCollection();
@@ -264,7 +264,7 @@ class User implements UserInterface
      * 
      * @return self
      * 
-     * @ORM\PrePresist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setSlug(Slugger $slugger): self
