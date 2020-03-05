@@ -26,22 +26,26 @@ class Rank
 
     /**
      * @ORM\Column(name="name", type="string", length=30, unique=true)
+     * 
      * @Assert\NotBlank
      * @Assert\Length(
      *      max = 30
      * )
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "user"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * 
      * @Assert\NotBlank
      * @Assert\Length(
      *      max = 50
      * )
      * @Assert\Type("string")
+     * 
      * @Groups({"celestial-body", "user"})
      */
     private $badge;
