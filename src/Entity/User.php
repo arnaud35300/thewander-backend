@@ -82,7 +82,7 @@ class User implements UserInterface
      *      max = 50
      * )
      * @Assert\Type("string")
-     * @Groups({"celestial-body", "user-update", "users", "user"})
+     * @Groups({"celestial-body", "user-update", "users", "user", "comments"})
      */
     private $avatar;
 
