@@ -13,6 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(
+ *      indexes={
+ *          @ORM\Index(name="idx_name", columns={"name"}),
+ *          @ORM\Index(name="idx_slug", columns={"slug"})
+ *      }
+ * )
  * 
  * @UniqueEntity("name")
  * @UniqueEntity("slug")
@@ -37,6 +43,9 @@ class CelestialBody
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=50
+     * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies", "comments"})
      */
@@ -47,6 +56,9 @@ class CelestialBody
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=50
+     * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
      */
@@ -55,7 +67,11 @@ class CelestialBody
     /**
      * @ORM\Column(name="xPosition", type="integer", nullable=true)
      * 
+     * @Assert\NotBlank
      * @Assert\Type(type="integer")
+     * @Assert\Length(
+     *      max=5
+     * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
@@ -64,7 +80,11 @@ class CelestialBody
     /**
      * @ORM\Column(name="yPosition", type="integer", nullable=true)
      * 
+     * @Assert\NotBlank
      * @Assert\Type(type="integer")
+     * @Assert\Length(
+     *      max=5
+     * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
@@ -74,6 +94,9 @@ class CelestialBody
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=50
+     * )
      * 
      * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
@@ -92,6 +115,9 @@ class CelestialBody
      * @ORM\Column(type="text", nullable=true)
      * 
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=500
+     * )
      * 
      * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
