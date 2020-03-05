@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
+ * @ORM\HasLifecycleCallbacks()
+ * 
  * @UniqueEntity("name")
  */
 class Property
