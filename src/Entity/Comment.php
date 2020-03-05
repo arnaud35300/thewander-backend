@@ -26,6 +26,9 @@ class Comment
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=150
+     * )
      * 
      * @Groups({"celestial-body", "user", "comments", "comment-creation", "comment-update"})
      */

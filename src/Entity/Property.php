@@ -12,6 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(
+ *      indexes={
+ *          @ORM\Index(name="idx_name", columns={"name"})
+ *      }
+ * )
  * 
  * @UniqueEntity("name")
  */
@@ -31,6 +36,9 @@ class Property
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=100
+     * )
      * 
      * @Groups({"properties", "celestial-body", "user-celestial-body"})
      */

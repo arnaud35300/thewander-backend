@@ -16,6 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(
+ *      indexes={
+ *          @ORM\Index(name="idx_nickname", columns={"nickname"}),
+ *          @ORM\Index(name="idx_slug", columns={"slug"})
+ *      }
+ * )
  * 
  * @UniqueEntity("nickname")
  * @UniqueEntity("email")
