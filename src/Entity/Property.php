@@ -111,7 +111,7 @@ class Property
     }
 
     /**
-     * @ORM\PrePersist
+     * @ORM\PostPersist
      */
     public function setCreatedAt(\DateTime $dateTime): self
     {
@@ -126,7 +126,7 @@ class Property
     }
 
     /**
-     * @ORM\PrePersist
+     * @ORM\PostPersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAt(\DateTime $dateTime): self

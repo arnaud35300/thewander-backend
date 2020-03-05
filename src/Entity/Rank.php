@@ -140,7 +140,7 @@ class Rank
      * 
      * @return self
      * 
-     * @ORM\PrePersist
+     * @ORM\PostPersist
      */
     public function setCreatedAt(\DateTime $dateTime): self
     {
@@ -158,7 +158,7 @@ class Rank
      * 
      * @return self
      * 
-     * @ORM\PrePersist
+     * @ORM\PostPersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAt(\DateTime $dateTime): self
