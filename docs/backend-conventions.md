@@ -66,33 +66,35 @@ public function getOne(?User $user = null, $id): ?JsonResponse
 
 ## Entities
 
-**The constructor will be used for the 'dynamic' properties of entities, such as a user's nickname, email, password, etc.**
+**The constructor will be used on generic properties and object hinting instances, such as array collections, date times, etc.**  
+**It will also be used for conventional property bindings like regular fields (nickname, email, ...).**
 
 ```
 // User.php
 
 public function __construct($nickname, $email, $password, ...)
 {
+    $this->role = new ArrayCollection();
+    $this->createdAt = new \DateTime();
+    $this->updatedAt = new \DateTime();
+    ...
     $this->nickname = $nickname;
     $this->email = $email;
     $this->password = $password;
     ...
 }
 ```
-
-**The entities event prePersist() will be used on generic properties and object hinting instances, such as array collections, date times, etc.**
+**The entities event PrePersist() will be used to bind properties with special treatments such as the slugs or the number of likes.**
 
 ```
-// User.php
+// CelestialBody.php
 
 /**
  * @ORM\PrePersist
  */
-public function setRole()
+public function setSlug()
 {
-    $this->role = new ArrayCollection();
-    $this->createdAt = new \DateTime();
-    $this->updatedAt = new \DateTime();
+    $this->slug = new Slugger($this->name);
 }
 ```
 

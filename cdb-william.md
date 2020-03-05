@@ -35,3 +35,9 @@
 **Matinée :** rétrospective sur le Sprint 0.
 
 **Après-midi :** prospection et documentation sur les connexions entre React et une API Symfony via le bundle JWT et l'utilisation de ce dernier, puis revue du code dans le cadre de la vérification de la convention de code.
+
+## 04/03/2020 - Jour 7
+
+**Matinée :** gestion des contraintes de propriétés sur chaque entité de la base de données.
+
+**Après-midi :** création des derniers contrôleurs, réflexion sur la manière de procéder pour l'assignation automatique des valeurs sur certaines propriétés des entités (createdAt, updatedAt, ...) et concertation avec l'équipe sur le futur nom du projet.
