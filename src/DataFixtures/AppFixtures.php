@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\DataFixtures\Provider\DataProvider;
 use App\Entity\CelestialBody;
+use App\Entity\Comment;
 use App\Entity\Property;
 use App\Entity\Rank;
 use App\Entity\Role;
@@ -25,21 +26,21 @@ class AppFixtures extends Fixture
     {
         $lorem = DataProvider::getLorem();
 
-        if (1 === 2) {
-            // Rank 
-            $ranks = array();
-            $ranksData = DataProvider::getRanks();
+        // Rank 
+        $ranks = array();
+        $ranksData = DataProvider::getRanks();
 
-            foreach ($ranksData as $currentRank) {
-                $rank = new Rank();
-                $rank
-                    ->setName($currentRank);
+        foreach ($ranksData as $currentRank) {
+            $rank = new Rank();
+            $rank
+                ->setName($currentRank)
+            ;
 
-                // store ranks
-                $ranks[$currentRank] = $rank;
-                $manager->persist($rank);
-            }
+            // store ranks
+            $ranks[$currentRank] = $rank;
+            $manager->persist($rank);
         }
+
         // Role 
         $roles = array();
         $rolesData = DataProvider::getRoles();
@@ -47,20 +48,22 @@ class AppFixtures extends Fixture
         foreach ($rolesData as $currentRole) {
             $role = new Role();
             $role
-                ->setName($currentRole);;
+                ->setName($currentRole)
+            ;
 
             $roles[$currentRole] = $role;
             $manager->persist($role);
         }
 
-        // Property
+        //Property
         $properties = array();
         $propertiesData = DataProvider::getProperties();
 
         foreach ($propertiesData as $currentProperty) {
             $property = new Property();
             $property
-                ->setName($currentProperty);
+                ->setName($currentProperty)
+            ;
 
             $properties[] = $property;
             $manager->persist($property);
@@ -76,12 +79,14 @@ class AppFixtures extends Fixture
             ->setEmail('admin@admin.fr')
             ->setPassword($this->encoder->encodePassword($admin, 'password'))
             ->setRole($roles['ROLE_ADMIN'])
-            ->setAvatar('https://avatarfiles.alphacoders.com/124/thumb-124726.jpg')
+            ->setAvatar('https://avatarfiles')
             ->setFirstname('John Doe')
             ->setBio($lorem)
-            ->setRank($ranks['astronaut']);
+            ->setRank($ranks['astronaut'])
+        ;
 
         $users[] = $admin;
+        $manager->persist($admin);
 
         // random user
         $email = DataProvider::getEmail();
@@ -93,11 +98,13 @@ class AppFixtures extends Fixture
                 ->setNickname($nickname[$key])
                 ->setEmail($currentEmail)
                 ->setPassword($this->encoder->encodePassword($user, 'password'))
-                ->setRole($roles['ROLE_USER'])
-                ->setAvatar('https://avatarfiles.alphacoders.com/124/thumb-124726.jpg')
+                ->setRole($roles['ROLE_CONTRIBUTOR'])
+                ->setAvatar('https://avatarfi')
                 ->setFirstname($nickname[$key])
                 ->setBio($lorem)
-                ->setRank($ranks['astronaut']);
+                ->setRole($roles['ROLE_ADMIN'])
+                ->setRank($ranks['astronaut'])
+            ;
 
             $users[] = $user;
             $manager->persist($user);
@@ -105,7 +112,7 @@ class AppFixtures extends Fixture
 
         // Celestial body 
         $celestialBodiesData = DataProvider::getCelestialBodies();
-
+        $celestialBodies = [];
         foreach ($celestialBodiesData as $currentCelestialBody) {
             $celestialBody = new CelestialBody();
             $celestialBody
@@ -114,7 +121,22 @@ class AppFixtures extends Fixture
                 ->setUser($users[mt_rand(0, count($users) - 1)])
                 ->setXPosition(mt_rand(-500, 500))
                 ->setYPosition(mt_rand(-500, 500))
-                ->addProperty($properties[mt_rand(0, count($properties) - 1)]);
+                ->addProperty($properties[mt_rand(0, count($properties) - 1)])
+            ;
+
+            $celestialBodies[] = $celestialBody; 
+            $manager->persist($celestialBody);
+        }
+
+        for ($i = 0; $i < 15; $i++) {
+            $comment = new Comment();
+            $comment
+                ->setBody(DataProvider::getLorem())
+                ->setUser($users[mt_rand(0, count($users) - 1)])
+                ->setCelestialBody($celestialBodies[mt_rand(0, count($celestialBodies) - 1)])
+            ;
+
+            $manager->persist($comment);
         }
 
         $manager->flush();
