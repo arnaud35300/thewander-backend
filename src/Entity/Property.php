@@ -19,14 +19,17 @@ class Property
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
      * @Groups({"properties", "celestial-body"})
      */
     private $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
+     * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * 
      * @Groups({"properties", "celestial-body", "user-celestial-body"})
      */
     private $name;
@@ -38,12 +41,14 @@ class Property
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      * @Assert\NotBlank
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      * @Assert\NotBlank
      */
     private $updatedAt;
@@ -103,9 +108,12 @@ class Property
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(\DateTime $dateTime): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $dateTime;
 
         return $this;
     }
@@ -115,9 +123,13 @@ class Property
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(\DateTime $dateTime): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $dateTime;
 
         return $this;
     }
