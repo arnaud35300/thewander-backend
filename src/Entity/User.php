@@ -98,7 +98,7 @@ class User implements UserInterface
      * )
      * @Assert\Type("string")
      * 
-     * @Groups({"celestial-body", "user-update", "users", "user"})
+     * @Groups({"celestial-body", "user-update", "users", "user", "comments"})
      */
     private $avatar;
 
