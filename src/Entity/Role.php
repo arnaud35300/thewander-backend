@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  * @UniqueEntity("name")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Role
 {
@@ -20,17 +21,20 @@ class Role
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * 
      * @Groups("user")
      */
     private $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=20, unique=true)
+     * 
      * @Assert\NotBlank
      * @Assert\Length(
      *      max = 30
      * )
      * @Assert\Type("string")
+     * 
      * @Groups("user")
      */
     private $name;
@@ -108,9 +112,16 @@ class Role
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(\DateTime $dateTime): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $dateTime;
 
         return $this;
     }
@@ -120,9 +131,17 @@ class Role
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(\DateTime $dateTime): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $dateTime;
 
         return $this;
     }
