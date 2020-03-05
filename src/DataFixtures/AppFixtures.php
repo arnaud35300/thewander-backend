@@ -24,25 +24,26 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $lorem = DataProvider::getLorem();
-        
-        // Rank 
-        $ranks = array();
-        $ranksData = DataProvider::getRanks();
-        
-        foreach ($ranksData as $currentRank) {
-            $rank = new Rank();
-            $rank
-                ->setName($currentRank);
 
-            // store ranks
-            $ranks[$currentRank] = $rank;
-            $manager->persist($rank);
+        if (1 === 2) {
+            // Rank 
+            $ranks = array();
+            $ranksData = DataProvider::getRanks();
+
+            foreach ($ranksData as $currentRank) {
+                $rank = new Rank();
+                $rank
+                    ->setName($currentRank);
+
+                // store ranks
+                $ranks[$currentRank] = $rank;
+                $manager->persist($rank);
+            }
         }
-
         // Role 
         $roles = array();
         $rolesData = DataProvider::getRoles();
-        
+
         foreach ($rolesData as $currentRole) {
             $role = new Role();
             $role
@@ -55,12 +56,11 @@ class AppFixtures extends Fixture
         // Property
         $properties = array();
         $propertiesData = DataProvider::getProperties();
-        
+
         foreach ($propertiesData as $currentProperty) {
             $property = new Property();
             $property
-                ->setName($currentProperty)
-            ;
+                ->setName($currentProperty);
 
             $properties[] = $property;
             $manager->persist($property);
@@ -79,15 +79,14 @@ class AppFixtures extends Fixture
             ->setAvatar('https://avatarfiles.alphacoders.com/124/thumb-124726.jpg')
             ->setFirstname('John Doe')
             ->setBio($lorem)
-            ->setRank($ranks['astronaut'])
-        ;
+            ->setRank($ranks['astronaut']);
 
         $users[] = $admin;
-        
+
         // random user
         $email = DataProvider::getEmail();
         $nickname = DataProvider::getNickname();
-        
+
         foreach ($email as $key => $currentEmail) {
             $user = new User();
             $user
@@ -98,8 +97,7 @@ class AppFixtures extends Fixture
                 ->setAvatar('https://avatarfiles.alphacoders.com/124/thumb-124726.jpg')
                 ->setFirstname($nickname[$key])
                 ->setBio($lorem)
-                ->setRank($ranks['astronaut'])
-            ;
+                ->setRank($ranks['astronaut']);
 
             $users[] = $user;
             $manager->persist($user);
@@ -108,17 +106,16 @@ class AppFixtures extends Fixture
         // Celestial body 
         $celestialBodiesData = DataProvider::getCelestialBodies();
 
-        foreach($celestialBodiesData as $currentCelestialBody) {
+        foreach ($celestialBodiesData as $currentCelestialBody) {
             $celestialBody = new CelestialBody();
             $celestialBody
-                        ->setName($currentCelestialBody)
-                        ->setDescription($lorem)
-                        ->setUser($users[mt_rand(0, count($users) - 1)])
-                        ->setXPosition(mt_rand(-500,500))
-                        ->setYPosition(mt_rand(-500,500))
-                        ->addProperty($properties[mt_rand(0, count($properties) - 1)])
-            ;
-        }   
+                ->setName($currentCelestialBody)
+                ->setDescription($lorem)
+                ->setUser($users[mt_rand(0, count($users) - 1)])
+                ->setXPosition(mt_rand(-500, 500))
+                ->setYPosition(mt_rand(-500, 500))
+                ->addProperty($properties[mt_rand(0, count($properties) - 1)]);
+        }
 
         $manager->flush();
     }
