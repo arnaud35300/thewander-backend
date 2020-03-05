@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RankRepository")
  * @UniqueEntity("name")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Rank
 {
@@ -130,21 +131,35 @@ class Rank
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(\DateTime $dateTime): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = $dateTime;
 
         return $this;
     }
-
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    /**
+     * @param \DateTime $dateTime
+     * 
+     * @return self
+     * 
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt(\DateTime $dateTime): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = $dateTime;
 
         return $this;
     }
