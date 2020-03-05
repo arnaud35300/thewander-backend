@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\RankRepository;
-use App\Repository\RoleRepository;
 use App\Service\Slugger;
+use App\Service\UserAttributes;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,11 +13,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
+ /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(
+ *      indexes={
+ *          @ORM\Index(name="idx_nickname", columns={"nickname"}),
+ *          @ORM\Index(name="idx_slug", columns={"slug"})
+ *      }
+ * )
+ * 
  * @UniqueEntity("nickname")
  * @UniqueEntity("email")
- * @ORM\HasLifecycleCallbacks()
  */
 class User implements UserInterface
 {
@@ -180,18 +186,12 @@ class User implements UserInterface
      */
     private $updatedAt;
 
-    public function __construct(RoleRepository $roleRepository, RankRepository $rankRepository)
+    public function __construct()
     {
         $this->celestialBodies = new ArrayCollection();
         $this->comments = new ArrayCollection();
 
         $this->status = (int) 1;
-
-        $role = $roleRepository->findByName('ROLE_USER');
-        $this->role = $role;
-
-        $rank = $rankRepository->findByName('neophyte');
-        $this->rank = $rank;
     }
 
     /**
@@ -201,12 +201,9 @@ class User implements UserInterface
      * 
      * @ORM\PreUpdate
      */
-    public function rankUgrade(RankRepository $rankRepository): void {
+    public function rankUgrade(): void
+    {
         $xp = $this->celestialBodies->count() + $this->comments->count();
-
-        if($xp > 5) {
-            $this->rank = $rankRepository->findByName('astronaut');
-        }
     }
 
     public function getId(): ?int
@@ -264,11 +261,12 @@ class User implements UserInterface
      * 
      * @return self
      * 
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setSlug(Slugger $slugger): self
+    public function setSlug(): self
     {
+        $slugger = new Slugger();
         $this->slug = $slugger->slugify($this->nickname);
 
         return $this;
@@ -462,15 +460,11 @@ class User implements UserInterface
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      */
-    public function setCreatedAt(\DateTime $dateTime): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $dateTime;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -481,16 +475,12 @@ class User implements UserInterface
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(\DateTime $dateTime): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }

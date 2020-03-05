@@ -168,11 +168,12 @@ class CelestialBody
     }
 
     /**
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setSlug(Slugger $slugger): self
+    public function setSlug(): self
     {
+        $slugger = new Slugger();
         $this->slug = $slugger->slugify($this->name);
 
         return $this;
@@ -313,11 +314,11 @@ class CelestialBody
     }
 
     /**
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      */
-    public function setCreatedAt(\DateTime $dateTime): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $dateTime;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -328,12 +329,12 @@ class CelestialBody
     }
 
     /**
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(\DateTime $dateTime): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }

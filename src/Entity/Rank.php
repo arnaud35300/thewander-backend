@@ -28,10 +28,10 @@ class Rank
      * @ORM\Column(name="name", type="string", length=30, unique=true)
      * 
      * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 30
      * )
-     * @Assert\Type("string")
      * 
      * @Groups({"celestial-body", "user"})
      */
@@ -41,10 +41,10 @@ class Rank
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
      * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\Type("string")
      * 
      * @Groups({"celestial-body", "user"})
      */
@@ -67,6 +67,7 @@ class Rank
 
     public function __construct()
     {
+        
         $this->users = new ArrayCollection();
     }
 
@@ -136,15 +137,11 @@ class Rank
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      */
-    public function setCreatedAt(\DateTime $dateTime): self
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $dateTime;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -154,16 +151,12 @@ class Rank
     }
 
     /**
-     * @param \DateTime $dateTime
-     * 
-     * @return self
-     * 
-     * @ORM\PostPersist
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(\DateTime $dateTime): self
+    public function setUpdatedAt(): self
     {
-        $this->updatedAt = $dateTime;
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }
