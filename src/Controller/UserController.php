@@ -194,6 +194,8 @@ class UserController extends AbstractController
         $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
 
+        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
+
         $user
             ->setPassword($encoder->encodePassword($user, $password))
             ->setAvatar($avatar)
