@@ -68,6 +68,12 @@ class Comment
      */
     private $updatedAt;
 
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -114,12 +120,9 @@ class Comment
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAt(): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -129,13 +132,9 @@ class Comment
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\CelestialBody;
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * @Route("/comments", name="api_")
+ * @Route(name="api_")
  */
 class CommentController extends AbstractController
 {
@@ -24,7 +26,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route(name="comments_list", methods={"GET"})
+     ** @Route("/comments", name="comments_list", methods={"GET"})
      */
     public function getAll(CommentRepository $commentRepository): JsonResponse
     {
@@ -45,7 +47,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{id}", name="comment", requirements={"id"="\d+"}, methods={"GET"})
+     ** @Route("/comments/{id}", name="comment", requirements={"id"="\d+"}, methods={"GET"})
      */
     public function getOne(Comment $comment = null): JsonResponse
     {
@@ -68,16 +70,18 @@ class CommentController extends AbstractController
      * 
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
-     * @param ValidatorInterface $validator
+     * @param ValidatorInterface $validator The Validator component.
+     * @param CelestialBody $celestialBody The CestialBody entity.
      * 
      * @return JsonResponse
      * 
-     ** @Route(name="create_comment", methods={"POST"})
+     ** @Route("/celestial-bodies/{slug}/comments", name="create_comment", methods={"POST"})
      */
     public function create(
         Request $request,
         SerializerInterface $serializer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        CelestialBody $celestialBody = null
     ): JsonResponse {
         // TODO : authentication requirements
 
@@ -95,6 +99,20 @@ class CommentController extends AbstractController
             'json',
             ['groups' => 'comment-creation']
         );
+
+        if ($celestialBody === null) {
+            return $this->json(
+                ['error' => 'This celestial body does not exist.'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $newComment->setCelestialBody($celestialBody);
+
+        // Todo : à retirer
+        $userRepo = $this->getDoctrine()->getRepository(User::class); 
+        $user = $userRepo->find(4);     
+        $newComment->setUser($user);
 
         $errors = $validator->validate($newComment);
 
@@ -127,7 +145,9 @@ class CommentController extends AbstractController
                 'message' => 'Comment sent.',
                 'content' => $newComment
             ],
-            Response::HTTP_CREATED
+            Response::HTTP_CREATED,
+            array(),
+            ['groups' => 'comments']
         );
     }
 
@@ -141,7 +161,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{id}", name="update_comment", requirements={"id"="\d+"}, methods={"PATCH"})
+     ** @Route("/comments/{id}", name="update_comment", requirements={"id"="\d+"}, methods={"PATCH"})
      */
     public function update(
         Request $request,
@@ -219,7 +239,7 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
+     ** @Route("/comments/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
      */
     public function delete(Comment $comment = null): JsonResponse
     {

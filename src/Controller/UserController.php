@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,8 +70,9 @@ class UserController extends AbstractController
      *
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
-     * @param ValidatorInterface $validator
-     * @param UserPasswordEncoderInterface $encoder
+     * @param ValidatorInterface $validator The Validator component.
+     * @param UserPasswordEncoderInterface $encoder The PasswordEncoder component.
+     * @param Slugger $slugger The Slugger service.
      * 
      * @return JsonResponse
      * 
@@ -80,7 +82,8 @@ class UserController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        Slugger $slugger
     ) {
         // TODO : authentication requirements
 
@@ -97,6 +100,10 @@ class UserController extends AbstractController
             User::class,
             'json',
             ['groups' => 'user-creation']
+        );
+
+        $user->setSlug(
+            $slugger->slugify($user->getNickname())
         );
   
         $errors = $validator->validate($user);
@@ -117,8 +124,12 @@ class UserController extends AbstractController
             );
         }
 
-        // TODO make event for this
-        $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+        $user->setPassword(
+            $encoder->encodePassword(
+                $user,
+                $user->getPassword()
+            )
+        );
 
         $manager = $this
             ->getDoctrine()
@@ -182,6 +193,8 @@ class UserController extends AbstractController
         $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
         $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
+
+        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
 
         $user
             ->setPassword($encoder->encodePassword($user, $password))
