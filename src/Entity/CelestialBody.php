@@ -70,7 +70,7 @@ class CelestialBody
      * @Assert\NotBlank
      * @Assert\Type(type="integer")
      * @Assert\Length(
-     *      max=5
+     *      max=6
      * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
@@ -83,7 +83,7 @@ class CelestialBody
      * @Assert\NotBlank
      * @Assert\Type(type="integer")
      * @Assert\Length(
-     *      max=5
+     *      max=6
      * )
      * 
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
@@ -126,7 +126,7 @@ class CelestialBody
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
      * 
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "celestial-body-update", "user-celestial-bodies"})
      */
     private $properties;
 

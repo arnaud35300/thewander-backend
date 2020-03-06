@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Property;
 use App\Entity\CelestialBody;
+use App\Entity\User;
 use App\Repository\CelestialBodyRepository;
 use App\Service\Slugger;
 use Symfony\Component\HttpFoundation\Request;
@@ -110,6 +111,11 @@ class CelestialBodyController extends AbstractController
             $slugger->slugify($newCelestialBody->getName())
         );
 
+        // Todo : à retirer
+        $userRepo = $this->getDoctrine()->getRepository(User::class); 
+        $user = $userRepo->find(6);     
+        $newCelestialBody->setUser($user);
+
         $errors = $validator->validate($newCelestialBody);
 
         if (count($errors) !== 0) {
@@ -152,7 +158,9 @@ class CelestialBodyController extends AbstractController
                 'message' => 'Celestial body now created.',
                 'content' => $newCelestialBody
             ],
-            Response::HTTP_CREATED
+            Response::HTTP_CREATED,
+            array(),
+            ['groups' => 'celestial-body']
         );
     }
 
