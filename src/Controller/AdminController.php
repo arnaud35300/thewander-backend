@@ -30,22 +30,29 @@ class AdminController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
 
-        if ($user->getStatus() === 1) {
-            $user->setStatus(0);
-
-            return $this->json(
-                ['message' => 'User now banned.'],
-                Response::HTTP_OK
-            );
+        switch ($user->getStatus()) {
+            case 1:
+                $user->setStatus(0);
+                $message = 'User now banned.';
+                break;
+            
+            case 0:
+                $user->setStatus(1);
+                $message = 'User now unbanned.';
+                break;
         }
 
-        if ($user->getStatus() === 0) {
-            $user->setStatus(1);
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
 
-            return $this->json(
-                ['message' => 'User now unbanned.'],
-                Response::HTTP_OK
-            );       
-        }
+        $manager->persist($user);
+        $manager->flush();
+
+        return $this->json(
+            ['message' => $message],
+            Response::HTTP_OK
+        );
     }
 }

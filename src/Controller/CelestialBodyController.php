@@ -134,15 +134,17 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        foreach ($properties as $propertyId) {
-            $property = $this
-                ->getDoctrine()
-                ->getRepository(Property::class)
-                ->find($propertyId)
-            ;
+        if ($properties) {
+            foreach ($properties as $propertyId) {
+                $property = $this
+                    ->getDoctrine()
+                    ->getRepository(Property::class)
+                    ->find($propertyId)
+                ;
             
-            if ($property)
-                $newCelestialBody->addProperty($property);
+                if ($property)
+                    $newCelestialBody->addProperty($property);
+            }
         }
 
         $manager = $this
@@ -180,6 +182,7 @@ class CelestialBodyController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
+        Slugger $slugger,
         CelestialBody $celestialBody = null
     ): JsonResponse {
         // TODO : authentication requirements
@@ -201,17 +204,19 @@ class CelestialBodyController extends AbstractController
         }
 
         $content = json_decode($content, true);
-        
+
         $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
-        $slug = !empty($content['slug']) ? $content['slug'] : $celestialBody->getSlug();
+        // $slug = !empty($content['slug']) ? $content['slug'] : $celestialBody->getSlug();
         $xPosition = !empty($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
         $yPosition = !empty($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
         $picture = !empty($content['picture']) ? $content['picture'] : $celestialBody->getPicture();
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
-        $properties = $content->properties;
+        $properties = !empty($content['properties']) ? $content['properties'] : false;
 
         $celestialBody->setName($name);
-        $celestialBody->setSlug($slug);
+        $celestialBody->setSlug(
+            $slugger->slugify($name)
+        );
         $celestialBody->setXPosition($xPosition);
         $celestialBody->setYPosition($yPosition);
         $celestialBody->setPicture($picture);
@@ -235,18 +240,24 @@ class CelestialBodyController extends AbstractController
             );
         }
         
-        $currentProperties = $celestialBody->getProperties();
+        $currentProperties = $celestialBody->getProperties();        
         
-        foreach ($currentProperties as $currentProperty)
-            $celestialBody->removeProperty($currentProperty);
+        if ($properties) {
+            foreach ($currentProperties as $currentProperty)
+                $celestialBody->removeProperty($currentProperty);
 
-        foreach ($properties as $propertyId) {
-            $property = $this->getDoctrine->getRepository(Property::class)->find($propertyId);
-            
-            if ($property)
-                $celestialBody->addProperty($property);
+            foreach ($properties as $propertyId) {
+                $property = $this
+                    ->getDoctrine()
+                    ->getRepository(Property::class)
+                    ->find($propertyId)
+                ;
+
+                if ($property)
+                    $celestialBody->addProperty($property);
+            }
         }
-        
+
         $manager = $this
             ->getDoctrine()
             ->getManager()
