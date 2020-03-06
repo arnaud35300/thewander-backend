@@ -55,6 +55,10 @@ class User implements UserInterface
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 30
+     * )
      * 
      * @Groups({"celestial-body", "users", "user-update", "user", "comments"})
      */
@@ -190,19 +194,10 @@ class User implements UserInterface
         $this->celestialBodies = new ArrayCollection();
         $this->comments = new ArrayCollection();
 
-        $this->status = (int) 1;
-    }
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
 
-    /**
-     * This method assesses the rank of the user based on their contributions.
-     * 
-     * @return void
-     * 
-     * @ORM\PreUpdate
-     */
-    public function rankUgrade(): void
-    {
-        $xp = $this->celestialBodies->count() + $this->comments->count();
+        $this->status = (int) 1;
     }
 
     public function getId(): ?int
@@ -237,7 +232,6 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-
     public function getNickname(): ?string
     {
         return $this->nickname;
@@ -255,18 +249,9 @@ class User implements UserInterface
         return $this->slug;
     }
 
-    /**
-     * @param Slugger $slugger The Slugger service.
-     * 
-     * @return self
-     * 
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setSlug(): self
+    public function setSlug(string $slug): self
     {
-        $slugger = new Slugger();
-        $this->slug = $slugger->slugify($this->nickname);
+        $this->slug = $slug;
 
         return $this;
     }
@@ -458,12 +443,10 @@ class User implements UserInterface
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAt(): self
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -473,13 +456,10 @@ class User implements UserInterface
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setUpdatedAt(): self
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

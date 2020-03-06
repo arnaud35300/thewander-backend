@@ -20,10 +20,10 @@ class UserEvent
 
     public function prePersist(User $user, LifecycleEventArgs $event)
     {
-        $rank = $this->rankRepository->findByName('neophyte');
+        $rank = $this->rankRepository->findOneByName('neophyte');
         $user->setRank($rank);
 
-        $role = $this->roleRepository->findByName('ROLE_CONTRIBUTOR');
+        $role = $this->roleRepository->findOneByName('ROLE_CONTRIBUTOR');
         $user->setRole($role);
     }
 }

@@ -168,6 +168,10 @@ class CelestialBody
     {
         $this->properties = new ArrayCollection();
         $this->comments = new ArrayCollection();
+
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+
         $this->nbStars = (int) 0;
     }
 
@@ -193,14 +197,9 @@ class CelestialBody
         return $this->slug;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setSlug(): self
+    public function setSlug(string $slug): self
     {
-        $slugger = new Slugger();
-        $this->slug = $slugger->slugify($this->name);
+        $this->slug = $slug;
 
         return $this;
     }
@@ -339,12 +338,9 @@ class CelestialBody
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
-    public function setCreatedAt(): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -354,13 +350,9 @@ class CelestialBody
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

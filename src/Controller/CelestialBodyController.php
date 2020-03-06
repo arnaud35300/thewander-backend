@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Property;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
+use App\Service\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,6 +73,7 @@ class CelestialBodyController extends AbstractController
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
+     * @param Slugger $slugger The Slugger service.
      * 
      * @return JsonResponse
      * 
@@ -80,7 +82,8 @@ class CelestialBodyController extends AbstractController
     public function create(
         Request $request,
         SerializerInterface $serializer,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        Slugger $slugger
     ): JsonResponse {
         // TODO : authentication requirements
 
@@ -101,6 +104,10 @@ class CelestialBodyController extends AbstractController
             CelestialBody::class,
             'json',
             ['groups' => 'celestial-body-creation']
+        );
+
+        $newCelestialBody->setSlug(
+            $slugger->slugify($newCelestialBody->getName())
         );
 
         $errors = $validator->validate($newCelestialBody);
