@@ -34,7 +34,7 @@ class CelestialBody
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies", "comments"})
+     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
      */
     private $id;
 

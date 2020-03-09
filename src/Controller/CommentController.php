@@ -111,7 +111,7 @@ class CommentController extends AbstractController
 
         // Todo : à retirer
         $userRepo = $this->getDoctrine()->getRepository(User::class); 
-        $user = $userRepo->find(4);     
+        $user = $userRepo->find(7);     
         $newComment->setUser($user);
 
         $errors = $validator->validate($newComment);
