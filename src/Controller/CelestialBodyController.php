@@ -113,7 +113,7 @@ class CelestialBodyController extends AbstractController
 
         // Todo : à retirer
         $userRepo = $this->getDoctrine()->getRepository(User::class); 
-        $user = $userRepo->find(6);     
+        $user = $userRepo->find(7);     
         $newCelestialBody->setUser($user);
 
         $errors = $validator->validate($newCelestialBody);
