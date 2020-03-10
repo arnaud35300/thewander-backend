@@ -51,3 +51,4 @@ security:
     role_hierarchy:
         ROLE_ADMINISTRATOR: ROLE_MODERATOR
         ROLE_MODERATOR: ROLE_CONTRIBUTOR
+
