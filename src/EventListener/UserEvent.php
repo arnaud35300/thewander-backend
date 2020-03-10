@@ -3,9 +3,9 @@
 namespace App\EventListener;
 
 use App\Entity\User;
-use App\Repository\RankRepository;
-use App\Repository\RoleRepository;
 use App\Service\Slugger;
+use App\Repository\RoleRepository;
+use App\Repository\RankRepository;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -47,6 +47,8 @@ class UserEvent
         $user->setSlug(
             $this->slugger->slugify($user->getNickname())
         );
+
+        $user->setStatus(1);
     }
 
     public function preUpdate(User $user, LifecycleEventArgs $event)
