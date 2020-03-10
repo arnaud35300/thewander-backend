@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
 use App\Service\Slugger;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -161,16 +161,19 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}", name="update_user", methods={"PATCH"})
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
+     ** @Route(name="update_user", methods={"PATCH"})
      */
     public function update(
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder,
-        User $user = null
     ) {
         // TODO : authentication requirements
+
+        $user = $this->getUser();
 
         if ($user === null)
             return $this->json(
@@ -251,12 +254,47 @@ class UserController extends AbstractController
      * @param User $user The user entity.
      * 
      * @return JsonResponse
-     * 
+     *
+     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
+     *  
      ** @Route("/{slug}", name="delete_user", methods={"DELETE"})
      */
     public function delete(User $user = null): JsonResponse
     {
         // TODO : authentication requirements
+
+        if ($user === null)
+            return $this->json(
+                ['error' => 'This user does not exist.'],
+                Response::HTTP_NOT_FOUND
+            );
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($user);
+        $manager->flush();
+
+        return $this->json(
+            ['message' => 'User deleted.'],
+            Response::HTTP_NO_CONTENT
+        );
+    }
+
+     /**
+     *? Deletes the connected user.
+     *  
+     * @return JsonResponse
+     *
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     *  
+     ** @Route(name="delete_self", methods={"DELETE"})
+     */
+    public function deleteSelf(): JsonResponse
+    {       
+        $user = $this->getUser();
 
         if ($user === null)
             return $this->json(
