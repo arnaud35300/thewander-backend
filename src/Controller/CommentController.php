@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\CelestialBody;
-use App\Entity\Comment;
 use App\Entity\User;
+use App\Entity\Comment;
+use App\Entity\CelestialBody;
 use App\Repository\CommentRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route(name="api_")
@@ -25,6 +26,8 @@ class CommentController extends AbstractController
      * @param CommentRepository $commentRepository The Comment repository.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
      * 
      ** @Route("/comments", name="comments_list", methods={"GET"})
      */
@@ -46,6 +49,8 @@ class CommentController extends AbstractController
      * @param Comment $comment The Comment entity.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
      * 
      ** @Route("/comments/{id}", name="comment", requirements={"id"="\d+"}, methods={"GET"})
      */
@@ -74,6 +79,8 @@ class CommentController extends AbstractController
      * @param CelestialBody $celestialBody The CestialBody entity.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/celestial-bodies/{slug}/comments", name="create_comment", methods={"POST"})
      */
@@ -161,6 +168,8 @@ class CommentController extends AbstractController
      * 
      * @return JsonResponse
      * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
      ** @Route("/comments/{id}", name="update_comment", requirements={"id"="\d+"}, methods={"PATCH"})
      */
     public function update(
@@ -238,6 +247,8 @@ class CommentController extends AbstractController
      * @param Comment $comment The Comment entity.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/comments/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
      */
