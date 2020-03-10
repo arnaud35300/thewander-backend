@@ -189,15 +189,15 @@ class CelestialBodyController extends AbstractController
         ValidatorInterface $validator,
         Slugger $slugger,
         CelestialBody $celestialBody = null
-    ): JsonResponse {
-        // TODO : authentication requirements
-
+    ): JsonResponse {        
         if ($celestialBody === null) {
             return $this->json(
                 ['error' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
+        
+        $this->denyAccessUnlessGranted('CELESTIALBODY_EDIT', $celestialBody);
 
         $content = $request->getContent();
 
@@ -299,14 +299,15 @@ class CelestialBodyController extends AbstractController
      */
     public function delete(CelestialBody $celestialBody = null): JsonResponse
     {
-        // TODO : authentication requirements
-
+        
         if ($celestialBody === null) {
             return $this->json(
                 ['error' => 'This celestial body does not exist.'],
                 Response::HTTP_NOT_FOUND
             );
         }
+        
+        $this->denyAccessUnlessGranted('CELESTIALBODY_DELETE', $celestialBody);
 
         $manager = $this
             ->getDoctrine()

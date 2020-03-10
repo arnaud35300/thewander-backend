@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Repository\PropertyRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/properties", name="api_")
@@ -19,6 +20,8 @@ class PropertyController extends AbstractController
      * @param PropertyRepository $propertyRepository The Property repository.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=404)
      *  
      ** @Route(name="properties_list", methods={"GET"})
      */

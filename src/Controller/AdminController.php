@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -19,6 +20,8 @@ class AdminController extends AbstractController
      * @param User $user The User Repository.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=404)
      * 
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
