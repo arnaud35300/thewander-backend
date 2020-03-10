@@ -177,14 +177,15 @@ class CommentController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         Comment $comment = null
-    ): JsonResponse {
-        // TODO : authentication requirements
-
+    ): JsonResponse
+    {
         if ($comment === null)
             return $this->json(
                 ['error' => 'comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
+
+        $this->denyAccessUnlessGranted('COMMENT_UPDATE', $comment);
 
         $content = $request->getContent();
 
@@ -254,13 +255,13 @@ class CommentController extends AbstractController
      */
     public function delete(Comment $comment = null): JsonResponse
     {
-        // TODO : authentication requirements
-
         if ($comment === null)
             return $this->json(
                 ['error' => 'The comment does not exist.'],
                 Response::HTTP_NOT_FOUND
             );
+
+        $this->denyAccessUnlessGranted('COMMENT_DELETE', $comment);
 
         $manager = $this
             ->getDoctrine()
