@@ -21,7 +21,7 @@ class AdminController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=404)
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
      * 
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
