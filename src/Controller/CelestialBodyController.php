@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\Slugger;
 use App\Entity\Property;
 use App\Entity\CelestialBody;
-use App\Entity\User;
 use App\Repository\CelestialBodyRepository;
-use App\Service\Slugger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/celestial-bodies", name="api_")
@@ -78,6 +79,8 @@ class CelestialBodyController extends AbstractController
      * 
      * @return JsonResponse
      * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     *
      ** @Route(name="create_celestial_body", methods={"POST"})
      */
     public function create(
@@ -175,6 +178,8 @@ class CelestialBodyController extends AbstractController
      * @param ValidatorInterface $validator The Validator component.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/{slug}", name="update_celestial_body", methods={"PATCH"})
      */
@@ -287,6 +292,8 @@ class CelestialBodyController extends AbstractController
      * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
      */
