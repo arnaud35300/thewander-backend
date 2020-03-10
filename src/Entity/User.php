@@ -53,13 +53,6 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=30)
      * 
-     * @Assert\NotBlank
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      min = 3,
-     *      max = 30
-     * )
-     * 
      * @Groups({"celestial-body", "users", "user-update", "user", "comments"})
      */
     private $slug;

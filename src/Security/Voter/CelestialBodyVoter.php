@@ -42,7 +42,7 @@ class CelestialBodyVoter extends Voter
             case 'CELESTIALBODY_DELETE':
                 if ($user === $celestialBody->getUser())
                     return true;
-                    
+
                 if ($this->security->isGranted('ROLE_MODERATOR'))
                     return true;
                 break;
@@ -51,4 +51,8 @@ class CelestialBodyVoter extends Voter
         return false;
     }
 }
+
+
+
+
 
