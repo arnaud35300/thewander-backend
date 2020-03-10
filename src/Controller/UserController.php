@@ -86,8 +86,6 @@ class UserController extends AbstractController
         UserPasswordEncoderInterface $encoder,
         Slugger $slugger
     ) {
-        // TODO : authentication requirements
-
         $content = $request->getContent();
 
         if (json_decode($content) === null)
@@ -103,10 +101,6 @@ class UserController extends AbstractController
             ['groups' => 'user-creation']
         );
 
-        $user->setSlug(
-            $slugger->slugify($user->getNickname())
-        );
-  
         $errors = $validator->validate($user);
 
         if (count($errors) !== 0) {
@@ -124,13 +118,6 @@ class UserController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-
-        $user->setPassword(
-            $encoder->encodePassword(
-                $user,
-                $user->getPassword()
-            )
-        );
 
         $manager = $this
             ->getDoctrine()
@@ -158,7 +145,6 @@ class UserController extends AbstractController
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
      * @param UserPasswordEncoderInterface $encoder The PasswordEncoder component.
-     * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
@@ -172,8 +158,6 @@ class UserController extends AbstractController
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder
     ) {
-        // TODO : authentication requirements
-
         $user = $this->getUser();
 
         if ($user === null)
@@ -261,10 +245,8 @@ class UserController extends AbstractController
      ** @Route("/{slug}", name="delete_user", methods={"DELETE"})
      */
     public function delete(User $user = null): JsonResponse
-    {
-        // TODO : authentication requirements
-
-        if ($user === null)
+    {    
+        if ($user === null || $user->getStatus() === 0)
             return $this->json(
                 ['error' => 'This user does not exist.'],
                 Response::HTTP_NOT_FOUND
