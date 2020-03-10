@@ -7,12 +7,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RankRepository")
- * @UniqueEntity("name")
+ * @UniqueEntity({"rankNumber", "name"})
  * @ORM\HasLifecycleCallbacks()
  */
 class Rank
@@ -24,6 +23,11 @@ class Rank
      */
     private $id;
 
+    /**
+     * @ORM\Column(type="smallint", unique=true)
+     */
+    private $rankNumber;
+    
     /**
      * @ORM\Column(name="name", type="string", length=30, unique=true)
      * 
@@ -70,10 +74,22 @@ class Rank
         
         $this->users = new ArrayCollection();
     }
-
+    
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getRankNumber(): ?int
+    {
+        return $this->rankNumber;
+    }
+
+    public function setRankNumber(int $rankNumber): self
+    {
+        $this->rankNumber = $rankNumber;
+
+        return $this;
     }
 
     public function getName(): ?string
