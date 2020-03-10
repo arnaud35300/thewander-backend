@@ -51,3 +51,4 @@ class CelestialBodyVoter extends Voter
         return false;
     }
 }
+
