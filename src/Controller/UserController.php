@@ -256,7 +256,7 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      *
-     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
+     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=404)
      *  
      ** @Route("/{slug}", name="delete_user", methods={"DELETE"})
      */
