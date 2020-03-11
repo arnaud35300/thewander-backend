@@ -88,9 +88,8 @@ class CelestialBodyController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         Slugger $slugger
-    ): JsonResponse {
-        // TODO : authentication requirements
-
+    ): JsonResponse
+    {
         $content = $request->getContent();
 
         if (json_decode($content) === null) {
@@ -113,11 +112,6 @@ class CelestialBodyController extends AbstractController
         $newCelestialBody->setSlug(
             $slugger->slugify($newCelestialBody->getName())
         );
-
-        // Todo : à retirer
-        $userRepo = $this->getDoctrine()->getRepository(User::class); 
-        $user = $userRepo->find(7);     
-        $newCelestialBody->setUser($user);
 
         $errors = $validator->validate($newCelestialBody);
 
@@ -211,7 +205,6 @@ class CelestialBodyController extends AbstractController
         $content = json_decode($content, true);
 
         $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
-        // $slug = !empty($content['slug']) ? $content['slug'] : $celestialBody->getSlug();
         $xPosition = !empty($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
         $yPosition = !empty($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
         $picture = !empty($content['picture']) ? $content['picture'] : $celestialBody->getPicture();

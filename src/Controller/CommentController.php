@@ -89,8 +89,8 @@ class CommentController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         CelestialBody $celestialBody = null
-    ): JsonResponse {
-        // TODO : authentication requirements
+    ): JsonResponse 
+    {
 
         $content = $request->getContent();
 
@@ -115,11 +115,6 @@ class CommentController extends AbstractController
         }
 
         $newComment->setCelestialBody($celestialBody);
-
-        // Todo : à retirer
-        $userRepo = $this->getDoctrine()->getRepository(User::class); 
-        $user = $userRepo->find(7);     
-        $newComment->setUser($user);
 
         $errors = $validator->validate($newComment);
 

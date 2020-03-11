@@ -36,3 +36,8 @@ services:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\CelestialBody' }
             - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\CelestialBody' }
             
+    App\EventListener\CommentEvent:
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Comment' }
+            - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\Comment' }
+

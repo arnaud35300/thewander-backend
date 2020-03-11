@@ -39,6 +39,8 @@ class CelestialBodyEvent
 
     public function preUpdate(CelestialBody $celestialBody)
     {
+        $celestialBody->setUpdatedAt(new \DateTime());
+
         $celestialBody->setSlug(
             $this->slugger->slugify(
                 $celestialBody->getName()
