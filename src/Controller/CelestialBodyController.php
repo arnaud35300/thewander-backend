@@ -80,7 +80,7 @@ class CelestialBodyController extends AbstractController
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
-     ** @Route("/delimit", name="delimit_celestial_bodies", methods={"POST"})
+     ** @Route("/delimiter", name="delimit_celestial_bodies", methods={"POST"})
      */
     public function verifyDelimiter(Request $request, Delimiter $delimiter): JsonResponse
     {
