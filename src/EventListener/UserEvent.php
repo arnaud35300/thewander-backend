@@ -49,6 +49,10 @@ class UserEvent
         );
 
         $user->setStatus(1);
+
+        $birthday = '2012-02-02';
+        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
+        $user->setBirthday($birthday);
     }
 
     public function preUpdate(User $user, LifecycleEventArgs $event)
