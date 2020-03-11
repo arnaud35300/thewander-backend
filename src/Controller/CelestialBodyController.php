@@ -187,7 +187,7 @@ class CelestialBodyController extends AbstractController
     {        
         if ($celestialBody === null)
             return $this->json(
-                ['error' => 'Comment not found.'],
+                ['error' => 'Celestial bodies not found.'],
                 Response::HTTP_NOT_FOUND
             );
         

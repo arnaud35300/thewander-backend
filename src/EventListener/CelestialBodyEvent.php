@@ -5,23 +5,25 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Service\Slugger;
 use App\Entity\CelestialBody;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as StorageTokenStorage;
 
 class CelestialBodyEvent
 {
     private $slugger;
     private $token;
 
-    public function __construct(Slugger $slugger, TokenInterface $token)
+    public function __construct(Slugger $slugger, StorageTokenStorage $token)
     {
         $this->slugger = $slugger;
         $this->token = $token;
     }
 
-    public function prePersist(CelestialBody $celestialBody, User $user)
+    public function prePersist(CelestialBody $celestialBody)
     {
+        $user = $this->token->getToken()->getUser();
+
         $celestialBody->setUser(
-            $this->token->getUser()
+            $user
         );
         
         $user->setExperience(
