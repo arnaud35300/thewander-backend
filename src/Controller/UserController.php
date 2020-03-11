@@ -67,6 +67,31 @@ class UserController extends AbstractController
     }
 
     /**
+     *? Retrieves all user's celestialbodies.
+     *
+     * @param User $user The user entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
+     */
+    public function getCelestialBodies(User $user = null): JsonResponse
+    {
+        if ($user === null || $user->getStatus() === 0)
+            return $this->json(
+                ['error' => 'User not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+
+        return $this->json(
+            $user,
+            Response::HTTP_OK,
+            array(),
+            ['groups' => 'user-celestial-bodies']
+        );
+    }
+
+    /**
      *? Create a new user.
      *
      * @param Request $request The HttpFoundation Request class.
@@ -296,31 +321,6 @@ class UserController extends AbstractController
         return $this->json(
             ['message' => 'User deleted.'],
             Response::HTTP_NO_CONTENT
-        );
-    }
-
-    /**
-     *? Retrieves all user's celestialbodies.
-     *
-     * @param User $user The user entity.
-     * 
-     * @return JsonResponse
-     * 
-     ** @Route("/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
-     */
-    public function getCelestialBodies(User $user = null): JsonResponse
-    {
-        if ($user === null || $user->getStatus() === 0)
-            return $this->json(
-                ['error' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
-            );
-
-        return $this->json(
-            $user,
-            Response::HTTP_OK,
-            array(),
-            ['groups' => 'user-celestial-bodies']
         );
     }
 }
