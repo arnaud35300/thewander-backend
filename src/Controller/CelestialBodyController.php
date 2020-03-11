@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Service\Slugger;
 use App\Entity\Property;
+use App\Service\Slugger;
+use App\Service\Delimiter;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,7 +88,8 @@ class CelestialBodyController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Slugger $slugger
+        Slugger $slugger,
+        Delimiter $delimiter
     ): JsonResponse
     {
         $content = $request->getContent();
@@ -132,6 +134,13 @@ class CelestialBodyController extends AbstractController
             );
         }
 
+        if($delimiter->verifyPositions($newCelestialBody->getXPosition(),$newCelestialBody->getYPosition())) {
+            return $this->json(
+                ['message' => 'Your celestial body is too close to another one.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+        dd('persist');
         if ($properties) {
             foreach ($properties as $propertyId) {
                 $property = $this
