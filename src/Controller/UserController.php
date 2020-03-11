@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @Route("/users", name="api_")
+ * @Route(name="api_")
  */
 class UserController extends AbstractController
 {
@@ -27,7 +27,7 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      *
-     ** @Route(name="users_list", methods={"GET"})
+     ** @Route("/users", name="users_list", methods={"GET"})
      */
     public function getAll(UserRepository $userRepository): JsonResponse
     {
@@ -48,7 +48,7 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}", name="user", methods={"GET"})
+     ** @Route("/users/{slug}", name="user", methods={"GET"})
      */
     public function getOne(User $user = null): JsonResponse
     {
@@ -67,13 +67,38 @@ class UserController extends AbstractController
     }
 
     /**
+     *? Retrieves the connected user.
+     * 
+     * @return JsonResponse
+     * 
+     ** @Route("/self", name="current_user", methods={"GET"})
+     */
+    public function getSelf(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        if ($user === null || $user->getStatus() === 0)
+            return $this->json(
+                ['error' => 'Useer not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+
+        return $this->json(
+            $user,
+            Response::HTTP_OK,
+            array(),
+            ['groups' => 'current-user']
+        );
+    }
+
+    /**
      *? Retrieves all user's celestialbodies.
      *
      * @param User $user The user entity.
      * 
      * @return JsonResponse
      * 
-     ** @Route("/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
+     ** @Route("/users/{slug}/celestial-bodies", name="api_user_celestial_bodies", methods={"GET"})
      */
     public function getCelestialBodies(User $user = null): JsonResponse
     {
@@ -102,7 +127,7 @@ class UserController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @Route(name="create_user", methods={"POST"})
+     ** @Route("/users", name="create_user", methods={"POST"})
      */
     public function create(
         Request $request,
@@ -146,8 +171,7 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager()
-        ;
+            ->getManager();
 
         $manager->persist($user);
         $manager->flush();
@@ -175,7 +199,7 @@ class UserController extends AbstractController
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
-     ** @Route(name="update_user", methods={"PATCH"})
+     ** @Route("/users", name="update_user", methods={"PATCH"})
      */
     public function update(
         Request $request,
@@ -214,8 +238,7 @@ class UserController extends AbstractController
             ->setAvatar($avatar)
             ->setFirstname($firstname)
             ->setBirthday($birthday)
-            ->setBio($bio)
-        ;
+            ->setBio($bio);
 
         $errors = $validator->validate($user);
 
@@ -237,8 +260,7 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager()
-        ;
+            ->getManager();
 
         $manager->persist($user);
         $manager->flush();
@@ -267,10 +289,10 @@ class UserController extends AbstractController
      *
      ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=404)
      *  
-     ** @Route("/{slug}", name="delete_user", methods={"DELETE"})
+     ** @Route("/users/{slug}", name="delete_user", methods={"DELETE"})
      */
     public function delete(User $user = null): JsonResponse
-    {    
+    {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
                 ['error' => 'This user does not exist.'],
@@ -279,8 +301,7 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager()
-        ;
+            ->getManager();
 
         $manager->remove($user);
         $manager->flush();
@@ -291,17 +312,17 @@ class UserController extends AbstractController
         );
     }
 
-     /**
+    /**
      *? Deletes the connected user.
      *  
      * @return JsonResponse
      *
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      *  
-     ** @Route(name="delete_self", methods={"DELETE"})
+     ** @Route("/users", name="delete_self", methods={"DELETE"})
      */
     public function deleteSelf(): JsonResponse
-    {       
+    {
         $user = $this->getUser();
 
         if ($user === null)
@@ -312,8 +333,7 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager()
-        ;
+            ->getManager();
 
         $manager->remove($user);
         $manager->flush();
