@@ -50,7 +50,7 @@ class UserEvent
 
         $user->setStatus(1);
 
-        $birthday = '2012-02-02';
+        $birthday = '1990-00-00';
         $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
         $user->setBirthday($birthday);
     }
@@ -67,5 +67,7 @@ class UserEvent
         $user->setSlug(
             $this->slugger->slugify($user->getNickname())
         );
+
+        $user->setUpdatedAt(new \DateTime());
     }    
 }
