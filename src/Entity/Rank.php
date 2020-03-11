@@ -37,7 +37,7 @@ class Rank
      *      max = 30
      * )
      * 
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "current-user"})
      */
     private $name;
 
@@ -50,7 +50,7 @@ class Rank
      *      max = 50
      * )
      * 
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "current-user"})
      */
     private $badge;
 
