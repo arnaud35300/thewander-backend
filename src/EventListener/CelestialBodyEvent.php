@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
 use App\Service\Slugger;
 use App\Entity\CelestialBody;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as StorageTokenStorage;

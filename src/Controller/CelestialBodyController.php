@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Service\Slugger;
 use App\Entity\Property;
+use App\Service\Delimiter;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +75,7 @@ class CelestialBodyController extends AbstractController
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
-     * @param Slugger $slugger The Slugger service.
+     * @param Delimiter $delimiter The Delimiter service.
      * 
      * @return JsonResponse
      * 
@@ -87,7 +87,7 @@ class CelestialBodyController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Slugger $slugger
+        Delimiter $delimiter
     ): JsonResponse
     {
         $content = $request->getContent();
@@ -110,10 +110,6 @@ class CelestialBodyController extends AbstractController
             ['groups' => 'celestial-body-creation']
         );
 
-        $newCelestialBody->setSlug(
-            $slugger->slugify($newCelestialBody->getName())
-        );
-
         $errors = $validator->validate($newCelestialBody);
 
         if (count($errors) !== 0) {
@@ -131,6 +127,15 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        $xPosition = $newCelestialBody->getXPosition();
+        $yPosition = $newCelestialBody->getYPosition();
+
+        if ($delimiter->verifyPositions($xPosition, $yPosition) === false)
+            return $this->json(
+                ['message' => 'Your celestial body is too close to another one.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
 
         if ($properties) {
             foreach ($properties as $propertyId) {
@@ -167,10 +172,11 @@ class CelestialBodyController extends AbstractController
     /**
      *? Updates a particular celestial body.
      * 
-     * @param CelestialBody $celestialBody The CelestialBody entity.
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
+     * @param Delimiter $delimiter The Delimiter service.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
      * 
@@ -182,7 +188,7 @@ class CelestialBodyController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Slugger $slugger,
+        Delimiter $delimiter,
         CelestialBody $celestialBody = null
     ): JsonResponse 
     {        
@@ -212,10 +218,6 @@ class CelestialBodyController extends AbstractController
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
         $properties = !empty($content['properties']) ? $content['properties'] : false;
 
-        $celestialBody->setName($name);
-        $celestialBody->setSlug(
-            $slugger->slugify($name)
-        );
         $celestialBody->setXPosition($xPosition);
         $celestialBody->setYPosition($yPosition);
         $celestialBody->setPicture($picture);
@@ -238,6 +240,15 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        $xPosition = $celestialBody->getXPosition();
+        $yPosition = $celestialBody->getYPosition();
+
+        if ($delimiter->verifyPositions($xPosition, $yPosition) === false)
+            return $this->json(
+                ['message' => 'Your celestial body is too close to another one.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         
         $currentProperties = $celestialBody->getProperties();        
         

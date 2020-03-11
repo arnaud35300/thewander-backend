@@ -54,12 +54,6 @@ class CelestialBody
     /**
      * @ORM\Column(name="slug", type="string", length=50)
      * 
-     * @Assert\NotBlank
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      max=50
-     * )
-     * 
      * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
      */
     private $slug;
