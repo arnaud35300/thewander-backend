@@ -70,6 +70,58 @@ class CelestialBodyController extends AbstractController
     }
 
     /**
+     *? Verifies whether the user can create or drag one of his celestial bodies on the precise X and Y positions.
+     *
+     * @param Request $request The HttpFoundation Request class.
+     * @param Delimiter $delimiter The Delimiter service.
+     * 
+     * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
+     ** @Route("/delimit", name="delimit_celestial_bodies", methods={"POST"})
+     */
+    public function verifyDelimiter(Request $request, Delimiter $delimiter): JsonResponse
+    {
+        $content = $request->getContent();
+        
+        if (json_decode($content) === null)
+            return $this->json(
+                ['error' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        
+        $content = json_decode($content, true);
+
+        $xPosition = isset($content['xPosition']) ? $content['xPosition'] : false;
+        $yPosition = isset($content['yPosition']) ? $content['yPosition'] : false;
+
+        if ($xPosition === false || $yPosition === false) {
+            return $this->json(
+                ['message' => 'No position has been defined.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        } elseif (is_int($xPosition) === false || is_int($yPosition) === false) {
+            return $this->json(
+                ['message' => 'Positions can only be defined by numbers.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+        
+        if ($delimiter->verifyPositions($xPosition, $yPosition) === false) {
+            return $this->json(
+                ['message' => 'Your celestial body is too close to another one.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        return $this->json(
+            ['message' => 'A new celestial body can be created on these coordinates.'],
+            Response::HTTP_OK
+        );
+    }
+
+    /**
      *? Creates a new celestial body.
      * 
      * @param Request $request The HttpFoundation Request class.
@@ -212,8 +264,8 @@ class CelestialBodyController extends AbstractController
         $content = json_decode($content, true);
 
         $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
-        $xPosition = !empty($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
-        $yPosition = !empty($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
+        $xPosition = isset($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
+        $yPosition = isset($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
         $picture = !empty($content['picture']) ? $content['picture'] : $celestialBody->getPicture();
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
         $properties = !empty($content['properties']) ? $content['properties'] : false;

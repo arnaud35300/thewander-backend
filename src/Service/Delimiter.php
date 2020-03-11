@@ -6,7 +6,7 @@ use App\Repository\CelestialBodyRepository;
 
 class Delimiter
 {
-    const GAP = 210;
+    const WIDTH = 210;
     private $celestialBodyRepository;
 
     public function __construct(CelestialBodyRepository $celestialBodyRepository)
@@ -19,18 +19,18 @@ class Delimiter
         $celestialBodies = $this->celestialBodyRepository->findAll();
 
         $newMinX = $newX;
-        $newMaxX = $newX + self::GAP;
+        $newMaxX = $newX + self::WIDTH;
         $newMinY = $newY;
-        $newMaxY = $newY + self::GAP;
+        $newMaxY = $newY + self::WIDTH;
 
         foreach ($celestialBodies as $celestialBody) {
             $xPosition = $celestialBody->getXPosition();
             $yPosition = $celestialBody->getYPosition();
 
             $minX = $xPosition;
-            $maxX = $xPosition + self::GAP;
+            $maxX = $xPosition + self::WIDTH;
             $minY = $yPosition;
-            $maxY = $yPosition + self::GAP;
+            $maxY = $yPosition + self::WIDTH;
 
             $xResult = true;
             $yResult = true;
@@ -46,8 +46,11 @@ class Delimiter
                 ($newMaxY >= $minY && $newMaxY <= $maxY)
             )
                 $yResult = false;
+
+            if ($yResult === false && $xResult === false)
+                return false;
         }
 
-        return $xResult && $yResult;
+        return true;
     }
 }
