@@ -333,7 +333,8 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->remove($user);
         $manager->flush();

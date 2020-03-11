@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Service\Slugger;
 use App\Entity\Property;
 use App\Service\Delimiter;
@@ -179,7 +180,6 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-
         $xPosition = $newCelestialBody->getXPosition();
         $yPosition = $newCelestialBody->getYPosition();
 
