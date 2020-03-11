@@ -58,5 +58,6 @@ class Delimiter
         //! REFAIRE AVEC X DE ET Y DE BASE AVEC - 200 | + 200 -> DIRECT SUR Y ET X CHAMP DE LETOILE COMPARE
 
         $result = $Yresult && $Xresult;
+        return $result;
     }
 }

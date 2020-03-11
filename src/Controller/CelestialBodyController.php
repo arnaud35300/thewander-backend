@@ -140,7 +140,7 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
-        dd('persist');
+
         if ($properties) {
             foreach ($properties as $propertyId) {
                 $property = $this
