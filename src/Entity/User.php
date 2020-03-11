@@ -32,7 +32,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-body", "users", "user", "comments"})
+     * @Groups({"celestial-body", "users", "user", "comments", "current-user"})
      */
     private $id;
 
@@ -46,14 +46,14 @@ class User implements UserInterface
      * @Assert\NotBlank
      * @Assert\Type("string")
      * 
-     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user", "comments"})
+     * @Groups({"celestial-body", "user-creation", "user-update", "users", "user", "current-user", "comments"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=30)
      * 
-     * @Groups({"celestial-body", "users", "user-update", "user", "comments"})
+     * @Groups({"celestial-body", "users", "user-update", "user", "current-user", "comments"})
      */
     private $slug;
 
@@ -67,7 +67,7 @@ class User implements UserInterface
      *      max = 100,
      * )
      * 
-     * @Groups({"user-creation", "user-update"})
+     * @Groups({"user-creation", "user-update", "current-user"})
      */
     private $email;
 
@@ -89,6 +89,8 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"current-user", "user"})
      */
     private $role;
 
@@ -100,7 +102,7 @@ class User implements UserInterface
      * )
      * @Assert\Type("string")
      * 
-     * @Groups({"celestial-body", "user-update", "users", "user", "comments"})
+     * @Groups({"celestial-body", "user-update", "users", "user", "current-user", "comments"})
      */
     private $avatar;
 
@@ -112,14 +114,14 @@ class User implements UserInterface
      * )
      * @Assert\Type("string")
      * 
-     * @Groups({"user-update", "user"})
+     * @Groups({"user-update", "user", "current-user"})
      * */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      * 
-     * @Groups({"user-update", "user"})
+     * @Groups({"user-update", "user", "current-user"})
      */
     private $birthday;
 
@@ -131,7 +133,7 @@ class User implements UserInterface
      * )
      * @Assert\Type("string")
      * 
-     * @Groups({"user-update", "user"})
+     * @Groups({"user-update", "user", "current-user"})
      */
     private $bio;
 
@@ -154,7 +156,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user", orphanRemoval=true)
      * 
-     * @Groups({"user"})
+     * @Groups({"user", "current-user"})
      */
     private $comments;
 
@@ -162,7 +164,7 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"celestial-body", "user"})
+     * @Groups({"celestial-body", "user", "current-user"})
      */
     private $rank;
 
@@ -175,7 +177,7 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
      * 
-     * @Groups({"user-update", "user"})
+     * @Groups({"user-update", "user", "current-user"})
      */
     private $createdAt;
 
@@ -183,7 +185,7 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
      * 
-     * @Groups({"user-update", "user"})
+     * @Groups({"user-update", "user", "current-user"})
      */
     private $updatedAt;
 
