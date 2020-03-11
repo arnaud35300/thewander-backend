@@ -100,7 +100,8 @@ class CelestialBodyController extends AbstractController
         }
 
         $data = json_decode($content);
-        $properties = $data->properties;
+
+        $properties = !empty($content['properties']) ? $content['properties'] : false;
 
         $newCelestialBody = $serializer->deserialize(
             $content,
