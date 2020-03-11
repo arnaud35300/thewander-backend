@@ -167,6 +167,11 @@ class User implements UserInterface
     private $rank;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $experience;
+
+    /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank
      * 
@@ -430,6 +435,18 @@ class User implements UserInterface
 
         return $this;
     }
+    
+    public function getExperience(): ?int
+    {
+        return $this->experience;
+    }
+
+    public function setExperience(?int $experience): self
+    {
+        $this->experience = $experience;
+
+        return $this;
+    }
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -456,4 +473,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }
