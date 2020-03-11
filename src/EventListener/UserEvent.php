@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Service\Slugger;
 use App\Repository\RoleRepository;
 use App\Repository\RankRepository;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserEvent
@@ -29,7 +28,7 @@ class UserEvent
         $this->encoder = $encoder;
     }
 
-    public function prePersist(User $user, LifecycleEventArgs $event)
+    public function prePersist(User $user)
     {
         $rank = $this->rankRepository->findOneByRankNumber(1);
         $user->setRank($rank);
@@ -49,13 +48,14 @@ class UserEvent
         );
 
         $user->setStatus(1);
+        $user->getExperience(0);
 
         $birthday = '1990-00-00';
         $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
         $user->setBirthday($birthday);
     }
 
-    public function preUpdate(User $user, LifecycleEventArgs $event)
+    public function preUpdate(User $user)
     {
         $user->setPassword(
             $this->encoder->encodePassword(
@@ -69,5 +69,23 @@ class UserEvent
         );
 
         $user->setUpdatedAt(new \DateTime());
+
+        // Rank
+        $experience = $user->getExperience();
+
+        $rank = [
+            1 => 10,
+            2 => 25,
+            3 => 50,
+            4 => 75,
+            5 => 100
+        ];
+
+        foreach($rank as $key => $value) {
+            if($experience > $value) {
+                $rank = $this->rankRepository->findOneByRankNumber($key);
+                $user->setRank($rank);
+            }
+        }
     }    
 }
