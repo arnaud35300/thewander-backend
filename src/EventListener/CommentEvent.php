@@ -2,27 +2,28 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
 use App\Entity\Comment;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface as StorageTokenStorage;
 
 class CommentEvent
 {
     private $token;
 
-    public function __construct(TokenInterface $token)
+    public function __construct(StorageTokenStorage $token)
     {
         $this->token = $token;
     }
 
-    public function prePersist(Comment $comment, User $user)
+    public function prePersist(Comment $comment)
     {
+        $user = $this->token->getToken()->getUser();
+
         $comment->setUser(
-            $this->token->getUser()
+            $user
         );
 
         $user->setExperience(
-            $user->getExperience()++
+            $user->getExperience() + 1
         );
     }
 
