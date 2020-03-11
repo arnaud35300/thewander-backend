@@ -6,6 +6,8 @@ use App\Repository\CelestialBodyRepository;
 
 class Delimiter
 {
+    const WIDTH = 210;
+
     private $celestialBodyRepository;
 
     public function __construct(CelestialBodyRepository $celestialBodyRepository)
@@ -16,48 +18,39 @@ class Delimiter
     public function verifyPositions(int $newX, int $newY): bool
     {
         $celestialBodies = $this->celestialBodyRepository->findAll();
+      
+        $newMinX = $newX;
+        $newMaxX = $newX + self::WIDTH;
+        $newMinY = $newY;
+        $newMaxY = $newY + self::WIDTH;
 
         foreach ($celestialBodies as $celestialBody) {
             $xPosition = $celestialBody->getXPosition();
             $yPosition = $celestialBody->getYPosition();
 
             $minX = $xPosition;
-            $maxX = $xPosition + 200;
+            $maxX = $xPosition + self::WIDTH;
             $minY = $yPosition;
-            $maxY = $yPosition + 200;
+            $maxY = $yPosition + self::WIDTH;
 
-            $XG = $newX; // gauche
-            $YH = $newY; // haut
-            $XD = $newX + 200; // droit
-            $YB = $newY + 200; // bas
+            $xResult = true;
+            $yResult = true;
 
-            $Xresult = false;
-            $Yresult = false;
+            if (
+                ($newMinX >= $minX && $newMinX <= $maxX) ||
+                ($newMaxX >= $minX && $newMaxX <= $maxX)
+            )
+                $xResult = false;
 
-            // Si gauche est supếrieur a minX et inférieur a maxX
-            if ($XG >= $minX && $XG <= $maxX) {
-                $Xresult = true;
-            }
+            if (
+                ($newMinY >= $minY && $newMinY <= $maxY) ||
+                ($newMaxY >= $minY && $newMaxY <= $maxY)
+            )
+                $yResult = false;
 
-            // Si droite est supếrieur a minX et inférieur a maxX
-            if ($XD >= $minX && $XD <= $maxX) {
-                $Xresult = true;
-            }
-
-            // Si haut est supếrieur a minY et inférieur a maxY
-            if ($YH >= $minY && $YH <= $maxY) {
-                $Yresult = true;
-            }
-
-            // Si bas est supếrieur a minY et inférieur a maxY
-            if ($YB >= $minY && $YB <= $maxY) {
-                $Yresult = true;
-            }
+            if ($yResult === false && $xResult === false)
+                return false;
         }
-
-        //! REFAIRE AVEC X DE ET Y DE BASE AVEC - 200 | + 200 -> DIRECT SUR Y ET X CHAMP DE LETOILE COMPARE
-
-        $result = $Yresult && $Xresult;
-        return $result;
+        return true;
     }
 }
