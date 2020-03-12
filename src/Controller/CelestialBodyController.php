@@ -82,7 +82,7 @@ class CelestialBodyController extends AbstractController
      * 
      ** @Route("/delimiter", name="delimit_celestial_bodies", methods={"POST"})
      */
-    public function verifyDelimiter(Request $request, Delimiter $delimiter): JsonResponse
+    public function verifyCoordinates(Request $request, Delimiter $delimiter): JsonResponse
     {
         $content = $request->getContent();
         
