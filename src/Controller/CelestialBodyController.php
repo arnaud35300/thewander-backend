@@ -8,6 +8,7 @@ use App\Entity\Property;
 use App\Service\Delimiter;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
+use App\Service\Uploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -132,7 +133,7 @@ class CelestialBodyController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     ** 
      *
      ** @Route(name="create_celestial_body", methods={"POST"})
      */
@@ -152,7 +153,7 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        $data = json_decode($content);
+        $data = json_decode($content, true);
 
         $properties = !empty($content['properties']) ? $content['properties'] : false;
 
