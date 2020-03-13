@@ -85,6 +85,18 @@ class CelestialBody
     private $yPosition;
 
     /**
+     * @ORM\Column(type="string", length=50)
+     * 
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=50
+     * )
+     * 
+     * @Groups({"celestial-bodies", "celestial-body-creation"})
+     */
+    private $icon;
+
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
      * @Assert\Type("string")
@@ -219,6 +231,18 @@ class CelestialBody
         return $this;
     }
 
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+    
     public function getPicture(): ?string
     {
         return $this->picture;
