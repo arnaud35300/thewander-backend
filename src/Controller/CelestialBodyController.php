@@ -153,8 +153,8 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        $data = json_decode($content, true);
-
+        $icon = !empty($content['icon']) ? $content['icon'] : false;
+        $picture = !empty($content['picture']) ? $content['picture'] : false;
         $properties = !empty($content['properties']) ? $content['properties'] : false;
 
         $newCelestialBody = $serializer->deserialize(
@@ -165,6 +165,12 @@ class CelestialBodyController extends AbstractController
         );
 
         $errors = $validator->validate($newCelestialBody);
+
+        // TODO : à tester
+        // $violations = $validator->validate($newCelestialBody);
+        // if ($violations->count() > 0) {
+        //     return $this->json($violations, 400);
+        // }
 
         if (count($errors) !== 0) {
             $errorsList = array();
@@ -181,6 +187,7 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+        
         $xPosition = $newCelestialBody->getXPosition();
         $yPosition = $newCelestialBody->getYPosition();
 
@@ -189,6 +196,36 @@ class CelestialBodyController extends AbstractController
                 ['message' => 'Your celestial body is too close to another one.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
+
+        if ($icon) {
+            $icon = stripslashes(
+                json_decode($icon)
+            );
+            
+            file_put_contents(
+                __DIR__ . '/../../public/images/icons/' . $newCelestialBody->getSlug() . '_icon.png',
+                $icon
+            );
+
+            $iconName = '/images/icons' . $newCelestialBody->getSlug() . '_icon.png';
+
+            $newCelestialBody->setIcon($iconName);
+        }
+
+        if ($picture) {
+            $picture = stripslashes(
+                json_decode($picture)
+            );
+            
+            file_put_contents(
+                __DIR__ . '/../../public/images/pictures/' . $newCelestialBody->getSlug() . '_picture.png',
+                $picture
+            );
+
+            $pictureName = '/images/pictures' . $newCelestialBody->getSlug() . '_picture.png';
+
+            $newCelestialBody->setPicture($pictureName);
+        }
 
         if ($properties) {
             foreach ($properties as $propertyId) {

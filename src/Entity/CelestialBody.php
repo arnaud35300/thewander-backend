@@ -92,7 +92,7 @@ class CelestialBody
      *      max=50
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body-creation"})
+     * @Groups({"celestial-bodies"})
      */
     private $icon;
 
@@ -104,7 +104,7 @@ class CelestialBody
      *      max=50
      * )
      * 
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $picture;
 
