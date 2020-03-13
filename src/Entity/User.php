@@ -132,12 +132,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * 
-     * @Assert\Length(
-     *      max = 500
-     * )
-     * @Assert\Type("string")
-     * 
+     *   
      * @Groups({"user-update", "user", "current-user"})
      */
     private $bio;

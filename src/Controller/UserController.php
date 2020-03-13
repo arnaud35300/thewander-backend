@@ -231,14 +231,16 @@ class UserController extends AbstractController
         $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
 
-        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
-
+        if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$birthday))
+            $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
+            $user->setBirthday($birthday);
+        
         $user
             ->setPassword($encoder->encodePassword($user, $password))
             ->setAvatar($avatar)
             ->setFirstname($firstname)
-            ->setBirthday($birthday)
-            ->setBio($bio);
+            ->setBio($bio)
+        ;
 
         $errors = $validator->validate($user);
 

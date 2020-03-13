@@ -52,7 +52,7 @@ class UserEvent
 
         $birthday = '1990-00-00';
         $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
-        $user->setBirthday($birthday);
+        // $user->setBirthday($birthday);
     }
 
     public function preUpdate(User $user)
