@@ -15,9 +15,9 @@ class Delimiter
         $this->celestialBodyRepository = $celestialBodyRepository;
     }
 
-    public function verifyPositions(int $newX, int $newY): bool
+    public function verifyPositions(string $slug = '', int $newX, int $newY): bool
     {
-        $celestialBodies = $this->celestialBodyRepository->findAll();
+        $celestialBodies = $this->celestialBodyRepository->getAllExceptCurrent($slug);
       
         $newMinX = $newX;
         $newMaxX = $newX + self::WIDTH;
