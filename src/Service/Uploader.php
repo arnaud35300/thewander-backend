@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Uploader
@@ -14,9 +15,11 @@ class Uploader
     {
         $this->request = $requestStack->getCurrentRequest();
     }
-    public function upload(string $path, string $name) //: bool
+    
+    public function upload(string $path, string $name, int $height = 200, int $width = 200): bool
     {
         $file = $this->request->files->get('image');
+        $tmp = $file->getPathname();
 
         if ($file === null)
             return false;
@@ -32,36 +35,11 @@ class Uploader
 
         $filename = $name . '.' . $file->guessExtension();
         $directory = __DIR__ . '/../../public/images/' . $path;
-        $file->move($directory, $filename);
 
-        // $this->resize($directory, 100, 100);
-    }
+        $image = Image::make($tmp);
+        $image->fit($width, $height);
+        $image->save($directory . '/' . $filename);
 
-    public function resize($file, $w, $h, $crop = false)
-    {
-        list($width, $height) = getimagesize($file);
-
-        $r = $width / $height;
-
-        if ($crop) {
-            if ($width > $height) {
-                $width = ceil($width - ($width * abs($r - $w / $h)));
-            } else {
-                $height = ceil($height - ($height * abs($r - $w / $h)));
-            }
-            $newwidth = $w;
-            $newheight = $h;
-        } else {
-            if ($w / $h > $r) {
-                $newwidth = $h * $r;
-                $newheight = $h;
-            } else {
-                $newheight = $w / $r;
-                $newwidth = $w;
-            }
-        }
-        $src = imagecreatefromjpeg($file);
-        $dst = imagecreatetruecolor($newwidth, $newheight);
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+        return true;
     }
 }
