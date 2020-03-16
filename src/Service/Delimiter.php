@@ -15,7 +15,7 @@ class Delimiter
         $this->celestialBodyRepository = $celestialBodyRepository;
     }
 
-    public function verifyPositions(string $slug = '', int $newX, int $newY): bool
+    public function verifyPositions(int $newX, int $newY, ?string $slug = ''): bool
     {
         $celestialBodies = $this->celestialBodyRepository->getAllExceptCurrent($slug);
       
