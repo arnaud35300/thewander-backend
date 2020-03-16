@@ -51,15 +51,11 @@ class Property
 
     /**
      * @ORM\Column(type="datetime")
-     * 
-     * @Assert\NotBlank
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * 
-     * @Assert\NotBlank
      */
     private $updatedAt;
 

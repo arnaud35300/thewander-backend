@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
- * @ORM\HasLifecycleCallbacks()
+ * 
  * @ORM\Table(
  *      indexes={
  *          @ORM\Index(name="idx_name", columns={"name"}),
@@ -85,18 +85,6 @@ class CelestialBody
     private $yPosition;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     * 
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      max=50
-     * )
-     * 
-     * @Groups({"celestial-bodies", "celestial-body-creation"})
-     */
-    private $icon;
-
-    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
      * @Assert\Type("string")
@@ -132,7 +120,7 @@ class CelestialBody
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
      * 
-     * @Groups({"celestial-body", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $properties;
 
@@ -169,6 +157,14 @@ class CelestialBody
      * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"celestial-bodies"})
+     */
+    private $icon;
 
     public function __construct()
     {
@@ -227,18 +223,6 @@ class CelestialBody
     public function setYPosition(?int $yPosition): self
     {
         $this->yPosition = $yPosition;
-
-        return $this;
-    }
-
-    public function getIcon(): ?string
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(?string $icon): self
-    {
-        $this->icon = $icon;
 
         return $this;
     }
@@ -368,6 +352,18 @@ class CelestialBody
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getIcon(): ?Icon
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?Icon $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }

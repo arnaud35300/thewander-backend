@@ -8,6 +8,7 @@ use App\Entity\Property;
 use App\Service\Delimiter;
 use App\Entity\CelestialBody;
 use App\Repository\CelestialBodyRepository;
+use App\Repository\IconRepository;
 use App\Service\Uploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -143,7 +144,8 @@ class CelestialBodyController extends AbstractController
         ValidatorInterface $validator,
         Delimiter $delimiter,
         Slugger $slugger,
-        Uploader $uploader
+        Uploader $uploader,
+        IconRepository $iconRepository
     ): JsonResponse
     {
         $content = $request->request->get('json');
@@ -155,14 +157,17 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        $properties = !empty($content['properties']) ? $content['properties'] : false;
-
         $newCelestialBody = $serializer->deserialize(
             $content,
             CelestialBody::class,
             'json',
             ['groups' => 'celestial-body-creation']
         );
+
+        $content = json_decode($content, true);
+
+        $properties = !empty($content['properties']) ? $content['properties'] : false;
+        $iconId = !empty($content['icon']) ? $content['icon'] : false;
 
         $errors = $validator->validate($newCelestialBody);
 
@@ -230,6 +235,16 @@ class CelestialBodyController extends AbstractController
             }
         }
 
+        $icon = $iconRepository->find($iconId);
+        
+        if ($icon === null) 
+            return $this->json(
+                ['message' => 'An icon is needed to create a new celestial body.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
+        $newCelestialBody->setIcon($icon);
+
         $manager = $this
             ->getDoctrine()
             ->getManager()
@@ -271,7 +286,8 @@ class CelestialBodyController extends AbstractController
         Delimiter $delimiter,
         Slugger $slugger,
         Uploader $uploader,
-        CelestialBody $celestialBody = null
+        CelestialBody $celestialBody = null,
+        IconRepository $iconRepository
     ): JsonResponse 
     {
         $request->setMethod('PATCH');
@@ -301,13 +317,13 @@ class CelestialBodyController extends AbstractController
         $icon = !empty($content['icon']) ? $content['icon'] : $celestialBody->getIcon();
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
         $properties = !empty($content['properties']) ? $content['properties'] : false;
+        $iconId = !empty($content['icon']) ? $content['icon'] : false;
 
         $previousName = $celestialBody->getName();
         
         $celestialBody->setName($name);
         $celestialBody->setXPosition($xPosition);
         $celestialBody->setYPosition($yPosition);
-        $celestialBody->setIcon($icon);
         $celestialBody->setDescription($description);
         
         $errors = $validator->validate($celestialBody);
@@ -338,28 +354,12 @@ class CelestialBodyController extends AbstractController
                 ['message' => 'Your celestial body is too close to another one.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-
             
-            $celestialBodySlug = $slugger->slugify(
-                $celestialBody->getName()
-            );
-            
-            $pictureFolder = __DIR__ . '/../../public/images/pictures/'; 
-            
-            if ($celestialBody->getName() !== $previousName) {            
-                $string = $celestialBody->getPicture();
-                $pattern = '#\b(.*)\_#';
-                $replacement = $celestialBodySlug . '_';
-                
-                $newString = preg_replace($pattern, $replacement, $string);
-                
-                rename(
-                    $pictureFolder . $celestialBody->getPicture(),
-               $pictureFolder . $newString
-            );
-            
-            $celestialBody->setPicture($newString);
-        }
+        $celestialBodySlug = $slugger->slugify(
+            $celestialBody->getName()
+        );
+        
+        $pictureFolder = __DIR__ . '/../../public/images/pictures/'; 
         
         if ($request->files->get('picture')) {
             $picture = $uploader->upload(
@@ -373,11 +373,27 @@ class CelestialBodyController extends AbstractController
                 ['message' => $picture],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-            
-            unlink($pictureFolder . $celestialBody->getPicture());
+        
+            if ($celestialBody->getPicture() !== null)
+                unlink($pictureFolder . $celestialBody->getPicture());
             
             $celestialBody->setPicture($picture['picture']);
         }
+
+        if ($celestialBody->getName() !== $previousName) {            
+            $string = $celestialBody->getPicture();
+            $pattern = '#\b(.*)\_#';
+            $replacement = $celestialBodySlug . '_';
+            
+            $newString = preg_replace($pattern, $replacement, $string);
+            
+            rename(
+                $pictureFolder . $celestialBody->getPicture(),
+                $pictureFolder . $newString
+            );
+        
+            $celestialBody->setPicture($newString);
+        }        
         
         $currentProperties = $celestialBody->getProperties();   
 
@@ -396,6 +412,16 @@ class CelestialBodyController extends AbstractController
                     $celestialBody->addProperty($property);
             }
         }
+
+        $icon = $iconRepository->find($iconId);
+        
+        if ($icon === null) 
+            return $this->json(
+                ['message' => 'An icon is needed to create a new celestial body.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
+        $celestialBody->setIcon($icon);
 
         $manager = $this
             ->getDoctrine()
