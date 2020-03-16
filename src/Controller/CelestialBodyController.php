@@ -133,7 +133,7 @@ class CelestialBodyController extends AbstractController
      * 
      * @return JsonResponse
      * 
-     ** 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      *
      ** @Route(name="create_celestial_body", methods={"POST"})
      */
@@ -190,30 +190,32 @@ class CelestialBodyController extends AbstractController
         
         $xPosition = $newCelestialBody->getXPosition();
         $yPosition = $newCelestialBody->getYPosition();
+        
+        $newCelestialBodySlug = $slugger->slugify(
+            $newCelestialBody->getName()
+        );
 
-        if ($delimiter->verifyPositions($xPosition, $yPosition) === false)
+        if ($delimiter->verifyPositions($newCelestialBodySlug, $xPosition, $yPosition) === false)
             return $this->json(
                 ['message' => 'Your celestial body is too close to another one.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
-        $newCelestialBodySlug = $slugger->slugify(
-            $newCelestialBody->getName()
-        );
-
-        $picture = $uploader->upload(
-            'pictures',
-            $newCelestialBodySlug,
-            '_picture'
-        );
-
-        if ($picture['status'] === false)
-            return $this->json(
-                ['message' => $picture],
-                Response::HTTP_UNPROCESSABLE_ENTITY
+        if ($request->files->get('picture')) {
+            $picture = $uploader->upload(
+                'pictures',
+                $newCelestialBodySlug,
+                '_picture'
             );
 
-        $newCelestialBody->setPicture($picture['picture']);
+            if ($picture['status'] === false)
+                return $this->json(
+                    ['message' => $picture],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+
+            $newCelestialBody->setPicture($picture['picture']);
+        }
 
         if ($properties) {
             foreach ($properties as $propertyId) {
@@ -260,16 +262,20 @@ class CelestialBodyController extends AbstractController
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
-     ** @Route("/{slug}", name="update_celestial_body", methods={"PATCH"})
+     ** @Route("/{slug}", name="update_celestial_body", methods={"POST"})
      */
     public function update(
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         Delimiter $delimiter,
+        Slugger $slugger,
+        Uploader $uploader,
         CelestialBody $celestialBody = null
     ): JsonResponse 
-    {        
+    {
+        $request->setMethod('PATCH');
+
         if ($celestialBody === null)
             return $this->json(
                 ['error' => 'Celestial bodies not found.'],
@@ -278,8 +284,8 @@ class CelestialBodyController extends AbstractController
         
         $this->denyAccessUnlessGranted('CELESTIALBODY_UPDATE', $celestialBody);
 
-        $content = $request->getContent();
-
+        $content = $request->request->get('json');
+ 
         if (json_decode($content) === null) {
             return $this->json(
                 ['error' => 'Invalid data format.'],
@@ -292,13 +298,16 @@ class CelestialBodyController extends AbstractController
         $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
         $xPosition = isset($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
         $yPosition = isset($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
-        $picture = !empty($content['picture']) ? $content['picture'] : $celestialBody->getPicture();
+        $icon = !empty($content['icon']) ? $content['icon'] : $celestialBody->getIcon();
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
         $properties = !empty($content['properties']) ? $content['properties'] : false;
 
+        $previousName = $celestialBody->getName();
+        
+        $celestialBody->setName($name);
         $celestialBody->setXPosition($xPosition);
         $celestialBody->setYPosition($yPosition);
-        $celestialBody->setPicture($picture);
+        $celestialBody->setIcon($icon);
         $celestialBody->setDescription($description);
         
         $errors = $validator->validate($celestialBody);
@@ -322,18 +331,60 @@ class CelestialBodyController extends AbstractController
         $xPosition = $celestialBody->getXPosition();
         $yPosition = $celestialBody->getYPosition();
 
-        if ($delimiter->verifyPositions($xPosition, $yPosition) === false)
+        $celestialBodySlug = $celestialBody->getSlug();
+
+        if ($delimiter->verifyPositions($celestialBodySlug, $xPosition, $yPosition) === false)
             return $this->json(
                 ['message' => 'Your celestial body is too close to another one.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        
-        $currentProperties = $celestialBody->getProperties();        
-        
-        if ($properties) {
-            foreach ($currentProperties as $currentProperty)
-                $celestialBody->removeProperty($currentProperty);
 
+            
+            $celestialBodySlug = $slugger->slugify(
+                $celestialBody->getName()
+            );
+            
+            $pictureFolder = __DIR__ . '/../../public/images/pictures/'; 
+            
+            if ($celestialBody->getName() !== $previousName) {            
+                $string = $celestialBody->getPicture();
+                $pattern = '#\b(.*)\_#';
+                $replacement = $celestialBodySlug . '_';
+                
+                $newString = preg_replace($pattern, $replacement, $string);
+                
+                rename(
+                    $pictureFolder . $celestialBody->getPicture(),
+               $pictureFolder . $newString
+            );
+            
+            $celestialBody->setPicture($newString);
+        }
+        
+        if ($request->files->get('picture')) {
+            $picture = $uploader->upload(
+                'pictures',
+                $celestialBodySlug,
+                '_picture'
+            );
+
+            if ($picture['status'] === false)
+            return $this->json(
+                ['message' => $picture],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+            
+            unlink($pictureFolder . $celestialBody->getPicture());
+            
+            $celestialBody->setPicture($picture['picture']);
+        }
+        
+        $currentProperties = $celestialBody->getProperties();   
+
+        foreach ($currentProperties as $currentProperty)
+            $celestialBody->removeProperty($currentProperty);
+            
+        if ($properties) {
             foreach ($properties as $propertyId) {
                 $property = $this
                     ->getDoctrine()

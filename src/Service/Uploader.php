@@ -16,16 +16,18 @@ class Uploader
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function upload(string $path, string $name, string $suffix, int $height = 200, int $width = 200): array
+    public function upload(string $path, string $name, string $suffix, int $width = 200, int $height = 200): array
     {
-        $file = $this->request->files->get('picture');
-        $tmp = $file->getPathname();
+        $file = $this->request->files->get('picture');        
 
         $errors = array();
         $success = array();
 
-        if ($file === null)
-            $errors['name'] = 'Invalid file name.';
+        if ($file === null) {
+            $errors['file'] = 'Invalid file name.';
+            
+            return $errors;
+        }
 
         if ($file->getError() > 0)
             $errors['upload'] = 'An error occurred while uploading the file.';
@@ -42,12 +44,13 @@ class Uploader
             return $errors;
         }
 
+        $pathname = $file->getPathname();
         $filename = $name . $suffix . '.' . $file->guessExtension();
         $directory = __DIR__ . '/../../public/images/' . $path;
 
-        $image = Image::make($tmp);
+        $image = Image::make($pathname);
 
-        $image->fit($width, $height);
+        $image->crop($width, $height);
         $image->save($directory . '/' . $filename);
 
         $success['picture'] = $filename;

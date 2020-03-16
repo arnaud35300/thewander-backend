@@ -19,19 +19,15 @@ class CelestialBodyRepository extends ServiceEntityRepository
         parent::__construct($registry, CelestialBody::class);
     }
 
-    public function getOneBySlug(string $slug)
+    public function getAllExceptCurrent(string $slug)
     {
-        // SELECT 
-	    //     celestial_body.*, 
-	    //     comment.id AS comment_id
-        // FROM 
-	    //     celestial_body
-        // JOIN 
-	    //     comment 
-        // ON 
-	    //     celestial_body.id = comment.celestial_body_id 
-        // WHERE 
-	    //     celestial_body.slug = 'earth'
+        return $this
+            ->createQueryBuilder('cb')
+            ->andWhere('cb.slug <> :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     // /**
