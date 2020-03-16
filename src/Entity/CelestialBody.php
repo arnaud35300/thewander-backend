@@ -120,7 +120,7 @@ class CelestialBody
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
      * 
-     * @Groups({"celestial-body", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user-celestial-bodies"})
      */
     private $properties;
 
@@ -161,6 +161,8 @@ class CelestialBody
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"celestial-bodies"})
      */
     private $icon;
 
