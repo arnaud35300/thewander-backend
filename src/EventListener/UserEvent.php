@@ -57,13 +57,6 @@ class UserEvent
 
     public function preUpdate(User $user)
     {
-        $user->setPassword(
-            $this->encoder->encodePassword(
-                $user,
-                $user->getPassword()
-            )
-        );
-
         $user->setSlug(
             $this->slugger->slugify($user->getNickname())
         );
