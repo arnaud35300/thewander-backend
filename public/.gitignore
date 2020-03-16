@@ -1,3 +1,4 @@
-/images/avatars/*
-/images/icons/*
-/images/pictures/*
+/images/*.jpeg
+/images/*.jpg
+/images/*.png
+/images/*.svg
