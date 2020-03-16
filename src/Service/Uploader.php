@@ -15,31 +15,44 @@ class Uploader
     {
         $this->request = $requestStack->getCurrentRequest();
     }
-    
-    public function upload(string $path, string $name, int $height = 200, int $width = 200): bool
+
+    public function upload(string $path, string $name, string $suffix, int $height = 200, int $width = 200): array
     {
-        $file = $this->request->files->get('image');
+        $file = $this->request->files->get('picture');
         $tmp = $file->getPathname();
 
+        $errors = array();
+        $success = array();
+
         if ($file === null)
-            return false;
+            $errors['name'] = 'Invalid file name.';
 
         if ($file->getError() > 0)
-            return false;
+            $errors['upload'] = 'An error occurred while uploading the file.';
 
         if ($file->getSize() >= 1000000)
-            return false;
+            $errors['size'] = 'Invalid file size.';
 
         if (!in_array($file->guessExtension(), self::EXTENSIONS))
-            return false;
+            $errors['extension'] = 'Invalid extension. You can only upload .jpg, .jpeg and .png files.';
 
-        $filename = $name . '.' . $file->guessExtension();
+        if (count($errors) > 0) {
+            $errors['status'] = false;
+            
+            return $errors;
+        }
+
+        $filename = $name . $suffix . '.' . $file->guessExtension();
         $directory = __DIR__ . '/../../public/images/' . $path;
 
         $image = Image::make($tmp);
+
         $image->fit($width, $height);
         $image->save($directory . '/' . $filename);
 
-        return true;
+        $success['picture'] = $filename;
+        $success['status'] = true;
+
+        return $success;
     }
 }

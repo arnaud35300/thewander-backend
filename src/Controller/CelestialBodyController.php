@@ -141,10 +141,12 @@ class CelestialBodyController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Delimiter $delimiter
+        Delimiter $delimiter,
+        Slugger $slugger,
+        Uploader $uploader
     ): JsonResponse
     {
-        $content = $request->getContent();
+        $content = $request->request->get('json');
 
         if (json_decode($content) === null) {
             return $this->json(
@@ -153,8 +155,6 @@ class CelestialBodyController extends AbstractController
             );
         }
 
-        $icon = !empty($content['icon']) ? $content['icon'] : false;
-        $picture = !empty($content['picture']) ? $content['picture'] : false;
         $properties = !empty($content['properties']) ? $content['properties'] : false;
 
         $newCelestialBody = $serializer->deserialize(
@@ -197,35 +197,23 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
-        if ($icon) {
-            $icon = stripslashes(
-                json_decode($icon)
-            );
-            
-            file_put_contents(
-                __DIR__ . '/../../public/images/icons/' . $newCelestialBody->getSlug() . '_icon.png',
-                $icon
-            );
+        $newCelestialBodySlug = $slugger->slugify(
+            $newCelestialBody->getName()
+        );
 
-            $iconName = '/images/icons' . $newCelestialBody->getSlug() . '_icon.png';
+        $picture = $uploader->upload(
+            'pictures',
+            $newCelestialBodySlug,
+            '_picture'
+        );
 
-            $newCelestialBody->setIcon($iconName);
-        }
-
-        if ($picture) {
-            $picture = stripslashes(
-                json_decode($picture)
-            );
-            
-            file_put_contents(
-                __DIR__ . '/../../public/images/pictures/' . $newCelestialBody->getSlug() . '_picture.png',
-                $picture
+        if ($picture['status'] === false)
+            return $this->json(
+                ['message' => $picture],
+                Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
-            $pictureName = '/images/pictures' . $newCelestialBody->getSlug() . '_picture.png';
-
-            $newCelestialBody->setPicture($pictureName);
-        }
+        $newCelestialBody->setPicture($picture['picture']);
 
         if ($properties) {
             foreach ($properties as $propertyId) {
