@@ -55,7 +55,7 @@ class UserController extends AbstractController
     {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'User not found.'],
+                ['message' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -80,7 +80,7 @@ class UserController extends AbstractController
 
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'Useer not found.'],
+                ['message' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -105,7 +105,7 @@ class UserController extends AbstractController
     {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'User not found.'],
+                ['message' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -141,7 +141,7 @@ class UserController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -215,7 +215,7 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['error' => 'User not found.'],
+                ['message' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -223,27 +223,25 @@ class UserController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
         $content = json_decode($content, true);
 
         $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
-        $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
-        $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
+        $firstname = !empty($content['firstname']) ? $content['firstname'] : false;
+        $birthday = !empty($content['birthday']) ? $content['birthday'] : false;
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
-
-        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
-
+        
+        $errors = $validator->validate($user);
+       
         $user
             ->setPassword($encoder->encodePassword($user, $password))
             ->setFirstname($firstname)
-            ->setBirthday($birthday)
-            ->setBio($bio);
-
-        $errors = $validator->validate($user);
-
+            ->setBio($bio)
+        ;
+        
         if (count($errors) !== 0) {
             $errorsList = array();
 
@@ -253,13 +251,26 @@ class UserController extends AbstractController
                     'message' => $error->getMessage()
                 ];
             }
-
+            
             return $this->json(
                 $errorsList,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
 
+        $pattern = '#\d{4}-\d{2}-\d{2}#';
+
+        if($birthday) {
+            if (preg_match($pattern, $birthday) !== 1)
+                return $this->json(
+                    ['message' => 'Invalid birthday format.'],
+                    Response::HTTP_UNAUTHORIZED
+                );
+            
+            $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
+            $user->setBirthday($birthday);
+        }
+        
         $avatarFolder = __DIR__ . '/../../public/images/avatars/';
         $userSlug = $user->getSlug();
         
