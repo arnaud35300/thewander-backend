@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
- * @ORM\HasLifecycleCallbacks()
+ * 
  * @ORM\Table(
  *      indexes={
  *          @ORM\Index(name="idx_name", columns={"name"}),
@@ -83,18 +83,6 @@ class CelestialBody
      * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
      */
     private $yPosition;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     * 
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      max=50
-     * )
-     * 
-     * @Groups({"celestial-bodies", "celestial-body-creation"})
-     */
-    private $icon;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
@@ -170,6 +158,12 @@ class CelestialBody
      */
     private $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $icon;
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
@@ -227,18 +221,6 @@ class CelestialBody
     public function setYPosition(?int $yPosition): self
     {
         $this->yPosition = $yPosition;
-
-        return $this;
-    }
-
-    public function getIcon(): ?string
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(?string $icon): self
-    {
-        $this->icon = $icon;
 
         return $this;
     }
@@ -368,6 +350,18 @@ class CelestialBody
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getIcon(): ?Icon
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?Icon $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }
