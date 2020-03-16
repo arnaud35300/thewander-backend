@@ -34,7 +34,7 @@ class CelestialBody
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
+     * @Groups({"users", "celestial-bodies", "celestial-body", "comments"})
      */
     private $id;
 
@@ -47,14 +47,14 @@ class CelestialBody
      *      max=50
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies", "comments"})
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "comments"})
      */
     private $name;
 
     /**
      * @ORM\Column(name="slug", type="string", length=50)
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "user-celestial-bodies", "comments"})
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "comments"})
      */
     private $slug;
 
@@ -67,7 +67,7 @@ class CelestialBody
      *      max=6
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user", "current-user"})
      */
     private $xPosition;
 
@@ -80,7 +80,7 @@ class CelestialBody
      *      max=6
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user", "current-user"})
      */
     private $yPosition;
 
@@ -92,7 +92,7 @@ class CelestialBody
      *      max=50
      * )
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user", "current-user"})
      */
     private $picture;
 
@@ -101,7 +101,7 @@ class CelestialBody
      * 
      * @Assert\Type(type="integer")
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-body"})
      */
     private $nbStars;
 
@@ -113,14 +113,14 @@ class CelestialBody
      *      max=500
      * )
      * 
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Property", inversedBy="celestialBodies")
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-body", "user", "current-user"})
      */
     private $properties;
 
@@ -129,14 +129,14 @@ class CelestialBody
      * 
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-bodies", "celestial-body"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="celestialBody", orphanRemoval=true)
      * 
-     * @Groups({"celestial-body"})
+     * @Groups({"celestial-body", "current-user"})
      */
     private $comments;
 
@@ -145,7 +145,7 @@ class CelestialBody
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "user", "current-user"})
      */
     private $createdAt;
 
@@ -154,7 +154,7 @@ class CelestialBody
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "user-celestial-bodies"})
+     * @Groups({"celestial-bodies", "celestial-body", "user", "current-user"})
      */
     private $updatedAt;
 

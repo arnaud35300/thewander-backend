@@ -40,7 +40,7 @@ class Property
      *      max=100
      * )
      * 
-     * @Groups({"properties", "celestial-body", "user-celestial-body"})
+     * @Groups({"properties", "celestial-body", "user", "current-user"})
      */
     private $name;
 

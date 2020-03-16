@@ -17,7 +17,7 @@ class Comment
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-body", "user", "comments"})
+     * @Groups({"celestial-body", "users", "user", "current-user", "comments"})
      */
     private $id;
 
@@ -30,7 +30,7 @@ class Comment
      *      max=150
      * )
      * 
-     * @Groups({"celestial-body", "user", "comments", "comment-creation", "comment-update"})
+     * @Groups({"celestial-body", "users", "user", "current-user", "comments", "comment-creation", "comment-update"})
      */
     private $body;
 
@@ -46,7 +46,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity="App\Entity\CelestialBody", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"comments"})
+     * @Groups({"comments", "user"})
      */
     private $celestialBody;
 
@@ -55,7 +55,7 @@ class Comment
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "user", "comments"})
+     * @Groups({"celestial-body", "users", "user","current-user", "comments"})
      */
     private $createdAt;
 
@@ -64,7 +64,7 @@ class Comment
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "user", "comments"})
+     * @Groups({"celestial-body", "users", "current-user", "comments"})
      */
     private $updatedAt;
 

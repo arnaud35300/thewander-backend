@@ -31,6 +31,8 @@ class Icon
 
     /**
      * @ORM\Column(type="string", length=100)
+     * 
+     * @Groups({"celestial-bodies", "icons"})
      */
     private $path;
 

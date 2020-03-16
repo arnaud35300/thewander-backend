@@ -35,7 +35,7 @@ class Role
      *      max = 30
      * )
      * 
-     * @Groups({"user", "current-user"})
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body"})
      */
     private $name;
 
