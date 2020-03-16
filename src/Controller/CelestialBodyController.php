@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 
-use App\Service\Slugger;
 use App\Entity\Property;
+use App\Service\Slugger;
+use App\Service\Uploader;
 use App\Service\Delimiter;
 use App\Entity\CelestialBody;
-use App\Repository\CelestialBodyRepository;
 use App\Repository\IconRepository;
-use App\Service\Uploader;
+use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
