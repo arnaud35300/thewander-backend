@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\Slugger;
 use App\Repository\UserRepository;
+use App\Service\Uploader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -199,14 +200,17 @@ class UserController extends AbstractController
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
-     ** @Route("/users", name="update_user", methods={"PATCH"})
+     ** @Route("/self/update", name="update_user", methods={"POST"})
      */
     public function update(
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        Uploader $uploader
     ) {
+        $request->setMethod('PATCH');
+
         $user = $this->getUser();
 
         if ($user === null)
@@ -215,7 +219,7 @@ class UserController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
 
-        $content = $request->getContent();
+        $content = $request->request->get('json');
 
         if (json_decode($content) === null)
             return $this->json(
@@ -226,7 +230,6 @@ class UserController extends AbstractController
         $content = json_decode($content, true);
 
         $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
-        $avatar = !empty($content['avatar']) ? $content['avatar'] : $user->getAvatar();
         $firstname = !empty($content['firstname']) ? $content['firstname'] : $user->getFirstname();
         $birthday = !empty($content['birthday']) ? $content['birthday'] : $user->getBirthday();
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
@@ -235,7 +238,6 @@ class UserController extends AbstractController
 
         $user
             ->setPassword($encoder->encodePassword($user, $password))
-            ->setAvatar($avatar)
             ->setFirstname($firstname)
             ->setBirthday($birthday)
             ->setBio($bio);
@@ -256,6 +258,30 @@ class UserController extends AbstractController
                 $errorsList,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
+        }
+
+        $avatarFolder = __DIR__ . '/../../public/images/avatars/';
+        $userSlug = $user->getSlug();
+        
+        if ($request->files->get('avatar')) {
+            $avatar = $uploader->upload(
+                'avatars',
+                $userSlug,
+                '_avatar',
+                'avatar',
+                75
+            );
+
+            if ($avatar['status'] === false)
+                return $this->json(
+                    ['message' => $avatar],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
+        
+            if ($user->getAvatar() !== null)
+                unlink($avatarFolder . $user->getAvatar());
+            
+            $user->setAvatar($avatar['avatar']);
         }
 
         $manager = $this

@@ -77,12 +77,12 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      * 
      * @Assert\Length(
-     *      max = 30
+     *      max = 150
      * )
      * @Assert\NotBlank
      * @Assert\Type("string")
      * @Assert\Regex(
-     *      pattern = "#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#",
+     *      pattern = "#.*^(?=.{8,150})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#",
      *      match=true,
      *      message="Your password must be at least eight characters long, including upper and lower case letters, a number and a symbol."
      * )
