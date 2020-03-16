@@ -16,7 +16,7 @@ class Uploader
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function upload(string $path, string $name, string $suffix, int $width = 200, int $height = 200): array
+    public function upload(string $path, string $name, string $suffix, int $width = 400): array
     {
         $file = $this->request->files->get('picture');        
 
@@ -49,8 +49,8 @@ class Uploader
         $directory = __DIR__ . '/../../public/images/' . $path;
 
         $image = Image::make($pathname);
-
-        $image->crop($width, $height);
+        
+        $image->fit($width);
         $image->save($directory . '/' . $filename);
 
         $success['picture'] = $filename;
