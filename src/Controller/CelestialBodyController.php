@@ -210,7 +210,8 @@ class CelestialBodyController extends AbstractController
             $picture = $uploader->upload(
                 'pictures',
                 $newCelestialBodySlug,
-                '_picture'
+                '_picture',
+                'picture'
             );
 
             if ($picture['status'] === false)
@@ -365,7 +366,8 @@ class CelestialBodyController extends AbstractController
             $picture = $uploader->upload(
                 'pictures',
                 $celestialBodySlug,
-                '_picture'
+                '_picture',
+                'picture'
             );
 
             if ($picture['status'] === false)

@@ -16,18 +16,12 @@ class Uploader
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function upload(string $path, string $name, string $suffix, int $width = 400): array
+    public function upload(string $path, string $name, string $suffix, string $field, int $width = 400): array
     {
-        $file = $this->request->files->get('picture');        
+        $file = $this->request->files->get($field);        
 
         $errors = array();
         $success = array();
-
-        if ($file === null) {
-            $errors['file'] = 'Invalid file name.';
-            
-            return $errors;
-        }
 
         if ($file->getError() > 0)
             $errors['upload'] = 'An error occurred while uploading the file.';
@@ -53,7 +47,7 @@ class Uploader
         $image->fit($width);
         $image->save($directory . '/' . $filename);
 
-        $success['picture'] = $filename;
+        $success[$field] = $filename;
         $success['status'] = true;
 
         return $success;
