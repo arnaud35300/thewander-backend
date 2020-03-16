@@ -57,10 +57,6 @@ class UserEvent
 
     public function preUpdate(User $user)
     {
-        $user->setSlug(
-            $this->slugger->slugify($user->getNickname())
-        );
-
         $user->setUpdatedAt(new \DateTime());
 
         // Rank
