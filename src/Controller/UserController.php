@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\Censor;
 use App\Service\Slugger;
-use App\Repository\UserRepository;
 use App\Service\Uploader;
+use Swift_Mailer as SwiftMailer;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Swift_Mailer as SwiftMailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -112,13 +113,20 @@ class UserController extends AbstractController
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder,
         Slugger $slugger,
-        SwiftMailer $mailer
+        SwiftMailer $mailer,
+        Censor $censor
     ) {
         $content = $request->getContent();
 
         if (json_decode($content) === null)
             return $this->json(
                 ['message' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -199,7 +207,8 @@ class UserController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder,
-        Uploader $uploader
+        Uploader $uploader,
+        Censor $censor
     ) {
         $request->setMethod('PATCH');
 
@@ -216,6 +225,12 @@ class UserController extends AbstractController
         if (json_decode($content) === null)
             return $this->json(
                 ['message' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
