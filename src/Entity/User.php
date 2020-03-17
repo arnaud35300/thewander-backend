@@ -196,6 +196,12 @@ class User implements UserInterface
      */
     private $updatedAt;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Preference", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $preference;
+
     public function __construct()
     {
         $this->celestialBodies = new ArrayCollection();
@@ -479,6 +485,18 @@ class User implements UserInterface
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPreference(): ?Preference
+    {
+        return $this->preference;
+    }
+
+    public function setPreference(Preference $preference): self
+    {
+        $this->preference = $preference;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\EventListener;
 
+use App\Entity\Preference;
 use App\Entity\User;
 use App\Service\Slugger;
 use App\Repository\RoleRepository;
@@ -50,9 +51,14 @@ class UserEvent
         $user->setStatus(1);
         $user->setExperience(0);
 
-        $birthday = '1990-00-00';
-        $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
-        $user->setBirthday($birthday);
+        $preference = new Preference();
+
+        $preference
+            ->setVolume(50)
+            ->setSoundscape('https://ajna-design.fr/wp-content/uploads/2020/03/The-Wander-Loop-Kinomood_-_Bring_Me_Over.mp3')
+        ;
+
+        $user->setPreference($preference);
     }
 
     public function preUpdate(User $user)

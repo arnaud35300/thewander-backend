@@ -204,15 +204,19 @@ class UserController extends AbstractController
 
         $content = json_decode($content, true);
 
-        $password = !empty($content['password']) ? $content['password'] : $user->getPassword();
-        $firstname = !empty($content['firstname']) ? $content['firstname'] : false;
+        $password = !empty($content['password']) ? $content['password'] : false;
+        $firstname = !empty($content['firstname']) ? $content['firstname'] : null;
         $birthday = !empty($content['birthday']) ? $content['birthday'] : false;
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
         
         $errors = $validator->validate($user);
        
+        if ($password) 
+            $user->setPassword(
+                $encoder->encodePassword($user, $password)
+            );
+
         $user
-            ->setPassword($encoder->encodePassword($user, $password))
             ->setFirstname($firstname)
             ->setBio($bio)
         ;
