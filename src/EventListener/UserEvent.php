@@ -48,8 +48,11 @@ class UserEvent
             $this->slugger->slugify($user->getNickname())
         );
 
-        $user->setStatus(1);
-        $user->setExperience(0);
+        $user
+            ->setStatus(1)
+            ->setExperience(0)
+            ->setAvatar('00_avatar.png')
+        ;
 
         $preference = new Preference();
 
