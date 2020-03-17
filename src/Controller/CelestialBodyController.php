@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Service\Censor;
 use App\Entity\Property;
 use App\Service\Slugger;
 use App\Service\Uploader;
@@ -145,7 +146,8 @@ class CelestialBodyController extends AbstractController
         Delimiter $delimiter,
         Slugger $slugger,
         Uploader $uploader,
-        IconRepository $iconRepository
+        IconRepository $iconRepository,
+        Censor $censor
     ): JsonResponse
     {
         $content = $request->request->get('json');
@@ -156,6 +158,12 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNAUTHORIZED
             );
         }
+
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
+                Response::HTTP_UNAUTHORIZED
+            );
 
         $newCelestialBody = $serializer->deserialize(
             $content,
@@ -288,7 +296,8 @@ class CelestialBodyController extends AbstractController
         Slugger $slugger,
         Uploader $uploader,
         CelestialBody $celestialBody = null,
-        IconRepository $iconRepository
+        IconRepository $iconRepository,
+        Censor $censor
     ): JsonResponse 
     {
         $request->setMethod('PATCH');
@@ -309,6 +318,12 @@ class CelestialBodyController extends AbstractController
                 Response::HTTP_UNAUTHORIZED
             );
         }
+
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
+                Response::HTTP_UNAUTHORIZED
+            );
 
         $content = json_decode($content, true);
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Comment;
+use App\Service\Censor;
 use App\Entity\CelestialBody;
 use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,15 +89,21 @@ class CommentController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        CelestialBody $celestialBody = null
+        CelestialBody $celestialBody = null,
+        Censor $censor
     ): JsonResponse 
     {
-
         $content = $request->getContent();
 
         if (json_decode($content) === null)
             return $this->json(
                 ['error' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -171,7 +178,8 @@ class CommentController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Comment $comment = null
+        Comment $comment = null,
+        Censor $censor
     ): JsonResponse
     {
         if ($comment === null)
@@ -187,6 +195,12 @@ class CommentController extends AbstractController
         if (json_decode($content) === null)
             return $this->json(
                 ['error' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+
+        if ($censor->check($content) === false)
+            return $this->json(
+                ['message' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
