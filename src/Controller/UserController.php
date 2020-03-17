@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Swift_Mailer as SwiftMailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -110,7 +111,8 @@ class UserController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder,
-        Slugger $slugger
+        Slugger $slugger,
+        SwiftMailer $mailer
     ) {
         $content = $request->getContent();
 
@@ -151,6 +153,21 @@ class UserController extends AbstractController
 
         $manager->persist($user);
         $manager->flush();
+
+        $message = (new \Swift_Message('Ready to browse the space!'))
+        ->setFrom('thewandercorp@gmail.com')
+        ->setTo($user->getEmail())
+        ->setBody(
+            $this->renderView(
+                'emails/signup.html.twig',
+                    [
+                        'user' => $user
+                    ]
+            ),
+            'text/html'
+        );
+
+        $mailer->send($message);
 
         return $this->json(
             [
