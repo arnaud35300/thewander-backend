@@ -48,7 +48,7 @@ class UserEvent
         );
 
         $user->setStatus(1);
-        $user->getExperience(0);
+        $user->setExperience(0);
 
         $birthday = '1990-00-00';
         $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
