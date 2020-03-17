@@ -35,6 +35,8 @@ class Preference
     /**
      * @ORM\Column(type="string", length=255)
      * 
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 255
      * )
