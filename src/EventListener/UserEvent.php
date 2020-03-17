@@ -56,6 +56,8 @@ class UserEvent
         $preference
             ->setVolume(50)
             ->setSoundscape('https://ajna-design.fr/wp-content/uploads/2020/03/The-Wander-Loop-Kinomood_-_Bring_Me_Over.mp3')
+            ->setCreatedAt(new \DateTime())
+            ->setUpdatedAt(new \DateTime())
         ;
 
         $user->setPreference($preference);

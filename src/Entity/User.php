@@ -199,6 +199,8 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Preference", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"current-user", "user-preference-update"})
      */
     private $preference;
 
