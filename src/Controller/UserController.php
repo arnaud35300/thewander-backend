@@ -297,6 +297,89 @@ class UserController extends AbstractController
     }
 
     /**
+     *? Updates the user's preference.
+     *
+     * @param Request $request The HttpFoundation Request class.
+     * @param ValidatorInterface $validator The Validator component.
+     * @param SerializerInterface $serializer The Serializer component.
+     * 
+     * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
+     ** @Route("/self/preference", name="update_user_preferences", methods={"PATCH"})
+     */
+    public function updatePreference(Request $request, ValidatorInterface $validator, SerializerInterface $serializer): JsonResponse
+    {
+        $user = $this->getUser();
+
+        if ($user === null)
+            return $this->json(
+                ['message' => 'User not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+
+        $preference = $user->getPreference();
+
+        $content = $request->getContent();
+
+        if (json_decode($content) === null)
+            return $this->json(
+                ['message' => 'Invalid data format.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+
+        $content = json_decode($content, true);
+
+        $volume = isset($content['volume']) ? $content['volume'] : $preference->getVolume();
+        $soundscape = isset($content['soundscape']) ? $content['soundscape'] : $preference->getSoundscape();
+
+        $preference
+            ->setVolume($volume)
+            ->setSoundscape($soundscape)
+        ;
+
+        $errors = $validator->validate($preference);
+        
+        if (count($errors) !== 0) {
+            $errorsList = array();
+
+            foreach ($errors as $error) {
+                $errorsList[] = [
+                    'field' => $error->getPropertyPath(),
+                    'message' => $error->getMessage()
+                ];
+            }
+            
+            return $this->json(
+                $errorsList,
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager();
+
+        $manager->persist($preference);
+        $manager->flush();
+
+        $preference = $serializer->serialize(
+            $preference,
+            'json',
+            ['groups' => 'user-preference-update']
+        );
+
+        return $this->json(
+            [
+                'message' => 'User preference updated.',
+                'content' => $preference
+            ],
+            Response::HTTP_OK
+        ); 
+    }
+
+    /**
      *? Deletes a user.
      * 
      * @param User $user The user entity.
