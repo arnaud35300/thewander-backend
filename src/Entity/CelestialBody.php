@@ -97,15 +97,6 @@ class CelestialBody
     private $picture;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     * 
-     * @Assert\Type(type="integer")
-     * 
-     * @Groups({"celestial-body"})
-     */
-    private $nbStars;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      * 
      * @Assert\Type("string")
@@ -235,18 +226,6 @@ class CelestialBody
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getNbStars(): ?int
-    {
-        return $this->nbStars;
-    }
-
-    public function setNbStars(?int $nbStars): self
-    {
-        $this->nbStars = $nbStars;
 
         return $this;
     }
