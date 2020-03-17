@@ -183,6 +183,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "snipe/banbuilder": {
+        "version": "2.3.0"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.3"
     },
