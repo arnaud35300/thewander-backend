@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Uploader
 {
     const EXTENSIONS = ['jpg', 'jpeg', 'png'];
-
     private $request;
 
     public function __construct(RequestStack $requestStack)
@@ -16,6 +15,17 @@ class Uploader
         $this->request = $requestStack->getCurrentRequest();
     }
 
+    /**
+     * Uploades an image within the public images folder.
+     * 
+     * @param string $path The image's path.
+     * @param string $name The image's name.
+     * @param string $suffix The image's type suffix (e.g. _picture, _avatar).
+     * @param string $field The returned array's index name.
+     * @param int $width The image's width.
+     * 
+     * @return array
+     */
     public function upload(string $path, string $name, string $suffix, string $field, int $width = 400): array
     {
         $file = $this->request->files->get($field);        
