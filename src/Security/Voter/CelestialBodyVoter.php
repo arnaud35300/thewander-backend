@@ -18,28 +18,25 @@ class CelestialBodyVoter extends Voter
     }
 
     protected function supports($attribute, $subject)
-    {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['CELESTIALBODY_UPDATE', 'CELESTIALBODY_DELETE'])
+    {    
+        return in_array($attribute, ['CELESTIAL_BODY_UPDATE', 'CELESTIAL_BODY_DELETE'])
             && $subject instanceof CelestialBody;
     }
 
     protected function voteOnAttribute($attribute, $celestialBody, TokenInterface $token)
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
-        if (!$user instanceof UserInterface) {
+        
+        if (!$user instanceof UserInterface)
             return false;
-        }
 
-        // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case 'CELESTIALBODY_UPDATE':
+            case 'CELESTIAL_BODY_UPDATE':
                 if ($user === $celestialBody->getUser())
                     return true;
                 break;
-            case 'CELESTIALBODY_DELETE':
+                
+            case 'CELESTIAL_BODY_DELETE':
                 if ($user === $celestialBody->getUser())
                     return true;
 

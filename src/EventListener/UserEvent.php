@@ -29,12 +29,21 @@ class UserEvent
         $this->encoder = $encoder;
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a new user is instantiated.
+     * 
+     * @param User $user The User entity.
+     * 
+     * @return void
+     */
     public function prePersist(User $user)
     {
         $rank = $this->rankRepository->findOneByRankNumber(1);
+
         $user->setRank($rank);
 
         $role = $this->roleRepository->findOneByName('ROLE_CONTRIBUTOR');
+
         $user->setRole($role);
 
         $user->setPassword(
@@ -66,11 +75,17 @@ class UserEvent
         $user->setPreference($preference);
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a new user is updated.
+     * 
+     * @param User $user The User entity.
+     * 
+     * @return void
+     */
     public function preUpdate(User $user)
     {
         $user->setUpdatedAt(new \DateTime());
 
-        // Rank
         $experience = $user->getExperience();
 
         $rank = [
@@ -82,8 +97,9 @@ class UserEvent
         ];
 
         foreach($rank as $key => $value) {
-            if($experience > $value) {
+            if ($experience > $value) {
                 $rank = $this->rankRepository->findOneByRankNumber($key);
+                
                 $user->setRank($rank);
             }
         }

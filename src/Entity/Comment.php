@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
- * @ORM\HasLifecycleCallbacks() 
  */
 class Comment
 {
@@ -17,28 +16,15 @@ class Comment
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-body", "users", "user", "current-user", "comments"})
+     * @Groups({"comments", "users", "user", "current-user", "celestial-body"})
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="text")
-     * 
-     * @Assert\NotBlank
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *      max=150
-     * )
-     * 
-     * @Groups({"celestial-body", "users", "user", "current-user", "comments", "comment-creation", "comment-update"})
-     */
-    private $body;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"celestial-body", "comments"})
+     * @Groups({"comments", "celestial-body"})
      */
     private $user;
 
@@ -51,11 +37,24 @@ class Comment
     private $celestialBody;
 
     /**
+     * @ORM\Column(type="text")
+     * 
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *      max=150
+     * )
+     * 
+     * @Groups({"comments", "comment-creation", "users", "user", "current-user", "celestial-body"})
+     */
+    private $body;
+
+    /**
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "users", "user","current-user", "comments"})
+     * @Groups({"comments", "users", "user", "current-user", "celestial-body"})
      */
     private $createdAt;
 
@@ -64,7 +63,7 @@ class Comment
      * 
      * @Assert\NotBlank
      * 
-     * @Groups({"celestial-body", "users", "current-user", "comments"})
+     * @Groups({ "comments", "users", "current-user", "celestial-body"})
      */
     private $updatedAt;
 
@@ -77,18 +76,6 @@ class Comment
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getBody(): ?string
-    {
-        return $this->body;
-    }
-
-    public function setBody(string $body): self
-    {
-        $this->body = $body;
-
-        return $this;
     }
 
     public function getUser(): ?User
@@ -111,6 +98,18 @@ class Comment
     public function setCelestialBody(?CelestialBody $celestialBody): self
     {
         $this->celestialBody = $celestialBody;
+
+        return $this;
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+
+    public function setBody(string $body): self
+    {
+        $this->body = $body;
 
         return $this;
     }

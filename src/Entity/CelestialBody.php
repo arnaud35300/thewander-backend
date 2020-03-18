@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
-use App\Service\Slugger;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CelestialBodyRepository")
@@ -34,9 +33,26 @@ class CelestialBody
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"users", "celestial-bodies", "celestial-body", "comments"})
+     * @Groups({"celestial-bodies", "celestial-body", "users", "comments"})
      */
     private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="celestialBodies")
+     * 
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"celestial-bodies", "celestial-body"})
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"celestial-bodies"})
+     */
+    private $icon;
 
     /**
      * @ORM\Column(name="name", type="string", length=50)
@@ -47,40 +63,38 @@ class CelestialBody
      *      max=50
      * )
      * 
-     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "comments"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "users", "user", "current-user", "comments"})
      */
     private $name;
 
     /**
      * @ORM\Column(name="slug", type="string", length=50)
      * 
-     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "comments"})
+     * @Groups({"celestial-bodies", "celestial-body", "users", "user", "current-user", "comments"})
      */
     private $slug;
 
     /**
-     * @ORM\Column(name="xPosition", type="integer", nullable=true)
-     * 
-     * @Assert\NotBlank
+     * @ORM\Column(name="xPosition", type="integer")
+     *
      * @Assert\Type(type="integer")
      * @Assert\Length(
      *      max=6
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user", "current-user"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "user", "current-user"})
      */
     private $xPosition;
 
     /**
-     * @ORM\Column(name="yPosition", type="integer", nullable=true)
-     * 
-     * @Assert\NotBlank
+     * @ORM\Column(name="yPosition", type="integer")
+     *
      * @Assert\Type(type="integer")
      * @Assert\Length(
      *      max=6
      * )
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "celestial-body-update", "user", "current-user"})
+     * @Groups({"celestial-bodies", "celestial-body", "celestial-body-creation", "user", "current-user"})
      */
     private $yPosition;
 
@@ -104,7 +118,7 @@ class CelestialBody
      *      max=500
      * )
      * 
-     * @Groups({"celestial-body", "celestial-body-creation", "celestial-body-update"})
+     * @Groups({"celestial-body", "celestial-body-creation"})
      */
     private $description;
 
@@ -114,15 +128,6 @@ class CelestialBody
      * @Groups({"celestial-body", "user", "current-user"})
      */
     private $properties;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="celestialBodies")
-     * 
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Groups({"celestial-bodies", "celestial-body"})
-     */
-    private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="celestialBody", orphanRemoval=true)
@@ -149,14 +154,6 @@ class CelestialBody
      */
     private $updatedAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Icon")
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Groups({"celestial-bodies"})
-     */
-    private $icon;
-
     public function __construct()
     {
         $this->properties = new ArrayCollection();
@@ -168,6 +165,30 @@ class CelestialBody
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIcon(): ?Icon
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?Icon $icon): self
+    {
+        $this->icon = $icon;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -268,18 +289,6 @@ class CelestialBody
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Comment[]
      */
@@ -331,18 +340,6 @@ class CelestialBody
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getIcon(): ?Icon
-    {
-        return $this->icon;
-    }
-
-    public function setIcon(?Icon $icon): self
-    {
-        $this->icon = $icon;
 
         return $this;
     }

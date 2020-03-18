@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Comment;
 use App\Service\Censor;
 use App\Entity\CelestialBody;
@@ -59,7 +58,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'Comment not found.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -75,9 +74,10 @@ class CommentController extends AbstractController
      *? Adds a new comment on a particular celestial body.
      * 
      * @param Request $request The HttpFoundation Request class.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
-     * @param CelestialBody $celestialBody The CestialBody entity.
+     * @param Censor $censor The Censor service.
      * 
      * @return JsonResponse
      * 
@@ -87,17 +87,23 @@ class CommentController extends AbstractController
      */
     public function create(
         Request $request,
+        CelestialBody $celestialBody = null,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        CelestialBody $celestialBody = null,
         Censor $censor
     ): JsonResponse 
     {
+        if ($celestialBody === null)
+            return $this->json(
+                ['message' => 'Celestial body not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+
         $content = $request->getContent();
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
@@ -114,32 +120,15 @@ class CommentController extends AbstractController
             ['groups' => 'comment-creation']
         );
 
-        if ($celestialBody === null) {
-            return $this->json(
-                ['error' => 'This celestial body does not exist.'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
         $newComment->setCelestialBody($celestialBody);
 
-        $errors = $validator->validate($newComment);
+        $violations = $validator->validate($newComment);
 
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
         
         $manager = $this
             ->getDoctrine()
@@ -161,12 +150,13 @@ class CommentController extends AbstractController
     }
 
     /**
-     *? Updates a user's comment.
+     *? Updates a comment.
      * 
      * @param Request $request The HttpFoundation Request class.
-     * @param SerializerInterface $serializer The Serializer component.
+     * @param Comment $comment The Comment entity.
      * @param ValidatorInterface $validator The Validator component.
-     * @param User $user The user entity.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param Censor $censor The Censor service.
      * 
      * @return JsonResponse
      * 
@@ -176,15 +166,15 @@ class CommentController extends AbstractController
      */
     public function update(
         Request $request,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
         Comment $comment = null,
+        ValidatorInterface $validator,
+        SerializerInterface $serializer,
         Censor $censor
     ): JsonResponse
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'comment not found.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -194,7 +184,7 @@ class CommentController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -210,23 +200,13 @@ class CommentController extends AbstractController
 
         $comment->setBody($body);
 
-        $errors = $validator->validate($comment);
+        $violations = $validator->validate($comment);
 
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
 
         $manager = $this
             ->getDoctrine()
@@ -239,12 +219,12 @@ class CommentController extends AbstractController
         $comment = $serializer->serialize(
             $comment,
             'json',
-            ['groups' => 'comment-update']
+            ['groups' => 'comments']
         );
         
         return $this->json(
             [
-                'message' => 'Comment updated.',
+                'message' => 'Comment now updated.',
                 'content' => $comment
             ],
             Response::HTTP_OK
@@ -266,7 +246,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'The comment does not exist.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -281,7 +261,7 @@ class CommentController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'Comment deleted.'],
+            ['message' => 'Comment now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }

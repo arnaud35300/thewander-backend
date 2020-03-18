@@ -49,7 +49,6 @@ class CelestialBodyController extends AbstractController
     /**
      *? Retrieves a particular celestial body.
      * 
-     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
      * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
      * @return JsonResponse
@@ -58,12 +57,11 @@ class CelestialBodyController extends AbstractController
      */
     public function getOne(CelestialBody $celestialBody = null): JsonResponse
     {
-        if ($celestialBody === null) {
+        if ($celestialBody === null)
             return $this->json(
-                ['error' => 'Celestial body not found.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
-        }
 
         return $this->json(
             $celestialBody,
@@ -74,7 +72,7 @@ class CelestialBodyController extends AbstractController
     }
 
     /**
-     *? Verifies whether the user can create or drag one of his celestial bodies on the precise X and Y positions.
+     *? Checks the defined coordinates' surroundings.
      *
      * @param Request $request The HttpFoundation Request class.
      * @param Delimiter $delimiter The Delimiter service.
@@ -91,7 +89,7 @@ class CelestialBodyController extends AbstractController
         
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
@@ -102,22 +100,21 @@ class CelestialBodyController extends AbstractController
 
         if ($xPosition === false || $yPosition === false) {
             return $this->json(
-                ['message' => 'No position has been defined.'],
+                ['message' => 'No coordinate has been defined.'],
                 Response::HTTP_UNAUTHORIZED
             );
         } elseif (is_int($xPosition) === false || is_int($yPosition) === false) {
             return $this->json(
-                ['message' => 'Positions can only be defined by numbers.'],
+                ['message' => 'Coordinates can only be defined by digits.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
         
-        if ($delimiter->verifyPositions($xPosition, $yPosition) === false) {
+        if ($delimiter->verifyPositions($xPosition, $yPosition) === false)
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
 
         return $this->json(
             ['message' => 'A new celestial body can be created on these coordinates.'],
@@ -129,9 +126,13 @@ class CelestialBodyController extends AbstractController
      *? Creates a new celestial body.
      * 
      * @param Request $request The HttpFoundation Request class.
+     * @param IconRepository $iconRepository The Icon repository.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
+     * @param Censor $censor The Censor service.
+     * @param Slugger $slugger The Slugger service.
      * @param Delimiter $delimiter The Delimiter service.
+     * @param Uploader $uploader The Uploader service.
      * 
      * @return JsonResponse
      * 
@@ -141,23 +142,22 @@ class CelestialBodyController extends AbstractController
      */
     public function create(
         Request $request,
+        IconRepository $iconRepository,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Delimiter $delimiter,
+        Censor $censor,
         Slugger $slugger,
-        Uploader $uploader,
-        IconRepository $iconRepository,
-        Censor $censor
+        Delimiter $delimiter,
+        Uploader $uploader
     ): JsonResponse
     {
         $content = $request->request->get('json');
 
-        if (json_decode($content) === null) {
+        if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
-        }
 
         if ($censor->check($content) === false)
             return $this->json(
@@ -175,31 +175,25 @@ class CelestialBodyController extends AbstractController
         $content = json_decode($content, true);
 
         $properties = !empty($content['properties']) ? $content['properties'] : false;
-        $iconId = !empty($content['icon']) ? $content['icon'] : false;
+        $iconID = !empty($content['icon']) ? $content['icon'] : false;
 
-        $errors = $validator->validate($newCelestialBody);
+        $violations = $validator->validate($newCelestialBody);
 
-        // TODO : à tester
-        // $violations = $validator->validate($newCelestialBody);
-        // if ($violations->count() > 0) {
-        //     return $this->json($violations, 400);
-        // }
-
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
+
+        $icon = $iconRepository->find($iconID);
+    
+        if ($icon === null) 
+            return $this->json(
+                ['message' => 'An icon has to be selected to set a new celestial body.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
+        $newCelestialBody->setIcon($icon);
         
         $xPosition = $newCelestialBody->getXPosition();
         $yPosition = $newCelestialBody->getYPosition();
@@ -208,9 +202,9 @@ class CelestialBodyController extends AbstractController
             $newCelestialBody->getName()
         );
 
-        if ($delimiter->verifyPositions($newCelestialBodySlug, $xPosition, $yPosition) === false)
+        if ($delimiter->verifyPositions($xPosition, $yPosition, $newCelestialBodySlug) === false)
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
@@ -232,27 +226,17 @@ class CelestialBodyController extends AbstractController
         }
 
         if ($properties) {
-            foreach ($properties as $propertyId) {
+            foreach ($properties as $propertyID) {
                 $property = $this
                     ->getDoctrine()
                     ->getRepository(Property::class)
-                    ->find($propertyId)
+                    ->find($propertyID)
                 ;
             
                 if ($property)
                     $newCelestialBody->addProperty($property);
             }
         }
-
-        $icon = $iconRepository->find($iconId);
-        
-        if ($icon === null) 
-            return $this->json(
-                ['message' => 'An icon is needed to create a new celestial body.'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-
-        $newCelestialBody->setIcon($icon);
 
         $manager = $this
             ->getDoctrine()
@@ -277,10 +261,14 @@ class CelestialBodyController extends AbstractController
      *? Updates a particular celestial body.
      * 
      * @param Request $request The HttpFoundation Request class.
-     * @param SerializerInterface $serializer The Serializer component.
-     * @param ValidatorInterface $validator The Validator component.
-     * @param Delimiter $delimiter The Delimiter service.
+     * @param IconRepository $iconRepository The Icon repository.
      * @param CelestialBody $celestialBody The CelestialBody entity.
+     * @param ValidatorInterface $validator The Validator component.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param Censor $censor The Censor service.
+     * @param Delimiter $delimiter The Delimiter service.
+     * @param Slugger $slugger The Slugger service.
+     * @param Uploader $uploader
      * 
      * @return JsonResponse
      * 
@@ -290,31 +278,31 @@ class CelestialBodyController extends AbstractController
      */
     public function update(
         Request $request,
-        SerializerInterface $serializer,
+        IconRepository $iconRepository,
+        CelestialBody $celestialBody = null,
         ValidatorInterface $validator,
+        SerializerInterface $serializer,
+        Censor $censor,
         Delimiter $delimiter,
         Slugger $slugger,
-        Uploader $uploader,
-        CelestialBody $celestialBody = null,
-        IconRepository $iconRepository,
-        Censor $censor
+        Uploader $uploader
     ): JsonResponse 
     {
         $request->setMethod('PATCH');
 
         if ($celestialBody === null)
             return $this->json(
-                ['error' => 'Celestial bodies not found.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         
-        $this->denyAccessUnlessGranted('CELESTIALBODY_UPDATE', $celestialBody);
+        $this->denyAccessUnlessGranted('CELESTIAL_BODY_UPDATE', $celestialBody);
 
         $content = $request->request->get('json');
  
         if (json_decode($content) === null) {
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -327,47 +315,48 @@ class CelestialBodyController extends AbstractController
 
         $content = json_decode($content, true);
 
+        $iconID = !empty($content['icon']) ? $content['icon'] : false;
         $name = !empty($content['name']) ? $content['name'] : $celestialBody->getName();
         $xPosition = isset($content['xPosition']) ? $content['xPosition'] : $celestialBody->getXPosition();
         $yPosition = isset($content['yPosition']) ? $content['yPosition'] : $celestialBody->getYPosition();
-        $icon = !empty($content['icon']) ? $content['icon'] : $celestialBody->getIcon();
         $description = !empty($content['description']) ? $content['description'] : $celestialBody->getDescription();
         $properties = !empty($content['properties']) ? $content['properties'] : false;
-        $iconId = !empty($content['icon']) ? $content['icon'] : false;
 
         $previousName = $celestialBody->getName();
         
-        $celestialBody->setName($name);
-        $celestialBody->setXPosition($xPosition);
-        $celestialBody->setYPosition($yPosition);
-        $celestialBody->setDescription($description);
+        $celestialBody
+            ->setName($name)
+            ->setXPosition($xPosition)
+            ->setYPosition($yPosition)
+            ->setDescription($description)
+        ;
         
-        $errors = $validator->validate($celestialBody);
-        
-        if (count($errors) !== 0) {
-            $errorsList = array();
-            
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-            
+        $violations = $validator->validate($celestialBody);
+
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
+
+        $icon = $iconRepository->find($iconID);
+    
+        if ($icon === null) 
+            return $this->json(
+                ['message' => 'An icon has to be selected to set a new celestial body.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
+        $celestialBody->setIcon($icon);
 
         $xPosition = $celestialBody->getXPosition();
         $yPosition = $celestialBody->getYPosition();
 
         $celestialBodySlug = $celestialBody->getSlug();
 
-        if ($delimiter->verifyPositions($celestialBodySlug, $xPosition, $yPosition) === false)
+        if ($delimiter->verifyPositions($xPosition, $yPosition, $celestialBodySlug) === false)
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
             
@@ -375,7 +364,7 @@ class CelestialBodyController extends AbstractController
             $celestialBody->getName()
         );
         
-        $pictureFolder = __DIR__ . '/../../public/images/pictures/'; 
+        $pictureDirectory = __DIR__ . '/../../public/images/pictures/'; 
         
         if ($request->files->get('picture')) {
             $picture = $uploader->upload(
@@ -386,30 +375,34 @@ class CelestialBodyController extends AbstractController
             );
 
             if ($picture['status'] === false)
-            return $this->json(
-                ['message' => $picture],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+                return $this->json(
+                    ['message' => $picture],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
         
             if ($celestialBody->getPicture() !== null)
-                unlink($pictureFolder . $celestialBody->getPicture());
+                unlink($pictureDirectory . $celestialBody->getPicture());
             
             $celestialBody->setPicture($picture['picture']);
         }
 
         if ($celestialBody->getName() !== $previousName) {            
-            $string = $celestialBody->getPicture();
+            $pictureName = $celestialBody->getPicture();
             $pattern = '#\b(.*)\_#';
             $replacement = $celestialBodySlug . '_';
             
-            $newString = preg_replace($pattern, $replacement, $string);
+            $newPictureName = preg_replace(
+                $pattern,
+                $replacement,
+                $pictureName
+            );
             
             rename(
-                $pictureFolder . $celestialBody->getPicture(),
-                $pictureFolder . $newString
+                $pictureDirectory . $celestialBody->getPicture(),
+                $pictureDirectory . $newPictureName
             );
         
-            $celestialBody->setPicture($newString);
+            $celestialBody->setPicture($newPictureName);
         }        
         
         $currentProperties = $celestialBody->getProperties();   
@@ -418,27 +411,17 @@ class CelestialBodyController extends AbstractController
             $celestialBody->removeProperty($currentProperty);
             
         if ($properties) {
-            foreach ($properties as $propertyId) {
+            foreach ($properties as $propertyID) {
                 $property = $this
                     ->getDoctrine()
                     ->getRepository(Property::class)
-                    ->find($propertyId)
+                    ->find($propertyID)
                 ;
 
                 if ($property)
                     $celestialBody->addProperty($property);
             }
         }
-
-        $icon = $iconRepository->find($iconId);
-        
-        if ($icon === null) 
-            return $this->json(
-                ['message' => 'An icon is needed to create a new celestial body.'],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-
-        $celestialBody->setIcon($icon);
 
         $manager = $this
             ->getDoctrine()
@@ -478,11 +461,11 @@ class CelestialBodyController extends AbstractController
     {        
         if ($celestialBody === null)
             return $this->json(
-                ['error' => 'This celestial body does not exist.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         
-        $this->denyAccessUnlessGranted('CELESTIALBODY_DELETE', $celestialBody);
+        $this->denyAccessUnlessGranted('CELESTIAL_BODY_DELETE', $celestialBody);
 
         $manager = $this
             ->getDoctrine()

@@ -6,8 +6,6 @@ use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserCheckerSubscriber implements EventSubscriberInterface
 {
@@ -18,6 +16,16 @@ class UserCheckerSubscriber implements EventSubscriberInterface
         $this->userRepository = $userRepository;
     }
 
+    /**
+     *? Checks the user's status before logging in.
+     *
+     *? If the status is set to 0 the user will be prevented from logging in.
+     *? If the status is set to 1 the user will be logged in.
+     * 
+     * @param ResponseEvent $event The HttpKernel response event component.
+     * 
+     * @return void
+     */
     public function onKernelResponse(ResponseEvent $event)
     {
         if ($event->getRequest()->getRequestUri() === "/login") {

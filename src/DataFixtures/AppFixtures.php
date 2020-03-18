@@ -2,13 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\DataFixtures\Provider\DataProvider;
-use App\Entity\CelestialBody;
-use App\Entity\Comment;
-use App\Entity\Property;
+use App\Entity\User;
 use App\Entity\Rank;
 use App\Entity\Role;
-use App\Entity\User;
+use App\Entity\Comment;
+use App\Entity\Property;
+use App\Entity\CelestialBody;
+use App\DataFixtures\Provider\DataProvider;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;

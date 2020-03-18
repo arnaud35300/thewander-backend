@@ -17,6 +17,13 @@ class CelestialBodyEvent
         $this->token = $token;
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a new celestial body is instantiated.
+     * 
+     * @param CelestialBody $celestialBody The CelestialBody entity.
+     * 
+     * @return void
+     */
     public function prePersist(CelestialBody $celestialBody)
     {
         $user = $this->token->getToken()->getUser();
@@ -36,6 +43,13 @@ class CelestialBodyEvent
         );        
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a celestial body is updated.
+     *
+     * @param CelestialBody $celestialBody The CelestialBody entity.
+     * 
+     * @return void
+     */
     public function preUpdate(CelestialBody $celestialBody)
     {
         $celestialBody->setUpdatedAt(new \DateTime());

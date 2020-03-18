@@ -6,6 +6,13 @@ use Snipe\BanBuilder\CensorWords;
 
 class Censor
 {
+    /**
+     *? Verifies and strikes or validates the request's content.
+     * 
+     * @param string $content The client's content.
+     * 
+     * @return bool
+     */
     public function check(string $content): bool
     {
         $censor = new CensorWords();

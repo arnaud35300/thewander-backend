@@ -2,19 +2,17 @@
 
 namespace App\Entity;
 
-use App\Service\Slugger;
-use App\Service\UserAttributes;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
  /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\HasLifecycleCallbacks()
+ * 
  * @ORM\Table(
  *      indexes={
  *          @ORM\Index(name="idx_nickname", columns={"nickname"}),
@@ -32,28 +30,36 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "users", "user", "comments", "current-user"})
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "comments"})
      */
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body"})
+     */
+    private $role;
+
+    /**
      * @ORM\Column(name="nickname", type="string", length=30, unique=true)
      * 
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Assert\Length(
      *      min = 3,
      *      max = 30
      * )
-     * @Assert\NotBlank
-     * @Assert\Type("string")
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "user-creation", "user-update", "users", "user", "current-user", "comments"})
+     * @Groups({"users", "user", "current-user", "user-creation", "celestial-bodies", "celestial-body", "comments"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=30)
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "users", "user-update", "user", "current-user", "comments"})
+     * @Groups({"users", "user", "current-user", "celestial-bodies", "celestial-body", "comments"})
      */
     private $slug;
 
@@ -67,7 +73,7 @@ class User implements UserInterface
      *      max = 100,
      * )
      * 
-     * @Groups({"users", "user-creation", "user-update", "current-user"})
+     * @Groups({"users", "current-user", "user-creation"})
      */
     private $email;
 
@@ -76,11 +82,11 @@ class User implements UserInterface
      * 
      * @ORM\Column(type="string")
      * 
+     * @Assert\NotBlank
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 150
      * )
-     * @Assert\NotBlank
-     * @Assert\Type("string")
      * @Assert\Regex(
      *      pattern = "#.*^(?=.{8,150})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#",
      *      match=true,
@@ -92,64 +98,79 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\Column(type="smallint")
+     * 
+     * @Assert\Type("integer")
+     * 
+     * @Groups({"users", "user", "current-user", "celestial-bodies"})
+     */
+    private $status;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"celestial-bodies", "celestial-body", "users", "current-user", "user"})
+     * @Groups({"user", "current-user", "celestial-body"})
      */
-    private $role;
+    private $rank;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * 
+     * @Groups({"user", "current-user"})
+     */
+    private $experience;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\Type("string")
      * 
-     * @Groups({"celestial-body", "user-update", "users", "user", "current-user", "comments"})
+     * @Groups({"users", "user", "current-user", "celestial-body", "comments"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
      * 
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 50
      * )
-     * @Assert\Type("string")
      * 
-     * @Groups({"user-update", "user", "current-user"})
+     * @Groups({"user", "current-user"})
      * */
     private $firstname;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      * 
-     * @Groups({"user-update", "user", "current-user"})
+     * @Groups({"user", "current-user"})
      */
     private $birthday;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * 
+     * @Assert\Type("string")
      * @Assert\Length(
      *      max = 500
      * )
-     * @Assert\Type("string")
      * 
-     * @Groups({"user-update", "user", "current-user"})
+     * @Groups({"user"})
      */
     private $bio;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\OneToOne(targetEntity="App\Entity\Preference", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
      * 
-     * @Assert\Type("integer")
-     * 
-     * @Groups({"celestial-bodies", "users", "user", "current-user"})
+     * @Groups({"current-user", "user-preference-update"})
      */
-    private $status;
+    private $preference;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CelestialBody", mappedBy="user", orphanRemoval=true)
@@ -166,49 +187,23 @@ class User implements UserInterface
     private $comments;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Groups({"celestial-body", "user", "current-user"})
-     */
-    private $rank;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     * 
-     * @Groups({"user", "current-user"})
-     */
-    private $experience;
-
-    /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
      * 
-     * @Groups({"user-update", "users", "user", "current-user"})
+     * @Groups({"users", "user", "current-user"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank
      * 
-     * @Groups({"user-update", "users", "current-user"})
+     * @Groups({"users", "current-user"})
      */
     private $updatedAt;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Preference", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     * 
-     * @Groups({"current-user", "user-preference-update"})
-     */
-    private $preference;
 
     public function __construct()
     {
         $this->celestialBodies = new ArrayCollection();
         $this->comments = new ArrayCollection();
-
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
 
@@ -245,6 +240,27 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * ? The mandatory abstract method from UserInterface.
+     * ! @see $this->getRole()
+     */
+    public function getRoles(): array
+    {
+        return [$this->getRole()->getName()];
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): self
+    {
+        $this->role = $role;
+
+        return $this;
     }
 
     public function getNickname(): ?string
@@ -298,23 +314,38 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * ? The mandatory abstract method from UserInterface.
-     * ! @see $this->getRole()
-     */
-    public function getRoles(): array
+    public function getStatus(): ?int
     {
-        return [$this->getRole()->getName()];
+        return $this->status;
     }
 
-    public function getRole(): ?Role
+    public function setStatus(int $status): self
     {
-        return $this->role;
+        $this->status = $status;
+
+        return $this;
     }
 
-    public function setRole(?Role $role): self
+    public function getRank(): ?Rank
     {
-        $this->role = $role;
+        return $this->rank;
+    }
+
+    public function setRank(?Rank $rank): self
+    {
+        $this->rank = $rank;
+
+        return $this;
+    }
+    
+    public function getExperience(): ?int
+    {
+        return $this->experience;
+    }
+
+    public function setExperience(?int $experience): self
+    {
+        $this->experience = $experience;
 
         return $this;
     }
@@ -367,14 +398,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getPreference(): ?Preference
     {
-        return $this->status;
+        return $this->preference;
     }
 
-    public function setStatus(int $status): self
+    public function setPreference(Preference $preference): self
     {
-        $this->status = $status;
+        $this->preference = $preference;
 
         return $this;
     }
@@ -441,30 +472,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRank(): ?Rank
-    {
-        return $this->rank;
-    }
-
-    public function setRank(?Rank $rank): self
-    {
-        $this->rank = $rank;
-
-        return $this;
-    }
-    
-    public function getExperience(): ?int
-    {
-        return $this->experience;
-    }
-
-    public function setExperience(?int $experience): self
-    {
-        $this->experience = $experience;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -490,17 +497,4 @@ class User implements UserInterface
 
         return $this;
     }
-
-    public function getPreference(): ?Preference
-    {
-        return $this->preference;
-    }
-
-    public function setPreference(Preference $preference): self
-    {
-        $this->preference = $preference;
-
-        return $this;
-    }
-
 }

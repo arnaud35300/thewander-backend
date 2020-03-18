@@ -14,6 +14,13 @@ class CommentEvent
         $this->token = $token;
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a new comment is instantiated.
+     * 
+     * @param Comment $comment The Comment entity.
+     * 
+     * @return void
+     */
     public function prePersist(Comment $comment)
     {
         $user = $this->token->getToken()->getUser();
@@ -27,6 +34,13 @@ class CommentEvent
         );
     }
 
+    /**
+     *? Sets some of the entity's properties automatically once a comment is updated.
+     *
+     * @param Comment $comment The Comment entity.
+     * 
+     * @return void
+     */
     public function preUpdate(Comment $comment)
     {
         $comment->setUpdatedAt(new \DateTime());

@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PropertyRepository")
- * @ORM\HasLifecycleCallbacks()
+ * 
  * @ORM\Table(
  *      indexes={
  *          @ORM\Index(name="idx_name", columns={"name"})
@@ -40,7 +40,7 @@ class Property
      *      max=100
      * )
      * 
-     * @Groups({"properties", "celestial-body", "user", "current-user"})
+     * @Groups({"properties", "user", "current-user", "celestial-body"})
      */
     private $name;
 

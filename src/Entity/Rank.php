@@ -2,17 +2,19 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RankRepository")
- * @UniqueEntity({"rankNumber", "name"})
- * @ORM\HasLifecycleCallbacks()
+ * 
+ * @UniqueEntity("name")
+ * @UniqueEntity("badge")
+ * @UniqueEntity("rankNumber")
  */
 class Rank
 {
@@ -22,11 +24,6 @@ class Rank
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="smallint", unique=true)
-     */
-    private $rankNumber;
     
     /**
      * @ORM\Column(name="name", type="string", length=30, unique=true)
@@ -42,7 +39,7 @@ class Rank
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(name="badge", type="string", length=50, nullable=true)
      * 
      * @Assert\NotBlank
      * @Assert\Type("string")
@@ -53,6 +50,11 @@ class Rank
      * @Groups({"celestial-body", "user", "current-user"})
      */
     private $badge;
+
+    /**
+     * @ORM\Column(name="rankNumber", type="smallint", unique=true)
+     */
+    private $rankNumber;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="rank")
@@ -80,18 +82,6 @@ class Rank
         return $this->id;
     }
 
-    public function getRankNumber(): ?int
-    {
-        return $this->rankNumber;
-    }
-
-    public function setRankNumber(int $rankNumber): self
-    {
-        $this->rankNumber = $rankNumber;
-
-        return $this;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -112,6 +102,18 @@ class Rank
     public function setBadge(?string $badge): self
     {
         $this->badge = $badge;
+
+        return $this;
+    }
+
+    public function getRankNumber(): ?int
+    {
+        return $this->rankNumber;
+    }
+
+    public function setRankNumber(int $rankNumber): self
+    {
+        $this->rankNumber = $rankNumber;
 
         return $this;
     }

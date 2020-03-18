@@ -7,14 +7,22 @@ use App\Repository\CelestialBodyRepository;
 class Delimiter
 {
     const WIDTH = 210;
-
     private $celestialBodyRepository;
 
     public function __construct(CelestialBodyRepository $celestialBodyRepository)
     {
         $this->celestialBodyRepository = $celestialBodyRepository;
     }
-
+    
+    /**
+     *? Checks the surroundings of the requested coordinates.
+     * 
+     * @param int $newX The client's X position.
+     * @param int $newY The client's Y position.
+     * @param string|null $slug
+     * 
+     * @return bool
+     */
     public function verifyPositions(int $newX, int $newY, ?string $slug = ''): bool
     {
         $celestialBodies = $this->celestialBodyRepository->getAllExceptCurrent($slug);
