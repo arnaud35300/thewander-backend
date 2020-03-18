@@ -21,7 +21,7 @@ class CelestialBodyVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, ['CELESTIALBODY_UPDATE', 'CELESTIALBODY_DELETE'])
+        return in_array($attribute, ['CELESTIAL_BODY_UPDATE', 'CELESTIAL_BODY_DELETE'])
             && $subject instanceof CelestialBody;
     }
 
@@ -35,11 +35,11 @@ class CelestialBodyVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case 'CELESTIALBODY_UPDATE':
+            case 'CELESTIAL_BODY_UPDATE':
                 if ($user === $celestialBody->getUser())
                     return true;
                 break;
-            case 'CELESTIALBODY_DELETE':
+            case 'CELESTIAL_BODY_DELETE':
                 if ($user === $celestialBody->getUser())
                     return true;
 
