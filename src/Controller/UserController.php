@@ -82,8 +82,8 @@ class UserController extends AbstractController
 
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['message' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
+                ['message' => 'Log in to check your information.'],
+                Response::HTTP_UNAUTHORIZED
             );
 
         return $this->json(
@@ -179,7 +179,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'User created.',
+                'message' => 'Account now created.',
                 'content' => $user
             ],
             Response::HTTP_CREATED,
@@ -216,8 +216,8 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['message' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
+                ['message' => 'Log in to edit your information.'],
+                Response::HTTP_UNAUTHORIZED
             );
 
         $content = $request->request->get('json');
@@ -274,7 +274,7 @@ class UserController extends AbstractController
         if($birthday) {
             if (preg_match($pattern, $birthday) !== 1)
                 return $this->json(
-                    ['message' => 'Invalid birthday format.'],
+                    ['message' => 'Invalid date format.'],
                     Response::HTTP_UNAUTHORIZED
                 );
             
@@ -321,7 +321,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'User updated.',
+                'message' => 'Information now updated.',
                 'content' => $user
             ],
             Response::HTTP_OK
@@ -347,8 +347,8 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['message' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
+                ['message' => 'Log in to edit your preferences.'],
+                Response::HTTP_UNAUTHORIZED
             );
 
         $preference = $user->getPreference();
@@ -404,7 +404,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'User preference updated.',
+                'message' => 'Preferences now updated.',
                 'content' => $preference
             ],
             Response::HTTP_OK
@@ -426,7 +426,7 @@ class UserController extends AbstractController
     {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['error' => 'This user does not exist.'],
+                ['message' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -438,7 +438,7 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'User deleted.'],
+            ['message' => 'User now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
@@ -458,8 +458,8 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['error' => 'This user does not exist.'],
-                Response::HTTP_NOT_FOUND
+                ['message' => 'Log in to perform deletion.'],
+                Response::HTTP_UNAUTHORIZED
             );
 
         $manager = $this
@@ -471,7 +471,7 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'User deleted.'],
+            ['message' => 'Account now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }

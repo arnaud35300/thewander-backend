@@ -60,7 +60,7 @@ class CelestialBodyController extends AbstractController
     {
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'Celestial body not found.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -91,7 +91,7 @@ class CelestialBodyController extends AbstractController
         
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
@@ -102,19 +102,19 @@ class CelestialBodyController extends AbstractController
 
         if ($xPosition === false || $yPosition === false) {
             return $this->json(
-                ['message' => 'No position has been defined.'],
+                ['message' => 'No coordinate has been defined.'],
                 Response::HTTP_UNAUTHORIZED
             );
         } elseif (is_int($xPosition) === false || is_int($yPosition) === false) {
             return $this->json(
-                ['message' => 'Positions can only be defined by numbers.'],
+                ['message' => 'Coordinates can only be defined by digits.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
         
         if ($delimiter->verifyPositions($xPosition, $yPosition) === false) {
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
@@ -154,7 +154,7 @@ class CelestialBodyController extends AbstractController
 
         if (json_decode($content) === null) {
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -210,7 +210,7 @@ class CelestialBodyController extends AbstractController
 
         if ($delimiter->verifyPositions($newCelestialBodySlug, $xPosition, $yPosition) === false)
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
@@ -248,7 +248,7 @@ class CelestialBodyController extends AbstractController
         
         if ($icon === null) 
             return $this->json(
-                ['message' => 'An icon is needed to create a new celestial body.'],
+                ['message' => 'An icon has to be selected to set a new celestial body.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
@@ -304,7 +304,7 @@ class CelestialBodyController extends AbstractController
 
         if ($celestialBody === null)
             return $this->json(
-                ['error' => 'Celestial bodies not found.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         
@@ -314,7 +314,7 @@ class CelestialBodyController extends AbstractController
  
         if (json_decode($content) === null) {
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         }
@@ -367,7 +367,7 @@ class CelestialBodyController extends AbstractController
 
         if ($delimiter->verifyPositions($celestialBodySlug, $xPosition, $yPosition) === false)
             return $this->json(
-                ['message' => 'Your celestial body is too close to another one.'],
+                ['message' => 'An existing celestial body is already around these coordinates.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
             
@@ -434,7 +434,7 @@ class CelestialBodyController extends AbstractController
         
         if ($icon === null) 
             return $this->json(
-                ['message' => 'An icon is needed to create a new celestial body.'],
+                ['message' => 'An icon has to be selected to set a new celestial body.'],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
 
@@ -478,7 +478,7 @@ class CelestialBodyController extends AbstractController
     {        
         if ($celestialBody === null)
             return $this->json(
-                ['error' => 'This celestial body does not exist.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         

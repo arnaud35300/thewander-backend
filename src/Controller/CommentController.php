@@ -59,7 +59,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'Comment not found.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -97,7 +97,7 @@ class CommentController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
@@ -116,7 +116,7 @@ class CommentController extends AbstractController
 
         if ($celestialBody === null) {
             return $this->json(
-                ['error' => 'This celestial body does not exist.'],
+                ['message' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -184,7 +184,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'comment not found.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -194,7 +194,7 @@ class CommentController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['error' => 'Invalid data format.'],
+                ['message' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -266,7 +266,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['error' => 'The comment does not exist.'],
+                ['message' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
