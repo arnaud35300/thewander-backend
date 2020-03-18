@@ -75,9 +75,10 @@ class CommentController extends AbstractController
      *? Adds a new comment on a particular celestial body.
      * 
      * @param Request $request The HttpFoundation Request class.
+     * @param CelestialBody $celestialBody The CelestialBody entity.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
-     * @param CelestialBody $celestialBody The CestialBody entity.
+     * @param Censor $censor The Censor service.
      * 
      * @return JsonResponse
      * 
@@ -87,12 +88,18 @@ class CommentController extends AbstractController
      */
     public function create(
         Request $request,
+        CelestialBody $celestialBody = null,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        CelestialBody $celestialBody = null,
         Censor $censor
     ): JsonResponse 
     {
+        if ($celestialBody === null)
+            return $this->json(
+                ['message' => 'Celestial body not found.'],
+                Response::HTTP_NOT_FOUND
+            );
+
         $content = $request->getContent();
 
         if (json_decode($content) === null)
@@ -114,32 +121,15 @@ class CommentController extends AbstractController
             ['groups' => 'comment-creation']
         );
 
-        if ($celestialBody === null) {
-            return $this->json(
-                ['message' => 'Celestial body not found.'],
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
         $newComment->setCelestialBody($celestialBody);
 
-        $errors = $validator->validate($newComment);
+        $violations = $validator->validate($newComment);
 
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
         
         $manager = $this
             ->getDoctrine()
@@ -161,12 +151,13 @@ class CommentController extends AbstractController
     }
 
     /**
-     *? Updates a user's comment.
+     *? Updates a comment.
      * 
      * @param Request $request The HttpFoundation Request class.
+     * @param Comment $comment The Comment entity.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
-     * @param User $user The user entity.
+     * @param Censor $censor The Censor service.
      * 
      * @return JsonResponse
      * 
@@ -176,9 +167,9 @@ class CommentController extends AbstractController
      */
     public function update(
         Request $request,
+        Comment $comment = null,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        Comment $comment = null,
         Censor $censor
     ): JsonResponse
     {
@@ -210,23 +201,13 @@ class CommentController extends AbstractController
 
         $comment->setBody($body);
 
-        $errors = $validator->validate($comment);
+        $violations = $validator->validate($comment);
 
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
 
         $manager = $this
             ->getDoctrine()
@@ -239,12 +220,12 @@ class CommentController extends AbstractController
         $comment = $serializer->serialize(
             $comment,
             'json',
-            ['groups' => 'comment-update']
+            ['groups' => 'comments']
         );
         
         return $this->json(
             [
-                'message' => 'Comment updated.',
+                'message' => 'Comment now updated.',
                 'content' => $comment
             ],
             Response::HTTP_OK
@@ -281,7 +262,7 @@ class CommentController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'Comment deleted.'],
+            ['message' => 'Comment now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }

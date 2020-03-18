@@ -34,13 +34,13 @@ class AdminController extends AbstractController
             );
 
         switch ($user->getStatus()) {
-            case 1:
-                $user->setStatus(0);
+            case 0:
+                $user->setStatus(1);
                 $message = 'User now banned.';
                 break;
             
-            case 0:
-                $user->setStatus(1);
+            case 1:
+                $user->setStatus(0);
                 $message = 'User now unbanned.';
                 break;
         }
