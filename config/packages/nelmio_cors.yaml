@@ -2,7 +2,8 @@ nelmio_cors:
     defaults:
         allow_credentials: true
         origin_regex: true
-        allow_origin: ['http://3.88.72.91/*', 'http://www.thewander.space/*']
+        # allow_origin: ['http://3.88.72.91/*', 'http://www.thewander.space/*']
+        allow_origin: ['*']
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
         allow_headers: ['Content-Type', 'Authorization']
         max_age: 3600
