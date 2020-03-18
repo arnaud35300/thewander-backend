@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Comment;
 use App\Service\Censor;
 use App\Entity\CelestialBody;
@@ -155,8 +154,8 @@ class CommentController extends AbstractController
      * 
      * @param Request $request The HttpFoundation Request class.
      * @param Comment $comment The Comment entity.
-     * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
+     * @param SerializerInterface $serializer The Serializer component.
      * @param Censor $censor The Censor service.
      * 
      * @return JsonResponse
@@ -168,8 +167,8 @@ class CommentController extends AbstractController
     public function update(
         Request $request,
         Comment $comment = null,
-        SerializerInterface $serializer,
         ValidatorInterface $validator,
+        SerializerInterface $serializer,
         Censor $censor
     ): JsonResponse
     {

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Censor;
-use App\Service\Slugger;
 use App\Service\Uploader;
 use Swift_Mailer as SwiftMailer;
 use App\Repository\UserRepository;
@@ -24,11 +23,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     *? Retrieves all users.
+     *? Retrieves all the users.
      *
      * @param UserRepository $userRepository The User repository.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
      *
      ** @Route("/users", name="users_list", methods={"GET"})
      */
@@ -45,11 +46,13 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Retrieves a partical user.
+     *? Retrieves a particular user's information.
      *
      * @param User $user The user entity.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/users/{slug}", name="user", methods={"GET"})
      */
@@ -70,9 +73,11 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Retrieves the connected user.
+     *? Retrieves the connected user's information.
      * 
      * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
      ** @Route("/self", name="current_user", methods={"GET"})
      */
@@ -95,13 +100,13 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Create a new user.
+     *? Create a new user account.
      *
      * @param Request $request The HttpFoundation Request class.
      * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
-     * @param UserPasswordEncoderInterface $encoder The PasswordEncoder component.
-     * @param Slugger $slugger The Slugger service.
+     * @param Censor $censor The Censor service.
+     * @param SwiftMailer $mailer The SwiftMailer service.
      * 
      * @return JsonResponse
      * 
@@ -111,11 +116,10 @@ class UserController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        UserPasswordEncoderInterface $encoder,
-        Slugger $slugger,
-        SwiftMailer $mailer,
-        Censor $censor
-    ) {
+        Censor $censor,
+        SwiftMailer $mailer
+    ): JsonResponse
+    {
         $content = $request->getContent();
 
         if (json_decode($content) === null)
@@ -137,23 +141,13 @@ class UserController extends AbstractController
             ['groups' => 'user-creation']
         );
 
-        $errors = $validator->validate($user);
+        $violations = $validator->validate($user);
 
-        if (count($errors) !== 0) {
-            $errorsList = array();
-
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field'     => $error->getPropertyPath(),
-                    'message'   => $error->getMessage()
-                ];
-            }
-
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
 
         $manager = $this
             ->getDoctrine()
@@ -163,16 +157,16 @@ class UserController extends AbstractController
         $manager->flush();
 
         $message = (new \Swift_Message('Ready to browse the space!'))
-        ->setFrom('thewandercorp@gmail.com')
-        ->setTo($user->getEmail())
-        ->setBody(
-            $this->renderView(
-                'emails/signup.html.twig',
-                    [
-                        'user' => $user
-                    ]
-            ),
-            'text/html'
+            ->setFrom('thewandercorp@gmail.com')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->renderView(
+                    'emails/signup.html.twig',
+                        [
+                            'user' => $user
+                        ]
+                ),
+                'text/html'
         );
 
         $mailer->send($message);
@@ -189,12 +183,14 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Update a user.
+     *? Updates a user's information.
      *
      * @param Request $request The HttpFoundation Request class.
-     * @param SerializerInterface $serializer The Serializer component.
-     * @param ValidatorInterface $validator The Validator component.
      * @param UserPasswordEncoderInterface $encoder The PasswordEncoder component.
+     * @param ValidatorInterface $validator The Validator component.
+     * @param SerializerInterface $serializer The Serializer component.
+     * @param Censor $censor The Censor service.
+     * @param Uploader $uploader The Uploader service.
      * 
      * @return JsonResponse
      * 
@@ -204,12 +200,13 @@ class UserController extends AbstractController
      */
     public function update(
         Request $request,
-        SerializerInterface $serializer,
-        ValidatorInterface $validator,
         UserPasswordEncoderInterface $encoder,
-        Uploader $uploader,
-        Censor $censor
-    ) {
+        ValidatorInterface $validator,
+        SerializerInterface $serializer,
+        Censor $censor,
+        Uploader $uploader
+    ): JsonResponse
+    {
         $request->setMethod('PATCH');
 
         $user = $this->getUser();
@@ -241,8 +238,6 @@ class UserController extends AbstractController
         $birthday = !empty($content['birthday']) ? $content['birthday'] : false;
         $bio = !empty($content['bio']) ? $content['bio'] : $user->getBio();
         
-        $errors = $validator->validate($user);
-       
         if ($password) 
             $user->setPassword(
                 $encoder->encodePassword($user, $password)
@@ -253,21 +248,13 @@ class UserController extends AbstractController
             ->setBio($bio)
         ;
         
-        if (count($errors) !== 0) {
-            $errorsList = array();
+        $violations = $validator->validate($user);
 
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field' => $error->getPropertyPath(),
-                    'message' => $error->getMessage()
-                ];
-            }
-            
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
-        }
 
         $pattern = '#\d{4}-\d{2}-\d{2}#';
 
@@ -279,10 +266,10 @@ class UserController extends AbstractController
                 );
             
             $birthday = \DateTime::createFromFormat('Y-m-d', $birthday);
+            
             $user->setBirthday($birthday);
         }
         
-        $avatarFolder = __DIR__ . '/../../public/images/avatars/';
         $userSlug = $user->getSlug();
         
         if ($request->files->get('avatar')) {
@@ -299,16 +286,19 @@ class UserController extends AbstractController
                     ['message' => $avatar],
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
+
+            $avatarDirectory = __DIR__ . '/../../public/images/avatars/';
         
             if ($user->getAvatar() !== null)
-                unlink($avatarFolder . $user->getAvatar());
+                unlink($avatarDirectory . $user->getAvatar());
             
             $user->setAvatar($avatar['avatar']);
         }
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->persist($user);
         $manager->flush();
@@ -316,7 +306,7 @@ class UserController extends AbstractController
         $user = $serializer->serialize(
             $user,
             'json',
-            ['groups' => 'user-update']
+            ['groups' => 'user']
         );
 
         return $this->json(
@@ -341,7 +331,11 @@ class UserController extends AbstractController
      * 
      ** @Route("/self/preference", name="update_user_preferences", methods={"PATCH"})
      */
-    public function updatePreference(Request $request, ValidatorInterface $validator, SerializerInterface $serializer): JsonResponse
+    public function updatePreference(
+        Request $request,
+        ValidatorInterface $validator,
+        SerializerInterface $serializer
+    ): JsonResponse
     {
         $user = $this->getUser();
 
@@ -351,9 +345,8 @@ class UserController extends AbstractController
                 Response::HTTP_UNAUTHORIZED
             );
 
-        $preference = $user->getPreference();
-
         $content = $request->getContent();
+        $preference = $user->getPreference();
 
         if (json_decode($content) === null)
             return $this->json(
@@ -371,23 +364,13 @@ class UserController extends AbstractController
             ->setSoundscape($soundscape)
         ;
 
-        $errors = $validator->validate($preference);
-        
-        if (count($errors) !== 0) {
-            $errorsList = array();
+        $violations = $validator->validate($user);
 
-            foreach ($errors as $error) {
-                $errorsList[] = [
-                    'field' => $error->getPropertyPath(),
-                    'message' => $error->getMessage()
-                ];
-            }
-            
+        if ($violations->count() > 0)
             return $this->json(
-                $errorsList,
+                $violations,
                 Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
+            );       
 
         $manager = $this
             ->getDoctrine()
@@ -412,13 +395,13 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Deletes a user.
+     *? Deletes a user account.
      * 
      * @param User $user The user entity.
      * 
      * @return JsonResponse
      *
-     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=404)
+     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
      *  
      ** @Route("/users/{slug}", name="delete_user", methods={"DELETE"})
      */
@@ -432,7 +415,8 @@ class UserController extends AbstractController
 
         $manager = $this
             ->getDoctrine()
-            ->getManager();
+            ->getManager()
+        ;
 
         $manager->remove($user);
         $manager->flush();
@@ -444,7 +428,7 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Deletes the connected user.
+     *? Deletes the user's account.
      *  
      * @return JsonResponse
      *

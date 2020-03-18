@@ -263,8 +263,8 @@ class CelestialBodyController extends AbstractController
      * @param Request $request The HttpFoundation Request class.
      * @param IconRepository $iconRepository The Icon repository.
      * @param CelestialBody $celestialBody The CelestialBody entity.
-     * @param SerializerInterface $serializer The Serializer component.
      * @param ValidatorInterface $validator The Validator component.
+     * @param SerializerInterface $serializer The Serializer component.
      * @param Censor $censor The Censor service.
      * @param Delimiter $delimiter The Delimiter service.
      * @param Slugger $slugger The Slugger service.
@@ -280,8 +280,8 @@ class CelestialBodyController extends AbstractController
         Request $request,
         IconRepository $iconRepository,
         CelestialBody $celestialBody = null,
-        SerializerInterface $serializer,
         ValidatorInterface $validator,
+        SerializerInterface $serializer,
         Censor $censor,
         Delimiter $delimiter,
         Slugger $slugger,
