@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\IconRepository")
  * 
  * @UniqueEntity("pattern")
+ * @UniqueEntity("path")
  */
 class Icon
 {
@@ -18,21 +19,21 @@ class Icon
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"celestial-bodies", "icons"})
+     * @Groups({"icons", "celestial-bodies"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(name="pattern", type="string", length=50)
      * 
-     * @Groups({"celestial-bodies", "icons"})
+     * @Groups({"icons", "celestial-bodies"})
      */
     private $pattern;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(name="path", type="string", length=100)
      * 
-     * @Groups({"celestial-bodies", "icons"})
+     * @Groups({"icons", "celestial-bodies"})
      */
     private $path;
 
