@@ -258,7 +258,7 @@ class UserController extends AbstractController
 
         $pattern = '#\d{4}-\d{2}-\d{2}#';
 
-        if($birthday) {
+        if ($birthday) {
             if (preg_match($pattern, $birthday) !== 1)
                 return $this->json(
                     ['information' => 'Invalid date format.'],
@@ -273,12 +273,17 @@ class UserController extends AbstractController
         $userSlug = $user->getSlug();
         
         if ($request->files->get('avatar')) {
+            $avatarDirectory = __DIR__ . '/../../public/images/avatars/';
+
+            if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
+                unlink($avatarDirectory . $user->getAvatar());
+
             $avatar = $uploader->upload(
                 'avatars',
                 $userSlug,
                 '_avatar',
                 'avatar',
-                75
+                200
             );
 
             if ($avatar['status'] === false)
@@ -286,11 +291,6 @@ class UserController extends AbstractController
                     ['information' => $avatar],
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
-
-            $avatarDirectory = __DIR__ . '/../../public/images/avatars/';
-        
-            if ($user->getAvatar() !== null)
-                unlink($avatarDirectory . $user->getAvatar());
             
             $user->setAvatar($avatar['avatar']);
         }

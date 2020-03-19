@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use Intervention\Image\ImageManagerStatic as Image;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Uploader
 {
