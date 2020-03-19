@@ -413,6 +413,9 @@ class UserController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
 
+        if ($user->getAvatar())
+            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
+
         $manager = $this
             ->getDoctrine()
             ->getManager()
@@ -445,6 +448,9 @@ class UserController extends AbstractController
                 ['information' => 'Log in to perform deletion.'],
                 Response::HTTP_UNAUTHORIZED
             );
+
+        if ($user->getAvatar())
+            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
 
         $manager = $this
             ->getDoctrine()
