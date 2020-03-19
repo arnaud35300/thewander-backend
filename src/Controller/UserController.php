@@ -156,12 +156,12 @@ class UserController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
-        $message = (new \Swift_Message('Ready to browse the space!'))
+        $mail = (new \Swift_Message('Ready to browse the space!'))
             ->setFrom('thewandercorp@gmail.com')
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
-                    'emails/signup.html.twig',
+                    'emails/signup-notification.html.twig',
                         [
                             'user' => $user
                         ]
@@ -169,7 +169,7 @@ class UserController extends AbstractController
                 'text/html'
         );
 
-        $mailer->send($message);
+        $mailer->send($mail);
 
         return $this->json(
             [
