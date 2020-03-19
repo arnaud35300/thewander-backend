@@ -60,7 +60,9 @@ class UserEvent
         $user
             ->setStatus(1)
             ->setExperience(0)
-            ->setAvatar('00_avatar.png')
+            ->setAvatar(
+                '0' . mt_rand(0, 4) . '_avatar.png'
+            )
         ;
 
         $preference = new Preference();
