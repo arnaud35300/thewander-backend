@@ -1,13 +1,18 @@
 {% block body %}
 
-<h3>Welcome {{ user.nickname }},</h3>
+<h3 style="margin: 0;">Welcome <span style="font-style: italic;">{{ user.nickname }}</span>,</h3>
+
 <p>You can now discover our website and its spacemap!</p>
 
-<p>If you're looking for clues, you can browse our user manual at this link:</p>
-<a href="http://site.com/usermanual" alt="Link to the user manual.">http://site.com/usermanual</a>
+<p>
+  If you're looking for clues, you can browse our <a href="http://www.thewander.space/manual" alt="Link to the user manual." style="font-weight: bold; text-decoration: none;">user manual</a> or directly browse the fabulous <a href="http://www.thewander.space/map" style="font-weight: bold; text-decoration: none;">space</a>.
+</p>
+
 <p>See you soon in the spaceship!</p>
 
-<p>Best regards,</p><br>
-<p style="font-weight:bold;">The Wander Corp Team.</p>
+<p>
+  Best regards,
+  <br><span style="font-weight: bold;">The Wander Corp Team.</span>
+</p>
 
 {% endblock %}
