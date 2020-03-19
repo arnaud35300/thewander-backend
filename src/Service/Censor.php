@@ -26,7 +26,7 @@ class Censor
             'en-us', 'en-uk', 'es', 'fr', 'nl', 'no', 'de', 'fi', 'it', 'jp'
         ]);
 
-        $censoredContent = $censor->censorString($content);
+        $censoredContent = $censor->censorString($content, true);
 
         if (count($censoredContent['matched']) !== 0) 
             return false;
