@@ -197,7 +197,13 @@ class CelestialBodyController extends AbstractController
         
         $xPosition = $newCelestialBody->getXPosition();
         $yPosition = $newCelestialBody->getYPosition();
-        
+
+        if ($xPosition === null || $yPosition === null)
+            return $this->json(
+                ['information' => 'Coordinates have to be selected.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+
         $newCelestialBodySlug = $slugger->slugify(
             $newCelestialBody->getName()
         );
@@ -351,6 +357,12 @@ class CelestialBodyController extends AbstractController
 
         $xPosition = $celestialBody->getXPosition();
         $yPosition = $celestialBody->getYPosition();
+
+        if ($xPosition === null || $yPosition === null)
+            return $this->json(
+                ['information' => 'Coordinates have to be selected.'],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
 
         $celestialBodySlug = $celestialBody->getSlug();
 
