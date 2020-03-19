@@ -60,7 +60,7 @@ class UserController extends AbstractController
     {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['message' => 'User not found.'],
+                ['information' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -87,7 +87,7 @@ class UserController extends AbstractController
 
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['message' => 'Log in to check your information.'],
+                ['information' => 'Log in to check your information.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -124,13 +124,13 @@ class UserController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['message' => 'Invalid data format.'],
+                ['information' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
         if ($censor->check($content) === false)
             return $this->json(
-                ['message' => 'Bad words are forbidden.'],
+                ['information' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -173,7 +173,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'Account now created.',
+                'information' => 'Account now created.',
                 'content' => $user
             ],
             Response::HTTP_CREATED,
@@ -213,7 +213,7 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['message' => 'Log in to edit your information.'],
+                ['information' => 'Log in to edit your information.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -221,13 +221,13 @@ class UserController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['message' => 'Invalid data format.'],
+                ['information' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
         if ($censor->check($content) === false)
             return $this->json(
-                ['message' => 'Bad words are forbidden.'],
+                ['information' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -261,7 +261,7 @@ class UserController extends AbstractController
         if($birthday) {
             if (preg_match($pattern, $birthday) !== 1)
                 return $this->json(
-                    ['message' => 'Invalid date format.'],
+                    ['information' => 'Invalid date format.'],
                     Response::HTTP_UNAUTHORIZED
                 );
             
@@ -283,7 +283,7 @@ class UserController extends AbstractController
 
             if ($avatar['status'] === false)
                 return $this->json(
-                    ['message' => $avatar],
+                    ['information' => $avatar],
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
 
@@ -311,7 +311,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'Information now updated.',
+                'information' => 'Information now updated.',
                 'content' => $user
             ],
             Response::HTTP_OK
@@ -341,7 +341,7 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['message' => 'Log in to edit your preferences.'],
+                ['information' => 'Log in to edit your preferences.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -350,7 +350,7 @@ class UserController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['message' => 'Invalid data format.'],
+                ['information' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -387,7 +387,7 @@ class UserController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'Preferences now updated.',
+                'information' => 'Preferences now updated.',
                 'content' => $preference
             ],
             Response::HTTP_OK
@@ -409,7 +409,7 @@ class UserController extends AbstractController
     {
         if ($user === null || $user->getStatus() === 0)
             return $this->json(
-                ['message' => 'User not found.'],
+                ['information' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -422,7 +422,7 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'User now deleted.'],
+            ['information' => 'User now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }
@@ -442,7 +442,7 @@ class UserController extends AbstractController
 
         if ($user === null)
             return $this->json(
-                ['message' => 'Log in to perform deletion.'],
+                ['information' => 'Log in to perform deletion.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -455,7 +455,7 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'Account now deleted.'],
+            ['information' => 'Account now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }

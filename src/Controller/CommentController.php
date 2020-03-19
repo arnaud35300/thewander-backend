@@ -58,7 +58,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['message' => 'Comment not found.'],
+                ['information' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -95,7 +95,7 @@ class CommentController extends AbstractController
     {
         if ($celestialBody === null)
             return $this->json(
-                ['message' => 'Celestial body not found.'],
+                ['information' => 'Celestial body not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -103,13 +103,13 @@ class CommentController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['message' => 'Invalid data format.'],
+                ['information' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
         
         if ($censor->check($content) === false)
             return $this->json(
-                ['message' => 'Bad words are forbidden.'],
+                ['information' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -140,7 +140,7 @@ class CommentController extends AbstractController
 
         return $this->json(
             [
-                'message' => 'Comment sent.',
+                'information' => 'Comment sent.',
                 'content' => $newComment
             ],
             Response::HTTP_CREATED,
@@ -174,7 +174,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['message' => 'Comment not found.'],
+                ['information' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -184,13 +184,13 @@ class CommentController extends AbstractController
 
         if (json_decode($content) === null)
             return $this->json(
-                ['message' => 'Invalid data format.'],
+                ['information' => 'Invalid data format.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
         if ($censor->check($content) === false)
             return $this->json(
-                ['message' => 'Bad words are forbidden.'],
+                ['information' => 'Bad words are forbidden.'],
                 Response::HTTP_UNAUTHORIZED
             );
 
@@ -224,7 +224,7 @@ class CommentController extends AbstractController
         
         return $this->json(
             [
-                'message' => 'Comment now updated.',
+                'information' => 'Comment now updated.',
                 'content' => $comment
             ],
             Response::HTTP_OK
@@ -246,7 +246,7 @@ class CommentController extends AbstractController
     {
         if ($comment === null)
             return $this->json(
-                ['message' => 'Comment not found.'],
+                ['information' => 'Comment not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -261,7 +261,7 @@ class CommentController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => 'Comment now deleted.'],
+            ['information' => 'Comment now deleted.'],
             Response::HTTP_NO_CONTENT
         );
     }

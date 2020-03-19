@@ -29,7 +29,7 @@ class AdminController extends AbstractController
     {
         if ($user === null)
             return $this->json(
-                ['error' => 'User not found.'],
+                ['information' => 'User not found.'],
                 Response::HTTP_NOT_FOUND
             );
 
@@ -54,7 +54,7 @@ class AdminController extends AbstractController
         $manager->flush();
 
         return $this->json(
-            ['message' => $message],
+            ['information' => $message],
             Response::HTTP_OK
         );
     }
