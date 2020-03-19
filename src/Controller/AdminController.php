@@ -70,7 +70,6 @@ class AdminController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
-
         return $this->json(
             ['information' => $message],
             Response::HTTP_OK
