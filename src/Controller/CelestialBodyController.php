@@ -376,7 +376,7 @@ class CelestialBodyController extends AbstractController
             $celestialBody->getName()
         );
         
-        $pictureDirectory = __DIR__ . '/../../public/images/pictures/'; 
+        $pictureDirectory = __DIR__ . '/../../public/assets/images/pictures/'; 
         
         if ($request->files->get('picture')) {
             $picture = $uploader->upload(

@@ -273,7 +273,7 @@ class UserController extends AbstractController
         $userSlug = $user->getSlug();
         
         if ($request->files->get('avatar')) {
-            $avatarDirectory = __DIR__ . '/../../public/images/avatars/';
+            $avatarDirectory = __DIR__ . '/../../public/assets/images/avatars/';
 
             if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
                 unlink($avatarDirectory . $user->getAvatar());

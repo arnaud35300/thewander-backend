@@ -50,7 +50,7 @@ class Uploader
 
         $pathname = $file->getPathname();
         $filename = $name . $suffix . '.' . $file->guessExtension();
-        $directory = __DIR__ . '/../../public/images/' . $path;
+        $directory = __DIR__ . '/../../public/assets/images/' . $path;
 
         $image = Image::make($pathname);
         
