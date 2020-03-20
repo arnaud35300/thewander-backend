@@ -50,6 +50,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             'password' => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
+
         $request->getSession()->set(
             Security::LAST_USERNAME,
             $credentials['email']
@@ -61,16 +62,14 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if (!$this->csrfTokenManager->isTokenValid($token)) {
+
+        if (!$this->csrfTokenManager->isTokenValid($token))
             throw new InvalidCsrfTokenException();
-        }
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $credentials['email']]);
 
-        if (!$user) {
-            // fail authentication with a custom error
+        if (!$user)
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
-        }
 
         return $user;
     }
@@ -90,12 +89,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        return new RedirectResponse($this->urlGenerator->generate('admin_head'));
     }
 
     protected function getLoginUrl()

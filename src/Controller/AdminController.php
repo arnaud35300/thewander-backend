@@ -30,21 +30,20 @@ class AdminController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-            dd($this->getUser());
-            return $this->redirectToRoute('api_celestial_bodies_list');
-        }
-
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render(
+            'security/login.html.twig',
+            [
+                'last_username' => $lastUsername,
+                'error' => $error
+            ]
+        );
     }
 
     /**
-     *? Disconnects a member of the lead team to the back office's interface. 
+     *? Disconnects a member of the lead team to the back office's interface.
      *
      ** @Route("/logout", name="logout")
      */
@@ -54,13 +53,92 @@ class AdminController extends AbstractController
     }
 
     /**
+     *? Renders the back office's home page.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     * 
+     ** @Route("/head", name="head", methods={"GET"})
+     */
+    public function showHome(): Response
+    {
+        return $this->render('interface/home.html.twig');
+    }
+
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     * 
+     ** @Route("/celestial-bodies", name="celestial_bodies_list", methods={"GET"})
+     */
+    public function getCelestialBodies(CelestialBodyRepository $celestialBodyRepository): Response
+    {
+        $celestialBodies = $celestialBodyRepository->findByUpdatedAt();
+
+        return $this->render(
+            'interface/celestialbodies.html.twig',
+            ['celestialBodies' => $celestialBodies]
+        );
+    }
+
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param UserRepository $userRepository The User repository.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     * 
+     ** @Route("/users", name="users_list", methods={"GET"})
+     */
+    public function getUsers(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findByUpdatedAt();
+
+        return $this->render(
+            'interface/users.html.twig',
+            ['users' => $users]
+        );
+    }
+
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param CommentRepository $commentRepository The Comment repository.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
+     * 
+     ** @Route("/comments", name="comments_list", methods={"GET"})
+     */
+    public function getComments(CommentRepository $commentRepository): Response
+    {
+        $comments = $commentRepository->findByUpdatedAt();
+
+        return $this->render(
+            'interface/comments.html.twig',
+            ['comments' => $comments]
+        );
+    }
+
+    /**
      *? Toggles the user's status (ban or unban).
      * 
      * @param User $user The User Repository.
      * @param SwiftMailer $mailer The SwiftMailer service.
      * 
      * @return JsonResponse
-     * 
+     *
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     *  
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
     public function toggleUserStatus(User $user = null, SwiftMailer $mailer): JsonResponse
@@ -87,9 +165,9 @@ class AdminController extends AbstractController
                     ->setBody(
                         $this->renderView(
                             'emails/ban-notification.html.twig',
-                                [
-                                    'user' => $user
-                                ]
+                            [
+                                'user' => $user
+                            ]
                         ),
                         'text/html'
                 );
@@ -110,65 +188,6 @@ class AdminController extends AbstractController
         return $this->json(
             ['information' => $message],
             Response::HTTP_OK
-        );
-    }
-
-    /**
-     *? Retrieves all celestial bodies by the last one created or updated.
-     * 
-     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
-     * 
-     * @return Response
-     * 
-     ** @Route("/celestial-bodies", name="celestial_bodies_list", methods={"GET"})
-     */
-    public function getCelestialBodies(CelestialBodyRepository $celestialBodyRepository): Response
-    {
-        $celestialBodies = $celestialBodyRepository->findAllBy('updatedAt');
-
-        return $this->render(
-            'interface/celestialbodies.html.twig',
-            ['celestialBodies' => $celestialBodies]
-        );
-    }
-
-    /**
-     *? Retrieves all celestial bodies by the last one created or updated.
-     * 
-     * @param UserRepository $userRepository The User repository.
-     * 
-     * @return Response
-     * 
-     ** @Route("/users", name="users_list", methods={"GET"})
-     */
-    public function getUsers(UserRepository $userRepository): Response
-    {
-        $users = $userRepository->findAllBy('updatedAt');
-
-        return $this->render(
-            'interface/users.html.twig',
-            ['users' => $users]
-        );
-    }
-
-    /**
-     *? Retrieves all celestial bodies by the last one created or updated.
-     * 
-     * @param CommentRepository $commentRepository The Comment repository.
-     * 
-     * @return Response
-     * 
-     ** @IsGranted(statusCode=404)
-     * 
-     ** @Route("/comments", name="comments_list", methods={"GET"})
-     */
-    public function getComments(CommentRepository $commentRepository): Response
-    {
-        $comments = $commentRepository->findAllBy('updatedAt');
-
-        return $this->render(
-            'interface/comments.html.twig',
-            ['comments' => $comments]
         );
     }
 }
