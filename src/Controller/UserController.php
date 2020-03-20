@@ -395,42 +395,6 @@ class UserController extends AbstractController
     }
 
     /**
-     *? Deletes a user account.
-     * 
-     * @param User $user The user entity.
-     * 
-     * @return JsonResponse
-     *
-     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
-     *  
-     ** @Route("/users/{slug}", name="delete_user", methods={"DELETE"})
-     */
-    public function delete(User $user = null): JsonResponse
-    {
-        if ($user === null || $user->getStatus() === 0)
-            return $this->json(
-                ['information' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
-            );
-
-        if ($user->getAvatar())
-            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
-
-        $manager = $this
-            ->getDoctrine()
-            ->getManager()
-        ;
-
-        $manager->remove($user);
-        $manager->flush();
-
-        return $this->json(
-            ['information' => 'User now deleted.'],
-            Response::HTTP_NO_CONTENT
-        );
-    }
-
-    /**
      *? Deletes the user's account.
      *  
      * @return JsonResponse
@@ -449,7 +413,7 @@ class UserController extends AbstractController
                 Response::HTTP_UNAUTHORIZED
             );
 
-        if ($user->getAvatar())
+        if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
             unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
 
         $manager = $this

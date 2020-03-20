@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Comment;
+use App\Entity\CelestialBody;
 use Swift_Mailer as SwiftMailer;
 use App\Repository\UserRepository;
 use App\Repository\CommentRepository;
@@ -79,12 +81,51 @@ class AdminController extends AbstractController
      */
     public function getCelestialBodies(CelestialBodyRepository $celestialBodyRepository): Response
     {
-        $celestialBodies = $celestialBodyRepository->findByUpdatedAt();
+        $celestialBodies = $celestialBodyRepository->findBy(
+            array(),
+            ['updatedAt' => 'DESC']
+        );
 
         return $this->render(
             'interface/celestialbodies.html.twig',
             ['celestialBodies' => $celestialBodies]
         );
+    }
+
+    /**
+     *? Deletes a particular celestial body.
+     * 
+     * @param CelestialBody $celestialBody The CelestialBody entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
+     ** @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
+     */
+    public function deleteCelestialBody(CelestialBody $celestialBody = null): Response
+    {        
+        if ($celestialBody === null) {
+            $this->addFlash(
+                'failure',
+                'CelestialBody not found.'
+            );
+
+            return $this->redirectToRoute('admin_celestial_bodies_list');
+        }
+        
+        if ($celestialBody->getPicture())
+            unlink(__DIR__ . '/../../public/images/pictures/' . $celestialBody->getPicture());
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($celestialBody);
+        $manager->flush();
+
+        return $this->redirectToRoute('admin_celestial_bodies_list');
     }
 
     /**
@@ -100,32 +141,14 @@ class AdminController extends AbstractController
      */
     public function getUsers(UserRepository $userRepository): Response
     {
-        $users = $userRepository->findByUpdatedAt();
+        $users = $userRepository->findByfindBy(
+            array(),
+            ['updatedAt' => 'DESC']
+        );
 
         return $this->render(
             'interface/users.html.twig',
             ['users' => $users]
-        );
-    }
-
-    /**
-     *? Retrieves all celestial bodies by the last one created or updated.
-     * 
-     * @param CommentRepository $commentRepository The Comment repository.
-     * 
-     * @return Response
-     * 
-     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
-     * 
-     ** @Route("/comments", name="comments_list", methods={"GET"})
-     */
-    public function getComments(CommentRepository $commentRepository): Response
-    {
-        $comments = $commentRepository->findByUpdatedAt();
-
-        return $this->render(
-            'interface/comments.html.twig',
-            ['comments' => $comments]
         );
     }
 
@@ -137,17 +160,20 @@ class AdminController extends AbstractController
      * 
      * @return JsonResponse
      *
-     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=401) 
      *  
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
-    public function toggleUserStatus(User $user = null, SwiftMailer $mailer): JsonResponse
+    public function toggleUserStatus(User $user = null, SwiftMailer $mailer): Response
     {
-        if ($user === null)
-            return $this->json(
-                ['information' => 'User not found.'],
-                Response::HTTP_NOT_FOUND
+        if ($user === null) {
+            $this->addFlash(
+                'failure', 
+                'User not found.'
             );
+
+            return $this->redirectToRoute('admin_users_list');
+        }
 
         switch ($user->getStatus()) {
             case 0:
@@ -185,9 +211,99 @@ class AdminController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
-        return $this->json(
-            ['information' => $message],
-            Response::HTTP_OK
+        return $this->redirectToRoute('admin_users_list');
+    }
+
+    /**
+     *? Deletes a user account.
+     * 
+     * @param User $user The user entity.
+     * 
+     * @return JsonResponse
+     *
+     ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
+     *  
+     ** @Route("/users/{slug}", name="delete_user", methods={"DELETE"})
+     */
+    public function deleteUser(User $user = null): Response
+    {
+        if ($user === null || $user->getStatus() === 0) {
+            $this->addFlash(
+                'failure',
+                'User not found.'
+            );
+
+            return $this->redirectToRoute('admin_users_list');
+        }
+
+        if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
+            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($user);
+        $manager->flush();
+
+        return $this->redirectToRoute('admin_users_list');
+    }
+
+    /**
+     *? Retrieves all comments by the last one created or updated.
+     * 
+     * @param CommentRepository $commentRepository The Comment repository.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404) 
+     * 
+     ** @Route("/comments", name="comments_list", methods={"GET"})
+     */
+    public function getComments(CommentRepository $commentRepository): Response
+    {
+        $comments = $commentRepository->findByfindBy(
+            array(),
+            ['updatedAt' => 'DESC']
         );
+
+        return $this->render(
+            'interface/comments.html.twig',
+            ['comments' => $comments]
+        );
+    }
+
+    /**
+     *? Deletes a user's comment.
+     * 
+     * @param Comment $comment The Comment entity.
+     * 
+     * @return JsonResponse
+     * 
+     ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
+     * 
+     ** @Route("/comments/{id}", name="delete_comment", requirements={"id"="\d+"}, methods={"DELETE"})
+     */
+    public function deleteComment(Comment $comment = null): Response
+    {
+        if ($comment === null) {
+            $this->addFlash(
+                'failure',
+                'Comment not found.'
+            );
+
+            return $this->redirectToRoute('admin_comments_list');
+        }
+
+        $manager = $this
+            ->getDoctrine()
+            ->getManager()
+        ;
+
+        $manager->remove($comment);
+        $manager->flush();
+
+        return $this->redirectToRoute('admin_comments_list');
     }
 }

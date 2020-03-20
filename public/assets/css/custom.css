@@ -1,0 +1,17 @@
+body {
+  background-image: url(../images/interface/background.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.table {
+  background-color: transparent;
+}
+
+table tr:last-child, td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+table tr:last-child, td:last-child {
+  border-bottom-right-radius: 10px;
+}
