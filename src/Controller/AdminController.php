@@ -9,12 +9,47 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * @Route("/admin", name="api_")
+ * @Route("/admin", name="admin_")
  */
 class AdminController extends AbstractController
 {
+    /**
+     *? Connects a member of the lead team to the back office's interface.
+     * 
+     * @param AuthenticationUtils $authenticationUtils The HTTP Authentication component.
+     * 
+     * @return Response 
+     * 
+     ** @Route("/login", name="login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        if ($this->getUser()) {
+            dd($this->getUser());
+            return $this->redirectToRoute('api_celestial_bodies_list');
+        }
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    }
+
+    /**
+     *? Disconnects a member of the lead team to the back office's interface. 
+     *
+     ** @Route("/logout", name="logout")
+     */
+    public function logout()
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
+
     /**
      *? Toggles the user's status (ban or unban).
      * 
@@ -22,8 +57,6 @@ class AdminController extends AbstractController
      * @param SwiftMailer $mailer The SwiftMailer service.
      * 
      * @return JsonResponse
-     * 
-     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
      * 
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
@@ -71,10 +104,10 @@ class AdminController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
-
         return $this->json(
             ['information' => $message],
             Response::HTTP_OK
         );
     }
+
 }
