@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}The Wander{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
 
 <body>
-    <main class="container-fluid">
-        {% block body %}{% endblock %}
-    </main>
+    {% block body %}{% endblock %}
+    {% block javascripts %}{% endblock %}
 </body>
 
 </html>

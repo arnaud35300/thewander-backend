@@ -160,7 +160,7 @@ class User implements UserInterface
      *      max = 500
      * )
      * 
-     * @Groups({"user"})
+     * @Groups({"user", "current-user"})
      */
     private $bio;
 
