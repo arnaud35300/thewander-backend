@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Swift_Mailer as SwiftMailer;
+use App\Repository\UserRepository;
+use App\Repository\CommentRepository;
+use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -110,4 +113,62 @@ class AdminController extends AbstractController
         );
     }
 
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param CelestialBodyRepository $celestialBodyRepository The CelestialBody repository.
+     * 
+     * @return Response
+     * 
+     ** @Route("/celestial-bodies", name="celestial_bodies_list", methods={"GET"})
+     */
+    public function getCelestialBodies(CelestialBodyRepository $celestialBodyRepository): Response
+    {
+        $celestialBodies = $celestialBodyRepository->findAllBy('updatedAt');
+
+        return $this->render(
+            'interface/celestialbodies.html.twig',
+            ['celestialBodies' => $celestialBodies]
+        );
+    }
+
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param UserRepository $userRepository The User repository.
+     * 
+     * @return Response
+     * 
+     ** @Route("/users", name="users_list", methods={"GET"})
+     */
+    public function getUsers(UserRepository $userRepository): Response
+    {
+        $users = $userRepository->findAllBy('updatedAt');
+
+        return $this->render(
+            'interface/users.html.twig',
+            ['users' => $users]
+        );
+    }
+
+    /**
+     *? Retrieves all celestial bodies by the last one created or updated.
+     * 
+     * @param CommentRepository $commentRepository The Comment repository.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted(statusCode=404)
+     * 
+     ** @Route("/comments", name="comments_list", methods={"GET"})
+     */
+    public function getComments(CommentRepository $commentRepository): Response
+    {
+        $comments = $commentRepository->findAllBy('updatedAt');
+
+        return $this->render(
+            'interface/comments.html.twig',
+            ['comments' => $comments]
+        );
+    }
 }
