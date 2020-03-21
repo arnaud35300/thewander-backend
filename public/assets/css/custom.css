@@ -120,6 +120,16 @@ td {
   color: #fff;
 }
 
+.user__badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge__picture {
+  width: 40px;
+}
+
 .separator {
   border-bottom: 1px solid #fff;
   margin: 2rem;
