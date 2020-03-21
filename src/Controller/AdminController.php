@@ -141,7 +141,7 @@ class AdminController extends AbstractController
      */
     public function getUsers(UserRepository $userRepository): Response
     {
-        $users = $userRepository->findByfindBy(
+        $users = $userRepository->findBy(
             array(),
             ['updatedAt' => 'DESC']
         );
@@ -263,7 +263,7 @@ class AdminController extends AbstractController
      */
     public function getComments(CommentRepository $commentRepository): Response
     {
-        $comments = $commentRepository->findByfindBy(
+        $comments = $commentRepository->findBy(
             array(),
             ['updatedAt' => 'DESC']
         );
