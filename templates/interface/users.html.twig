@@ -27,7 +27,7 @@
         <th class="align-middle" scope="row">{{ user.id }}</th>
         <td class="align-middle">{{ user.nickname }}</td>
         <td class="align-middle">{{ user.email }}</td>
-        <td class="align-middle">{{ user.role.name }}</td>
+        <td class="align-middle">{{ user.role.name|slice(5)|lower|capitalize }}</td>
         <td class="align-middle" width="20%"><img src="{{ asset('assets/images/avatars/' ~ user.avatar) }}" width="20%">
         </td>
         <td class="align-middle">{{ user.rank.name }}</td>

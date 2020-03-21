@@ -12,7 +12,7 @@
           <h5 class="card-title info__title">{{ user.nickname }}</h5>
           <p>
             <span class="info__head">Role : </span>
-            {{ user.role.name }}
+            {{ user.role.name|slice(5)|lower|capitalize }}
           </p>
 
           <div class="user__badge">

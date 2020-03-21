@@ -27,7 +27,7 @@
           </div>
         </td>
         <td class="align-middle">{{ comment.user.nickname }}</td>
-        <td class="align-middle">{{ comment.user.role.name }}</td>
+        <td class="align-middle">{{ comment.user.role.name|slice(5)|lower|capitalize }}</td>
         <td class="align-middle">
           {{ comment.updatedAt|date('H:i') }}hr,
           {{ comment.updatedAt|date('M d Y') }}

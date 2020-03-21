@@ -24,7 +24,7 @@
         <th class="align-middle" scope="row">{{ celestialBody.id }}</th>
         <td class="align-middle">{{ celestialBody.name }}</td>
         <td class="align-middle">{{ celestialBody.user.nickname }}</td>
-        <td class="align-middle">{{ celestialBody.user.role.name }}</td>
+        <td class="align-middle">{{ celestialBody.user.role.name|slice(5)|lower|capitalize }}</td>
         <td class="align-middle" width="20%"><img src="{{ asset('assets/images/pictures/' ~ celestialBody.picture) }}"
             width="20%"></td>
         <td class="align-middle">
