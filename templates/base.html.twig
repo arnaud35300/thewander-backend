@@ -13,12 +13,14 @@
 </head>
 
 <body>
-  {% block header %}
-    {% include "layouts/header.html.twig" %}
-  {% endblock %}
+  <main class="container">
+    {% block header %}
+      {% include "layouts/header.html.twig" %}
+    {% endblock %}
 
-  {% block body %}{% endblock %}
-  {% block javascripts %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+  </main>
 </body>
 
 </html>

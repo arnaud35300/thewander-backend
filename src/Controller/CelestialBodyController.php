@@ -479,8 +479,8 @@ class CelestialBodyController extends AbstractController
         
         $this->denyAccessUnlessGranted('CELESTIAL_BODY_DELETE', $celestialBody);
 
-        if ($celestialBody->getPicture())
-            unlink(__DIR__ . '/../../public/images/pictures/' . $celestialBody->getPicture());
+        if ($celestialBody->getPicture() !== null)
+            unlink(__DIR__ . '/../../public/assets/images/pictures/' . $celestialBody->getPicture());
 
         $manager = $this
             ->getDoctrine()

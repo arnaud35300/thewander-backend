@@ -414,7 +414,7 @@ class UserController extends AbstractController
             );
 
         if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
-            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
+            unlink(__DIR__ . '/../../public/assets/images/avatars/' . $user->getAvatar());
 
         $manager = $this
             ->getDoctrine()

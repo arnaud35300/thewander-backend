@@ -2,42 +2,54 @@
 
 {% block body %}
 
-<main class="container">
+<section class="container">
   <table class="table border rounded table-dark text-center">
-    <thead>
+    <thead class="table-head border">
       <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Creator</th>
-        <th scope="col">Creator's role</th>
-        <th scope="col">Picture</th>
-        <th scope="col">Latest update</th>
-        <th scope="col">Creation date</th>
-        <th scope="col">Delete</th>
+        <th class="align-middle" scope="col">ID</th>
+        <th class="align-middle" scope="col">Name</th>
+        <th class="align-middle" scope="col">Creator</th>
+        <th class="align-middle" scope="col">Creator's role</th>
+        <th class="align-middle" scope="col">Picture</th>
+        <th class="align-middle" scope="col">Latest update</th>
+        <th class="align-middle" scope="col">Creation date</th>
+        <th class="align-middle" scope="col">Celestial Body details</th>
+        <th class="align-middle" scope="col">Creator details</th>
+        <th class="align-middle" scope="col">Delete</th>
       </tr>
     </thead>
-    {% for celestialBody in celestialBodies %}
     <tbody>
+      {% for celestialBody in celestialBodies %}
       <tr>
-        <th scope="row">{{ celestialBody.id }}</th>
-        <td>{{ celestialBody.name }}</td>
-        <td>{{ celestialBody.user.nickname }}</td>
-        <td>{{ celestialBody.user.role.name }}</td>
-        <td width="20%"><img src="{{ asset('assets/images/pictures/' ~ celestialBody.picture) }}" width="20%"></td>
-        <td>
-          {{ celestialBody.updatedAt|date('Y-m-d \\test H \\heure') }}</td>
-        <td>{{ celestialBody.createdAt|date('Y-m-d') }}</td>
-        <td>
-          <form method="post" action="{{ path('api_delete_celestial_body', {slug: celestialBody.slug}) }}"
-            onsubmit="return confirm('Are you sure you want to delete this item?');" style="display: inline-block;">
+        <th class="align-middle" scope="row">{{ celestialBody.id }}</th>
+        <td class="align-middle">{{ celestialBody.name }}</td>
+        <td class="align-middle">{{ celestialBody.user.nickname }}</td>
+        <td class="align-middle">{{ celestialBody.user.role.name }}</td>
+        <td class="align-middle" width="20%"><img src="{{ asset('assets/images/pictures/' ~ celestialBody.picture) }}"
+            width="20%"></td>
+        <td class="align-middle">
+          {{ celestialBody.updatedAt|date('H:i') }}hr,
+          {{ celestialBody.updatedAt|date('M d Y') }}
+        </td>
+        <td class="align-middle">{{ celestialBody.createdAt|date('H:i') }}hr,
+          {{ celestialBody.createdAt|date('M d Y') }}</td>
+        <td class="align-middle">
+          <a class="btn" href="{{ path('admin_celestial_body', {slug: celestialBody.slug}) }}">Check</a>
+        </td>
+        <td class="align-middle">
+          <a class="btn" href="{{ path('admin_user', {slug: celestialBody.user.slug}) }}">Check</a>
+        </td>
+        <td class="align-middle">
+          <form method="POST" action="{{ path('admin_delete_celestial_body', {slug: celestialBody.slug}) }}"
+            onsubmit="return confirm('Are you sure you want to delete this item?');">
             <input type="hidden" name="_method" value="DELETE">
             <button class="btn">Delete</button>
           </form>
         </td>
       </tr>
+      {% endfor %}
     </tbody>
-    {% endfor %}
   </table>
-</main>
+</section>
 
 {% endblock %}

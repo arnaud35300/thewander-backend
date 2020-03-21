@@ -11,7 +11,6 @@ use App\Repository\CommentRepository;
 use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -93,15 +92,43 @@ class AdminController extends AbstractController
     }
 
     /**
+     *? Retrieves a particular celestial body.
+     * 
+     * @param CelestialBody $celestialBody The CelestialBody entity.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
+     * 
+     ** @Route("/celestial-bodies/{slug}", name="celestial_body", methods={"GET"})
+     */
+    public function getCelestialBody(CelestialBody $celestialBody = null): Response
+    {
+        if ($celestialBody === null) {
+            $this->addFlash(
+                'failure', 
+                'Celestialbody not found.'
+            );
+
+            return $this->redirectToRoute('admin_celestial_bodies_list');
+        }
+
+        return $this->render(
+            'interface/celestialbody.html.twig',
+            ['celestialBody' => $celestialBody]
+        );
+    }
+
+    /**
      *? Deletes a particular celestial body.
      * 
      * @param CelestialBody $celestialBody The CelestialBody entity.
      * 
-     * @return JsonResponse
+     * @return Response
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 
-     ** @Route("/{slug}", name="delete_celestial_body", methods={"DELETE"})
+     ** @Route("/celestial-bodies/{slug}", name="delete_celestial_body", methods={"DELETE"})
      */
     public function deleteCelestialBody(CelestialBody $celestialBody = null): Response
     {        
@@ -114,8 +141,8 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_celestial_bodies_list');
         }
         
-        if ($celestialBody->getPicture())
-            unlink(__DIR__ . '/../../public/images/pictures/' . $celestialBody->getPicture());
+        if ($celestialBody->getPicture() !== null)
+            unlink(__DIR__ . '/../../public/assets/images/pictures/' . $celestialBody->getPicture());
 
         $manager = $this
             ->getDoctrine()
@@ -153,12 +180,40 @@ class AdminController extends AbstractController
     }
 
     /**
+     *? Retrieves a particular user's information.
+     *
+     * @param User $user The user entity.
+     * 
+     * @return Response
+     * 
+     ** @IsGranted("ROLE_MODERATOR", statusCode=404)
+     * 
+     ** @Route("/users/{slug}", name="user", methods={"GET"})
+     */
+    public function getUser(User $user = null): Response
+    {
+        if ($user === null) {
+            $this->addFlash(
+                'failure', 
+                'User not found.'
+            );
+
+            return $this->redirectToRoute('admin_users_list');
+        }
+
+        return $this->render(
+            'interface/user.html.twig',
+            ['user' => $user]
+        );
+    }
+
+    /**
      *? Toggles the user's status (ban or unban).
      * 
      * @param User $user The User Repository.
      * @param SwiftMailer $mailer The SwiftMailer service.
      * 
-     * @return JsonResponse
+     * @return Response
      *
      ** @IsGranted("ROLE_MODERATOR", statusCode=401) 
      *  
@@ -219,7 +274,7 @@ class AdminController extends AbstractController
      * 
      * @param User $user The user entity.
      * 
-     * @return JsonResponse
+     * @return Response
      *
      ** @IsGranted("ROLE_ADMINISTRATOR", statusCode=401)
      *  
@@ -237,7 +292,7 @@ class AdminController extends AbstractController
         }
 
         if (preg_match('#0[0-4]_avatar\.png#', $user->getAvatar()) !== 1)
-            unlink(__DIR__ . '/../../public/images/avatars/' . $user->getAvatar());
+            unlink(__DIR__ . '/../../public/assets/images/avatars/' . $user->getAvatar());
 
         $manager = $this
             ->getDoctrine()
@@ -279,7 +334,7 @@ class AdminController extends AbstractController
      * 
      * @param Comment $comment The Comment entity.
      * 
-     * @return JsonResponse
+     * @return Response
      * 
      ** @IsGranted("ROLE_CONTRIBUTOR", statusCode=401)
      * 

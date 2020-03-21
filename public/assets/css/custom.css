@@ -4,16 +4,13 @@ body {
   background-repeat: no-repeat;
 }
 
-.table {
-  background-color: transparent;
+.container {
+  max-width: 80vw;
 }
 
-table tr:last-child, td:first-child {
-  border-bottom-left-radius: 10px;
-}
-
-table tr:last-child, td:last-child {
-  border-bottom-right-radius: 10px;
+.header {
+  margin-top: 1rem;
+  margin-bottom: 2.5rem;
 }
 
 .logo {
@@ -35,4 +32,39 @@ table tr:last-child, td:last-child {
 
 .active {
   color: rgba(255, 255, 255, 1);
+}
+
+.table {
+  max-width: 100%;
+}
+
+.table-dark {
+  background-color: rgba(33, 37, 41, 0.8);
+}
+
+.table-dark td,
+.table-dark th,
+.table-dark thead th {
+  border-color: #fff;
+  border-bottom: 0;
+}
+
+td {
+  border-top: 0;
+}
+
+.comment-body-content {
+  max-width: 250px;
+  max-height: 100px;
+  overflow-y: auto; 
+}
+
+.btn {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #000;
+}
+
+.btn:hover {
+  color: #000;
+  text-decoration: underline;
 }
