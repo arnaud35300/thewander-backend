@@ -1,4 +1,5 @@
 body {
+  font-family: 'Dosis', sans-serif;
   background-image: url(../images/interface/background.jpg);
   background-size: cover;
   background-repeat: no-repeat;
@@ -6,6 +7,10 @@ body {
 
 .container {
   max-width: 80vw;
+}
+
+.container.login-container {
+  height: 100vh;
 }
 
 .container .item-info {
@@ -60,7 +65,7 @@ td {
 .comment-body-content {
   max-width: 250px;
   max-height: 100px;
-  overflow-y: auto; 
+  overflow-y: auto;
 }
 
 .btn {
@@ -91,7 +96,6 @@ td {
 }
 
 .info__title {
-  /* text-align: center; */
   font-size: 1.8rem;
   font-weight: bold;
   text-transform: capitalize;
@@ -112,7 +116,7 @@ td {
 }
 
 .user__nickname {
-  text-decoration: underline;  
+  text-decoration: underline;
   color: rgba(255, 255, 255, 0.9);
 }
 
@@ -140,7 +144,6 @@ td {
 }
 
 .form-container {
-  /* text-align: center; */
   display: flex;
   justify-content: center;
 }
@@ -148,4 +151,35 @@ td {
 .form-button {
   text-align: center;
   margin: 0.5rem;
+}
+
+.login-form,
+.logout-message {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  width: 25%;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.login-content,
+.logout-message--text {
+  font-size: 1.1em;
+  color: #fff;
+}
+
+.logout-message--text {
+  font-weight: bold;
+}
+
+.user-name {
+  color: #0ff;
+}
+
+.signin-btn {
+  width: 100%;
+}
+
+.logout-button {
+  display: block;
 }

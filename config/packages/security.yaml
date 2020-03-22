@@ -17,6 +17,10 @@ security:
             guard:
                 authenticators:
                     - App\Security\AdminAuthenticator
+            remember_me: 
+                path: /admin
+                secret: '%kernel.secret%'
+                lifetime: 2629746
             logout:
                 path: admin_logout
                 target: admin_login
