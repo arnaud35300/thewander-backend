@@ -2,4 +2,22 @@
 
 {% block body %}
 
+<section class="container home-container">
+  <div class="home-message mx-auto">
+    <h1 class="mb-5">
+      Welcome, {{ app.user.nickname }}.
+    </h1>
+    <p>You are now logged to the control center.</p>
+    <p>
+      If you will to moderate the website's content you can browse the
+      <a class="home-link" href="{{ path('admin_celestial_bodies_list') }}">celestial bodies</a> list,
+      <a class="home-link" href="{{ path('admin_users_list') }}">users'</a> or
+      <a class="home-link" href="{{ path('admin_comments_list') }}">comments'</a>.
+    </p>
+    <p>
+      Or you can go back to the <a class="home-link" href="http://thewander.space">front site</a>.
+    </p>
+  </div>
+</section>
+
 {% endblock %}

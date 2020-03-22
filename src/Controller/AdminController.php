@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Entity\CelestialBody;
 use Swift_Mailer as SwiftMailer;
 use App\Repository\UserRepository;
+use App\Repository\RoleRepository;
 use App\Repository\CommentRepository;
 use App\Repository\CelestialBodyRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -210,6 +211,7 @@ class AdminController extends AbstractController
     /**
      *? Toggles the user's status (ban or unban).
      * 
+     * @param RoleRepository $roleRepository The Role repository.
      * @param User $user The User Repository.
      * @param SwiftMailer $mailer The SwiftMailer service.
      * 
@@ -219,7 +221,7 @@ class AdminController extends AbstractController
      *  
      ** @Route("/users/{slug}", name="toggle_user", methods={"PATCH"})
      */
-    public function toggleUserStatus(User $user = null, SwiftMailer $mailer): Response
+    public function toggleUserStatus(RoleRepository $roleRepository, User $user = null, SwiftMailer $mailer): Response
     {
         if ($user === null) {
             $this->addFlash(
@@ -233,12 +235,10 @@ class AdminController extends AbstractController
         switch ($user->getStatus()) {
             case 0:
                 $user->setStatus(1);
-                $message = 'User now unbanned.';
                 break;
             
             case 1:
                 $user->setStatus(0);
-                $message = 'User now banned.';
 
                 $mail = (new \Swift_Message('We have bad news'))
                     ->setFrom('thewandercorp@gmail.com')
@@ -257,6 +257,11 @@ class AdminController extends AbstractController
                 
                 break;
         }
+
+        $newRole = $roleRepository->findOneByName('ROLE_CONTRIBUTOR');
+
+        if ($user->getStatus() === 0)
+            $user->setRole($newRole);
 
         $manager = $this
             ->getDoctrine()

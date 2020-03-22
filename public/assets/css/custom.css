@@ -9,7 +9,8 @@ body {
   max-width: 80vw;
 }
 
-.container.login-container {
+.container.login-container,
+.container.home-container {
   height: 100vh;
 }
 
@@ -41,6 +42,51 @@ body {
 
 .active {
   color: rgba(255, 255, 255, 1);
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+}
+
+.form-button {
+  text-align: center;
+  margin: 0.5rem;
+}
+
+.home-message {
+  width: 50%;
+  text-shadow: 1px 1px #000;
+}
+
+.home-message .home-link {
+  font-weight: bold;
+  color: #fff;
+  text-decoration: underline;
+}
+
+.login-form,
+.logout-message {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  width: 25%;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.home-message,
+.login-content,
+.logout-message--text {
+  font-size: 1.1em;
+  color: #fff;
+}
+
+.logout-message--text {
+  font-weight: bold;
+}
+
+.user-name {
+  color: #0ff;
 }
 
 .table {
@@ -76,6 +122,14 @@ td {
 .btn:hover {
   color: #000;
   text-decoration: underline;
+}
+
+.signin-btn {
+  width: 100%;
+}
+
+.logout-button {
+  display: block;
 }
 
 .head {
@@ -141,45 +195,4 @@ td {
 
 .comment__body {
   margin: 1.2rem;
-}
-
-.form-container {
-  display: flex;
-  justify-content: center;
-}
-
-.form-button {
-  text-align: center;
-  margin: 0.5rem;
-}
-
-.login-form,
-.logout-message {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  width: 25%;
-  border-radius: 10px;
-  padding: 2rem;
-}
-
-.login-content,
-.logout-message--text {
-  font-size: 1.1em;
-  color: #fff;
-}
-
-.logout-message--text {
-  font-weight: bold;
-}
-
-.user-name {
-  color: #0ff;
-}
-
-.signin-btn {
-  width: 100%;
-}
-
-.logout-button {
-  display: block;
 }
