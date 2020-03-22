@@ -115,7 +115,7 @@ class CelestialBody
      * 
      * @Assert\Type("string")
      * @Assert\Length(
-     *      max=500
+     *      max=2000
      * )
      * 
      * @Groups({"celestial-body", "celestial-body-creation"})
