@@ -239,6 +239,19 @@ class AdminController extends AbstractController
             
             case 1:
                 $user->setStatus(0);
+                
+                $newRole = $roleRepository->findOneByName('ROLE_CONTRIBUTOR');
+                $user->setRole($newRole);
+
+                $comments = $user->getComments();
+
+                foreach ($comments as $comment) 
+                    $user->removeComment($comment);
+            
+                $celestialBodies = $user->getCelestialBodies();
+
+                foreach ($celestialBodies as $celestialBody) 
+                    $user->removeComment($celestialBody);
 
                 $mail = (new \Swift_Message('We have bad news'))
                     ->setFrom('thewandercorp@gmail.com')
@@ -257,11 +270,6 @@ class AdminController extends AbstractController
                 
                 break;
         }
-
-        $newRole = $roleRepository->findOneByName('ROLE_CONTRIBUTOR');
-
-        if ($user->getStatus() === 0)
-            $user->setRole($newRole);
 
         $manager = $this
             ->getDoctrine()
