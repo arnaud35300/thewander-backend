@@ -244,14 +244,14 @@ class AdminController extends AbstractController
                 $user->setRole($newRole);
 
                 $comments = $user->getComments();
-
-                foreach ($comments as $comment) 
+                
+                foreach ($comments as $comment)
                     $user->removeComment($comment);
-            
+
                 $celestialBodies = $user->getCelestialBodies();
 
                 foreach ($celestialBodies as $celestialBody) 
-                    $user->removeComment($celestialBody);
+                    $user->removeCelestialBody($celestialBody);
 
                 $mail = (new \Swift_Message('We have bad news'))
                     ->setFrom('thewandercorp@gmail.com')
