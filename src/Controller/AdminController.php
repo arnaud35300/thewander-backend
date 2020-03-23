@@ -295,7 +295,7 @@ class AdminController extends AbstractController
      */
     public function deleteUser(User $user = null): Response
     {
-        if ($user === null || $user->getStatus() === 0) {
+        if ($user === null) {
             $this->addFlash(
                 'failure',
                 'User not found.'
